@@ -12,7 +12,7 @@ If a CAT wiki page for the domain is found then a new tab is opened in the backg
 
 As this is not yet on the Chrome Web Store it's necessary to download and manually install it: 
 
-1. Clone or download zip of this repo. 
+1. Clone or download a [zip](https://github.com/WayneKeenan/ClintonCAT/archive/refs/heads/main.zip) of this repo. 
 2. Open Extension settings: e.g. `chrome://extensions/`  or `brave://extensions/` etc.
 3. Enable Developer Mode
 4. Click `Load Unpacked`
