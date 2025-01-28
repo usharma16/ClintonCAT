@@ -13,10 +13,17 @@ If a CAT wiki page for the domain is found then a new tab is opened in the backg
 As this is not yet on the Chrome Web Store it's necessary to download and manually install it: 
 
 1. Clone or download a [zip](https://github.com/WayneKeenan/ClintonCAT/archive/refs/heads/main.zip) of this repo. 
-2. Open Extension settings: e.g. `chrome://extensions/`  or `brave://extensions/` etc.
+2. Open Extension settings: e.g. `chrome://extensions/`  or `brave://extensions/` etc.  (see below for firefox)
 3. Enable Developer Mode
 4. Click `Load Unpacked`
 5. Navigate to the cloned/unzipped folder.
+
+### Firefox
+
+ 
+about:addons -> Extensions -> 'Settings icon' -> Debug Addons -> Load Temporary Add-on... -> Open `ClintonCAT/manifest.json`
+
+
 
 ### Bleeding edge version
 
@@ -28,11 +35,8 @@ The most recent bleeding edge version will be the `dev` branch.
 ## TODO
 
 - [ ] Platform: Safari Extension
-- [ ] UI: Alternate notification strategy: Icon change
 - [ ] UI: Alternate notification strategy: overlay button in-page header
-- [ ] UI: Search in-page
 - [ ] User Config: Preferred notification strategy
-- [ ] User Config: Whitelisting sites for notification surpression
 - [ ] Logic: Extending the trailing TLD list
 - [ ] Logic: More accurate Wiki search (e.g. only display pages with 'Controversies')
 
@@ -40,4 +44,6 @@ The most recent bleeding edge version will be the `dev` branch.
 
 Thanks to:
 
-- @blimeybloke
+- @blimeybloke  (Settings)
+- @lnardon (Firefox)
+- @khonkhortisan (Firefox)
