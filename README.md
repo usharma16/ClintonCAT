@@ -35,3 +35,9 @@ The most recent bleeding edge version will be the `dev` branch.
 - [ ] User Config: Whitelisting sites for notification surpression
 - [ ] Logic: Extending the trailing TLD list
 - [ ] Logic: More accurate Wiki search (e.g. only display pages with 'Controversies')
+
+# Contributions
+
+Thanks to:
+
+- @blimeybloke
