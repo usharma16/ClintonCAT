@@ -67,20 +67,47 @@ function foundCATEntry(url) {
   openTabIfNotExists(url);
 }
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.domain) {
-    const searchTerm = getMainDomain(message.domain);
-    // handle circular case.
-    if (searchTerm === CAT_DOMAIN) {
-      return;
-    }
-    console.log("Searching for main domain: " + searchTerm);
-    searchWiki(searchTerm).then((results) => {
-      if (results.length > 0) {
-        const pageUrl = `${WIKI_URL}/${encodeURIComponent(results[0].title)}`;
-        foundCATEntry(pageUrl);
+function getOptions(keys) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get(keys, (result) => {
+      console.log("Options: ", JSON.stringify(result));
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve(result);
       }
     });
+  });
+}
+
+
+function isDomainExcluded(exclusions, domain)  {
+  if (exclusions == null) {
+    return false;
   }
+  return exclusions.some((excludedDomain) => domain.includes(excludedDomain));
+}
+
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  (async () => {
+    const options = await getOptions("domain_exclusions");
+    const currentDomain = message.domain;
+    if (currentDomain) {
+      const searchTerm = getMainDomain(currentDomain);
+      // handle circular case.
+      // ignore excluded domains
+      if ( (searchTerm === CAT_DOMAIN) || isDomainExcluded(options.domain_exclusions, currentDomain) ) {
+        return;
+      }
+      console.log("Searching for main domain: " + searchTerm);
+      searchWiki(searchTerm).then((results) => {
+        if (results.length > 0) {
+          const pageUrl = `${WIKI_URL}/${encodeURIComponent(results[0].title)}`;
+          foundCATEntry(pageUrl);
+        }
+      });
+    }
+  })();
 });
 
