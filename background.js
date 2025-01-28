@@ -1,3 +1,5 @@
+import { OPTIONS_DOMAIN_EXCLUSIONS } from "./constants.js";
+
 const BASE_URL="https://wiki.rossmanngroup.com";
 const SEARCH_API_URL= BASE_URL+ "/api.php";
 const WIKI_URL= BASE_URL+ "/wiki";
@@ -91,7 +93,7 @@ function isDomainExcluded(exclusions, domain)  {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   (async () => {
-    const options = await getOptions("domain_exclusions");
+    const options = await getOptions(OPTIONS_DOMAIN_EXCLUSIONS);
     const currentDomain = message.domain;
     if (currentDomain) {
       const searchTerm = getMainDomain(currentDomain);

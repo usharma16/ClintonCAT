@@ -1,3 +1,4 @@
+import { OPTIONS_DOMAIN_EXCLUSIONS } from "./constants.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const exclusionInput = document.getElementById("domainExclusions");
@@ -10,9 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Load saved exclusions
-    chrome.storage.sync.get(["domain_exclusions"], (result) => {
-        console.log("Loaded domain_exclusions:", result.domain_exclusions);
-        const exclusions = result.domain_exclusions || [];
+    chrome.storage.sync.get([OPTIONS_DOMAIN_EXCLUSIONS], (result) => {
+        console.log("Loaded domain_exclusions:", result[OPTIONS_DOMAIN_EXCLUSIONS]);
+        const exclusions = result[OPTIONS_DOMAIN_EXCLUSIONS] || [];
         exclusions.forEach(addExclusionToUI);
     });
 
@@ -21,9 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const url = exclusionInput.value.trim();
         console.log("Button clicked, input:", url);
         if (url) {
-            chrome.storage.sync.get(["domain_exclusions"], (result) => {
-                console.log("Retrieved exclusions:", result.domain_exclusions);
-                const domain_exclusions = result.domain_exclusions || [];
+            chrome.storage.sync.get([OPTIONS_DOMAIN_EXCLUSIONS], (result) => {
+                console.log("Retrieved exclusions:", result[OPTIONS_DOMAIN_EXCLUSIONS]);
+                const domain_exclusions = result[OPTIONS_DOMAIN_EXCLUSIONS] || [];
                 if (!domain_exclusions.includes(url)) {
                     domain_exclusions.push(url);
                     chrome.storage.sync.set({ domain_exclusions }, () => {
@@ -48,11 +49,12 @@ document.addEventListener("DOMContentLoaded", () => {
         removeButton.textContent = "Remove";
         removeButton.style.marginLeft = "10px";
         removeButton.addEventListener("click", () => {
-            chrome.storage.sync.get(["domain_exclusions"], (result) => {
-                console.log("Before removal exclusions:", result.domain_exclusions);
-                const exclusions = result.domain_exclusions || [];
+            chrome.storage.sync.get([OPTIONS_DOMAIN_EXCLUSIONS], (result) => {
+                console.log("Before removal exclusions:", result[OPTIONS_DOMAIN_EXCLUSIONS]);
+                const exclusions = result[OPTIONS_DOMAIN_EXCLUSIONS] || [];
                 const updatedExclusions = exclusions.filter((item) => item !== url);
-                chrome.storage.sync.set({ domain_exclusions: updatedExclusions }, () => {
+                console.log("After removal exclusions:", updatedExclusions);
+                chrome.storage.sync.set({ [OPTIONS_DOMAIN_EXCLUSIONS]: updatedExclusions }, () => {
                     console.log("Removed exclusion:", url);
                     li.remove();
                 });
