@@ -1,9 +1,12 @@
-import { OPTIONS_DOMAIN_EXCLUSIONS } from "./constants.js";
+import { OPTIONS_DOMAIN_EXCLUSIONS, STATE_OPEN_DOMAINS } from "./constants.js";
 
 const BASE_URL="https://wiki.rossmanngroup.com";
 const SEARCH_API_URL= BASE_URL+ "/api.php";
 const WIKI_URL= BASE_URL+ "/wiki";
 const CAT_DOMAIN = getMainDomain(BASE_URL);
+
+console.log("initial load");
+chrome.storage.local.set({ [STATE_OPEN_DOMAINS]: []});
 
 
 const searchWiki = async (searchTerm) => {
@@ -90,9 +93,28 @@ function isDomainExcluded(exclusions, domain)  {
   return exclusions.some((excludedDomain) => domain.includes(excludedDomain));
 }
 
+async function getOpenDomains() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(STATE_OPEN_DOMAINS, (result) => {
+      console.log("Open domains: ", result[STATE_OPEN_DOMAINS] );
+      resolve(result[STATE_OPEN_DOMAINS] || []);
+    });
+  });
+}
+
+async function saveOpenDomains(domainName) {
+  const openDomains = await getOpenDomains();
+  if (!openDomains.includes(domainName)) {
+    openDomains.push(domainName);
+    chrome.storage.local.set({ [STATE_OPEN_DOMAINS]: openDomains});
+  }
+}
+
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   (async () => {
+
+
     const options = await getOptions(OPTIONS_DOMAIN_EXCLUSIONS);
     const currentDomain = message.domain;
     if (currentDomain) {
@@ -102,6 +124,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if ( (searchTerm === CAT_DOMAIN) || isDomainExcluded(options.domain_exclusions, currentDomain) ) {
         return;
       }
+
+      // Block multiple tb openings due to multiple windows and potentially multiple async 'onMessage' invocations
+      const openDomains = await getOpenDomains();
+      if (openDomains.includes(searchTerm)) {
+        return;
+      } else {
+        saveOpenDomains(currentDomain);
+      }
+
+
       console.log("Searching for main domain: " + searchTerm);
       searchWiki(searchTerm).then((results) => {
         if (results.length > 0) {

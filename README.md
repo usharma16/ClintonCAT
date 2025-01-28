@@ -44,6 +44,7 @@ The most recent bleeding edge version will be the `dev` branch.
 
 Thanks to:
 
-- @blimeybloke  (Settings)
+- @blimeybloke  (Settings and whitelisting)
 - @lnardon (Firefox)
 - @khonkhortisan (Firefox)
+- @SalimOfShadow (Multiple tab prevention)
