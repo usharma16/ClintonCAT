@@ -18,6 +18,13 @@ As this is not yet on the Chrome Web Store it's necessary to download and manual
 4. Click `Load Unpacked`
 5. Navigate to the cloned/unzipped folder.
 
+### Bleeding edge version
+
+The 'main' branch should be the most stable one of the family to install, until it's on the various extension 'web stores'.
+
+The most recent bleeding edge version will be the `dev` branch.
+
+
 ## TODO
 
 - [ ] Platform: Safari Extension
