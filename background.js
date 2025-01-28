@@ -7,6 +7,7 @@ const CAT_DOMAIN = getMainDomain(BASE_URL);
 
 console.log("initial load");
 chrome.storage.local.set({ [STATE_OPEN_DOMAINS]: []});
+chrome.storage.local.set({ appDisable: false});
 
 
 const searchWiki = async (searchTerm) => {
@@ -114,9 +115,20 @@ async function saveOpenDomains(domainName) {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   (async () => {
 
+    const options = await getOptions([OPTIONS_DOMAIN_EXCLUSIONS, "appDisabled"]);
+    console.log("CAT options: ", JSON.stringify(options));
 
-    const options = await getOptions(OPTIONS_DOMAIN_EXCLUSIONS);
-    const currentDomain = message.domain;
+    if (message.badgeText) {
+      chrome.action.setBadgeText({ text: message.badgeText });
+    }
+
+    console.log("CAT is loafing?", options["appDisabled"]);
+    if (options["appDisabled"]) {
+      return;
+    }
+
+
+      const currentDomain = message.domain;
     if (currentDomain) {
       const searchTerm = getMainDomain(currentDomain);
       // handle circular case.
