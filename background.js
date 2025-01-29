@@ -3,14 +3,15 @@ import { OPTIONS_DOMAIN_EXCLUSIONS, STATE_OPEN_DOMAINS } from "./constants.js";
 const WIKI_URL="https://wiki.rossmanngroup.com/wiki";
 
 const PAGES_DB_JSON_URL = "https://raw.githubusercontent.com/WayneKeenan/ClintonCAT/refs/heads/main/pages_db.json";
+const UPDATE_ALARM_NAME = "updatePagesDB";
+const CACHE_KEY = "cachedPagesDB";
+const CACHE_TIMESTAMP_KEY = "cachedPagesDBTimestamp";
+const FETCH_INTERVAL_MINUTES = 30; // Fetch every 30 minutes
+const FETCH_INTERVAL_MS = FETCH_INTERVAL_MINUTES * 60 * 1000;
 
 console.log("initial load");
 chrome.storage.local.set({ [STATE_OPEN_DOMAINS]: []});
 chrome.storage.local.set({ appDisable: false});
-
-let pagesDB = [];
-fetchJson(PAGES_DB_JSON_URL).then(result => {pagesDB = result});
-
 
 async function fetchJson(url) {
   try {
@@ -25,6 +26,55 @@ async function fetchJson(url) {
   }
 }
 
+async function isCacheStale(epoch = Date.now()) {
+  // Get the last update timestamp
+  const { [CACHE_TIMESTAMP_KEY]: lastUpdated } = await chrome.storage.local.get(CACHE_TIMESTAMP_KEY);
+
+  if (!lastUpdated) {
+    return true;
+  }
+  return epoch - lastUpdated >= FETCH_INTERVAL_MS
+}
+
+async function saveCache(data, timestamp = Date.now()) {
+  await chrome.storage.local.set({ [CACHE_KEY]: data, [CACHE_TIMESTAMP_KEY]: timestamp });
+}
+
+// Function to fetch and cache the pages database
+async function updatePagesDB(force = false) {
+  try {
+    const now = Date.now();
+    const needsUpdate = force || await isCacheStale(now);
+    if (!needsUpdate) {
+      console.log("Skipping update: Cache TTL not reached.");
+    }
+
+    console.log("Fetching updated pages database...");
+    const jsonData = await fetchJson(PAGES_DB_JSON_URL);
+    await saveCache(jsonData, now);
+
+    console.log("Pages database updated successfully.");
+  } catch (error) {
+    console.error(`Failed to update pages database: ${error.message}`);
+  }
+}
+
+// Function to get the cached pages database
+async function getCachedPagesDB() {
+  const { [CACHE_KEY]: pagesDb } = await chrome.storage.local.get(CACHE_KEY);
+  return pagesDb || [];
+}
+
+// Alarm to trigger periodic updates
+chrome.alarms.create(UPDATE_ALARM_NAME, { periodInMinutes: FETCH_INTERVAL_MINUTES });
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === UPDATE_ALARM_NAME) {
+    updatePagesDB();
+  }
+});
+
+// Initial fetch on extension load
+updatePagesDB();
 
 function fuzzySearch(query, arr) {
   const lowerQuery = query.toLowerCase();
@@ -34,6 +84,7 @@ function fuzzySearch(query, arr) {
 
 async function getPagesForDomain(domain) {
 
+  const pagesDB = await getCachedPagesDB();
   const pages =  fuzzySearch(domain, pagesDB);
 
   console.log("Pages fuzzy search result: ", pages);
