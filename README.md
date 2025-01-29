@@ -2,6 +2,8 @@
 
 ## About
 
+# EXPERIMENTAL 
+
 Chrome Browser Extension for automatically searching [Rossmann's Consumer Action Taskforce (CAT)](https://wiki.rossmanngroup.com/wiki/Mission_statement) articles for the current site being visited. 
 
 ## Operation
@@ -33,13 +35,6 @@ The 'main' branch should be the most stable one of the family to install, until 
 The most recent bleeding edge version will be the `dev` branch.
 
 
-## TODO
-
-- [ ] Platform: Safari Extension
-- [ ] UI: Alternate notification strategy: overlay button in-page header
-- [ ] User Config: Preferred notification strategy
-- [ ] Logic: Extending the trailing TLD list
-- [ ] Logic: More accurate Wiki search (e.g. only display pages with 'Controversies')
 
 # Contributions
 
