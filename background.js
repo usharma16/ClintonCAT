@@ -111,6 +111,21 @@ async function saveOpenDomains(domainName) {
   }
 }
 
+async function indicateCATEntries(num) {
+  if (num > 0) {
+    chrome.action.setBadgeText({text: `${num}`});
+  } else {
+    chrome.storage.sync.get(
+        null,
+        (items) => {
+          if (typeof items?.appDisabled === "boolean") {
+            let appDisabled = items.appDisabled;
+            chrome.action.setBadgeText( { text: appDisabled ? "off" : "on" });
+          }
+        },
+    );
+  }
+}
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   (async () => {
@@ -120,10 +135,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     if (message.badgeText) {
       chrome.action.setBadgeText({ text: message.badgeText });
+    } else {
+      await indicateCATEntries(0);
     }
 
     console.log("CAT is loafing?", options["appDisabled"]);
     if (options["appDisabled"]) {
+      await indicateCATEntries(0);
       return;
     }
 
@@ -149,6 +167,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       console.log("Searching for main domain: " + searchTerm);
       searchWiki(searchTerm).then((results) => {
         if (results.length > 0) {
+          indicateCATEntries(results.length);
+
           const pageUrl = `${WIKI_URL}/${encodeURIComponent(results[0].title)}`;
           foundCATEntry(pageUrl);
         }
