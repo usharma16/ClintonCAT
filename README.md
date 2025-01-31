@@ -8,32 +8,17 @@ Chrome Browser Extension for automatically searching [Rossmann's Consumer Action
 
 ## Operation
 
-If a CAT wiki page for the domain is found then a new tab is opened in the background for the wiki article.
+If a CAT wiki page for the domain is found then a new tab is opened in the background with the wiki article.
 
 ## Install
 
 As this is not yet on the Chrome Web Store it's necessary to download and manually install it: 
 
-1. Clone this repo or download a [release](https://github.com/WayneKeenan/ClintonCAT/releases) (recommended). 
-2. Open Extension settings: e.g. `chrome://extensions/`  or `brave://extensions/` etc.  (see below for Firefox)
+1. Download a [release](https://github.com/WayneKeenan/ClintonCAT/releases) . 
+2. Open Extension settings: e.g. `chrome://extensions/`  or `brave://extensions/` etc.  
 3. Enable Developer Mode
 4. Click `Load Unpacked`
 5. Navigate to the cloned/unzipped folder.
-
-
-### Firefox
-
- 
-about:addons -> Extensions -> 'Settings icon' -> Debug Addons -> Load Temporary Add-on... -> Open `ClintonCAT/manifest.json`
-
-
-
-### Bleeding edge version
-
-The 'main' branch should be the most stable one of the family to install, until it's on the various extension 'web stores'.
-
-The most recent bleeding edge version will be the `dev` branch.
-
 
 
 # Contributions

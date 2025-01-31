@@ -1,4 +1,11 @@
-import { OPTIONS_DOMAIN_EXCLUSIONS, STATE_OPEN_DOMAINS } from "./constants.js";
+const STATE_OPEN_DOMAINS = "open_domains";
+import {Preferences} from './storage'
+
+chrome.runtime.onInstalled.addListener(() => {
+  console.log("Extension Installed");
+  Preferences.initDefaults();
+});
+
 
 const WIKI_URL="https://wiki.rossmanngroup.com/wiki";
 
@@ -9,18 +16,22 @@ const CACHE_TIMESTAMP_KEY = "cachedPagesDBTimestamp";
 const FETCH_INTERVAL_MINUTES = 30; // Fetch every 30 minutes
 const FETCH_INTERVAL_MS = FETCH_INTERVAL_MINUTES * 60 * 1000;
 
-console.log("initial load");
-chrome.storage.local.set({ [STATE_OPEN_DOMAINS]: []});
-chrome.storage.local.set({ appDisable: false});
+interface DomainResults {
+  numPages: number;
+  pageUrls: string[];
+}
 
-async function fetchJson(url) {
+
+
+
+async function fetchJson(url: string) {
   try {
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     return await response.json();
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Failed to fetch JSON: ${error.message}`);
     throw error;
   }
@@ -36,7 +47,7 @@ async function isCacheStale(epoch = Date.now()) {
   return epoch - lastUpdated >= FETCH_INTERVAL_MS
 }
 
-async function saveCache(data, timestamp = Date.now()) {
+async function saveCache(data: string, timestamp: number = Date.now()) {
   await chrome.storage.local.set({ [CACHE_KEY]: data, [CACHE_TIMESTAMP_KEY]: timestamp });
 }
 
@@ -54,7 +65,7 @@ async function updatePagesDB(force = false) {
     await saveCache(jsonData, now);
 
     console.log("Pages database updated successfully.");
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Failed to update pages database: ${error.message}`);
   }
 }
@@ -76,26 +87,27 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 // Initial fetch on extension load
 updatePagesDB();
 
-function fuzzySearch(query, arr) {
+function fuzzySearch(query: string, arr: string[]) {
   const lowerQuery = query.toLowerCase();
-  return arr.filter(item => item.toLowerCase().includes(lowerQuery));
+  return arr.filter((item: string) => item.toLowerCase().includes(lowerQuery));
 }
 
 
-async function getPagesForDomain(domain) {
 
-  const pagesDB = await getCachedPagesDB();
-  const pages =  fuzzySearch(domain, pagesDB);
+async function getPagesForDomain(domain: string) :Promise<DomainResults> {
+
+  const pagesDB: string[] = await getCachedPagesDB();
+  let pages: string[] =  fuzzySearch(domain, pagesDB);
 
   console.log("Pages fuzzy search result: ", pages);
 
-  let result = {
+  let result: DomainResults= {
     numPages: 0,
     pageUrls: [],
   };
 
   if (pages && pages.length > 0) {
-      const pageUrl = `${WIKI_URL}/${encodeURIComponent(pages[0])}`;
+      const pageUrl: string = `${WIKI_URL}/${encodeURIComponent(pages[0])}`;
       result.numPages = pages.length;
       result.pageUrls = [pageUrl];
   }
@@ -106,7 +118,7 @@ async function getPagesForDomain(domain) {
 
 
 
-function extractMainDomain(hostname) {
+function extractMainDomain(hostname: string) {
   // TODO: https://publicsuffix.org
   const twoLevelTLDs = ['co.uk', 'gov.uk', 'com.au', 'org.uk', 'ac.uk'];
 
@@ -134,12 +146,12 @@ function extractMainDomain(hostname) {
 
 
 
-function openBackgroundTab(url) {
+function openBackgroundTab(url: string) {
   chrome.tabs.create({ url: url, active: false }, (tab) => {
   });
 }
 
-function openTabIfNotExists(url) {
+function openTabIfNotExists(url: string) {
   // Query all tabs to find if the URL is already open
   chrome.tabs.query({}, (tabs) => {
     const existingTab = tabs.find((tab) => tab.url === url);
@@ -150,32 +162,20 @@ function openTabIfNotExists(url) {
 }
 
 
-function foundCATEntry(url) {
+function foundCATEntry(url: string) {
   openTabIfNotExists(url);
 }
 
-function getOptions(keys) {
-  return new Promise((resolve, reject) => {
-    chrome.storage.sync.get(keys, (result) => {
-      console.log("Options: ", JSON.stringify(result));
-      if (chrome.runtime.lastError) {
-        reject(chrome.runtime.lastError);
-      } else {
-        resolve(result);
-      }
-    });
-  });
-}
 
 
-function isDomainExcluded(exclusions, domain)  {
+function isDomainExcluded(exclusions : string[], domain : string) :boolean  {
   if (exclusions == null) {
     return false;
   }
-  return exclusions.some((excludedDomain) => domain.includes(excludedDomain));
+  return exclusions.some((excludedDomain: string) => domain.includes(excludedDomain));
 }
 
-async function getOpenDomains() {
+async function getOpenDomains(): Promise<string[]> {
   return new Promise((resolve) => {
     chrome.storage.local.get(STATE_OPEN_DOMAINS, (result) => {
       console.log("Open domains: ", result[STATE_OPEN_DOMAINS] );
@@ -184,35 +184,27 @@ async function getOpenDomains() {
   });
 }
 
-async function saveOpenDomains(domainName) {
-  const openDomains = await getOpenDomains();
+async function saveOpenDomains(domainName: string) :Promise<void> {
+  let openDomains: string[] = await getOpenDomains();
+
   if (!openDomains.includes(domainName)) {
     openDomains.push(domainName);
     chrome.storage.local.set({ [STATE_OPEN_DOMAINS]: openDomains});
   }
 }
 
-async function indicateCATEntries(num) {
+async function indicateCATEntries(num: number) :Promise<void> {
+  let badgeText: string = Preferences.isEnabled ? "on" : "off";
+
   if (num > 0) {
-    chrome.action.setBadgeText({text: `${num}`});
-  } else {
-    chrome.storage.sync.get(
-        null,
-        (items) => {
-          if (typeof items?.appDisabled === "boolean") {
-            let appDisabled = items.appDisabled;
-            chrome.action.setBadgeText( { text: appDisabled ? "off" : "on" });
-          }
-        },
-    );
+    badgeText = `${num}`;
   }
+  chrome.action.setBadgeText( {text: badgeText} );
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   (async () => {
 
-    const options = await getOptions([OPTIONS_DOMAIN_EXCLUSIONS, "appDisabled"]);
-    console.log("CAT options: ", JSON.stringify(options));
 
     if (message.badgeText) {
       chrome.action.setBadgeText({ text: message.badgeText });
@@ -220,8 +212,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       await indicateCATEntries(0);
     }
 
-    console.log("CAT is loafing?", options["appDisabled"]);
-    if (options["appDisabled"]) {
+    console.log("CAT is loafing?", Preferences.isEnabled);
+    if (!Preferences.isEnabled) {
       await indicateCATEntries(0);
       return;
     }
@@ -230,7 +222,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const currentDomain = message.domain;
     if (currentDomain) {
       // ignore excluded domains
-      if ( isDomainExcluded(options.domain_exclusions, currentDomain) ){
+      if ( isDomainExcluded(Preferences.domainExclusions, currentDomain) ){
         return;
       }
 
