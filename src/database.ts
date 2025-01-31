@@ -7,7 +7,7 @@ export interface PageResults {
 export class PagesDB {
 
     static readonly WIKI_URL = "https://wiki.rossmanngroup.com/wiki";
-    static readonly PAGES_DB_JSON_URL = "https://raw.githubusercontent.com/WayneKeenan/ClintonCAT/refs/heads/main/pages_db.json";
+    static readonly PAGES_DB_JSON_URL = "https://raw.githubusercontent.com/WayneKeenan/ClintonCAT/refs/heads/main/data/pages_db.json";
     static readonly UPDATE_ALARM_NAME = "updatePagesDB";
     static readonly CACHE_KEY = "cachedPagesDB";
     static readonly CACHE_TIMESTAMP_KEY = "cachedPagesDBTimestamp";
