@@ -1,3 +1,4 @@
+import {Preferences} from "./storage";
 
 export class DomainTools {
 
@@ -37,4 +38,5 @@ export class DomainTools {
         }
         return exclusions.some((excludedDomain: string) => domain.includes(excludedDomain));
     }
+
 }

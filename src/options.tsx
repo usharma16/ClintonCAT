@@ -1,33 +1,65 @@
-import React, { useState, useEffect } from "react";
-import { createRoot } from "react-dom/client";
+import React, {useEffect, useState} from "react";
+import {createRoot} from "react-dom/client";
+import {Preferences} from "./storage";
+import "./options.css";
 
-const Options = () => {
-  const [color, setColor] = useState<string>("");
+const Options: React.FC = () => {
+    const [items, setItems] = useState<string[]>([]);
+    const [input, setInput] = useState("");
 
-  useEffect(() => {
-    chrome.storage.sync.get("color", (data) => {
-      setColor(data.color || "blue");
-    });
-  }, []);
+    useEffect(() => {
+        setItems(Preferences.domainExclusions);
+    }, []);
 
-  const saveColor = () => {
-    chrome.storage.sync.set({ color }, () => {
-      alert("Color saved!");
-    });
-  };
+    const addItem = () => {
+        if (input.trim() !== "") {
+            setItems([...items, input]);
+            Preferences.domainExclusions = items;
+            setInput("");
+        }
+    };
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h2>Options Page</h2>
-      <label>Favorite Color:</label>
-      <input type="text" value={color} onChange={(e) => setColor(e.target.value)} />
-      <button onClick={saveColor}>Save</button>
-    </div>
-  );
+    const removeItem = (index: number) => {
+        setItems(items.filter((_, i) => i !== index));
+        Preferences.domainExclusions = items;
+    };
+
+    const clearList = () => {
+        Preferences.domainExclusions = [];
+        setItems([]);
+    };
+
+    return (
+        <div className="container">
+            <h2>Excluded Domains</h2>
+            <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Enter a string"
+                className="input-field"
+            />
+            <button onClick={clearList} className="btn clear-btn">Clear All</button>
+            <button onClick={addItem} className="btn">Add</button>
+
+            <ul className="list">
+                {items.map((item, index) => (
+                    <li key={index} className="list-item">
+                        {item}
+                        <button onClick={() => removeItem(index)} className="remove-btn">
+                            ❌
+                        </button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
-const container = document.createElement("div");
-document.body.appendChild(container);
-const root = createRoot(container);
-root.render(<Options />);
+const root = createRoot(document.getElementById("root")!);
 
+root.render(
+    <React.StrictMode>
+        <Options/>
+    </React.StrictMode>
+);

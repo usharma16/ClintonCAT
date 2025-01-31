@@ -5,11 +5,11 @@ import "./popup.css";
 const Popup: React.FC = () => {
 
     const toggleEnabled = () => {
-        alert(`Clicked`);
+        // TODO
     };
 
     const openCATPage = () => {
-        chrome.runtime.openOptionsPage();
+        // TODO:
     };
     const openOpenOptionsPage = () => {
         chrome.runtime.openOptionsPage();

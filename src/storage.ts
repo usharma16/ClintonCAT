@@ -8,9 +8,6 @@ export class Preferences {
 
     static async refresh() {
         console.log("Refreshing settings");
-        // trigger get
-        // this.isEnabled;
-        // this.domainExclusions;
         await this.getPreference(this.IS_ENABLED_KEY);
         await this.getPreference(this.DOMAIN_EXCLUSIONS_KEY);
     }
@@ -26,7 +23,7 @@ export class Preferences {
 
     static set isEnabled(isEnabled: boolean) {
         this._isEnabled = isEnabled;
-        this.setPreference(Preferences.IS_ENABLED_KEY, isEnabled).then();
+        this.setPreference(Preferences.IS_ENABLED_KEY, isEnabled);
     }
 
     static get domainExclusions(): string[] {
@@ -35,19 +32,18 @@ export class Preferences {
 
     static set domainExclusions(domains: string[] ) {
         this._domainExclusions = domains;
-        this.setPreference(Preferences.DOMAIN_EXCLUSIONS_KEY, domains).then();
+        this.setPreference(Preferences.DOMAIN_EXCLUSIONS_KEY, domains);
     }
 
-    toString(): string {
+    public static dump(): void {
         let msg: string = `IsEnabled = ${Preferences._isEnabled}, DomainExclusions = ${Preferences._domainExclusions}`;
         console.log(msg);
-        return msg;
     }
 
     // TODO: inject a 'backing store' implementation, type depends on browser API
     static async setPreference (key: string, value: any) {
         await chrome.storage.sync.set({ [key]: value });
-        console.log(`Save pref: ${key} = ${value}`);
+        console.log(`Set pref: ${key} = ${value}`);
     };
 
     static async getPreference (key: string): Promise<any | undefined> {
@@ -68,5 +64,6 @@ export class Preferences {
             chrome.storage.local.get(key, (result) => resolve(result[key]));
         });
     };
+
 
 }
