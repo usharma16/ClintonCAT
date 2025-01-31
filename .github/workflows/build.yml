@@ -40,6 +40,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ./dist/*
-          tag_name: ${{ env.GITDATE }}
+          tag_name: ${{ github.GITHUB_REF }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
