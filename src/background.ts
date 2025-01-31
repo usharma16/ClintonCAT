@@ -1,122 +1,13 @@
 const STATE_OPEN_DOMAINS = "open_domains";
 import {Preferences} from './storage'
+import {PagesDB} from "./database";
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log("Extension Installed");
-  Preferences.initDefaults();
+  console.log("ClintonCAT Extension Installed");
+  Preferences.initDefaults().then(() => {console.log(Preferences.toString())});
 });
 
-
-const WIKI_URL="https://wiki.rossmanngroup.com/wiki";
-
-const PAGES_DB_JSON_URL = "https://raw.githubusercontent.com/WayneKeenan/ClintonCAT/refs/heads/main/pages_db.json";
-const UPDATE_ALARM_NAME = "updatePagesDB";
-const CACHE_KEY = "cachedPagesDB";
-const CACHE_TIMESTAMP_KEY = "cachedPagesDBTimestamp";
-const FETCH_INTERVAL_MINUTES = 30; // Fetch every 30 minutes
-const FETCH_INTERVAL_MS = FETCH_INTERVAL_MINUTES * 60 * 1000;
-
-interface DomainResults {
-  numPages: number;
-  pageUrls: string[];
-}
-
-
-
-
-async function fetchJson(url: string) {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    return await response.json();
-  } catch (error: any) {
-    console.error(`Failed to fetch JSON: ${error.message}`);
-    throw error;
-  }
-}
-
-async function isCacheStale(epoch = Date.now()) {
-  // Get the last update timestamp
-  const { [CACHE_TIMESTAMP_KEY]: lastUpdated } = await chrome.storage.local.get(CACHE_TIMESTAMP_KEY);
-
-  if (!lastUpdated) {
-    return true;
-  }
-  return epoch - lastUpdated >= FETCH_INTERVAL_MS
-}
-
-async function saveCache(data: string, timestamp: number = Date.now()) {
-  await chrome.storage.local.set({ [CACHE_KEY]: data, [CACHE_TIMESTAMP_KEY]: timestamp });
-}
-
-// Function to fetch and cache the pages database
-async function updatePagesDB(force = false) {
-  try {
-    const now = Date.now();
-    const needsUpdate = force || await isCacheStale(now);
-    if (!needsUpdate) {
-      console.log("Skipping update: Cache TTL not reached.");
-    }
-
-    console.log("Fetching updated pages database...");
-    const jsonData = await fetchJson(PAGES_DB_JSON_URL);
-    await saveCache(jsonData, now);
-
-    console.log("Pages database updated successfully.");
-  } catch (error: any) {
-    console.error(`Failed to update pages database: ${error.message}`);
-  }
-}
-
-// Function to get the cached pages database
-async function getCachedPagesDB() {
-  const { [CACHE_KEY]: pagesDb } = await chrome.storage.local.get(CACHE_KEY);
-  return pagesDb || [];
-}
-
-// Alarm to trigger periodic updates
-chrome.alarms.create(UPDATE_ALARM_NAME, { periodInMinutes: FETCH_INTERVAL_MINUTES });
-chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === UPDATE_ALARM_NAME) {
-    updatePagesDB();
-  }
-});
-
-// Initial fetch on extension load
-updatePagesDB();
-
-function fuzzySearch(query: string, arr: string[]) {
-  const lowerQuery = query.toLowerCase();
-  return arr.filter((item: string) => item.toLowerCase().includes(lowerQuery));
-}
-
-
-
-async function getPagesForDomain(domain: string) :Promise<DomainResults> {
-
-  const pagesDB: string[] = await getCachedPagesDB();
-  let pages: string[] =  fuzzySearch(domain, pagesDB);
-
-  console.log("Pages fuzzy search result: ", pages);
-
-  let result: DomainResults= {
-    numPages: 0,
-    pageUrls: [],
-  };
-
-  if (pages && pages.length > 0) {
-      const pageUrl: string = `${WIKI_URL}/${encodeURIComponent(pages[0])}`;
-      result.numPages = pages.length;
-      result.pageUrls = [pageUrl];
-  }
-
-  return result;
-}
-
-
-
+const pagesDatabase = new PagesDB();
 
 function extractMainDomain(hostname: string) {
   // TODO: https://publicsuffix.org
@@ -239,7 +130,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         saveOpenDomains(currentDomain);
       }
 
-      getPagesForDomain(mainDomain).then((results) => {
+      pagesDatabase.getPagesForDomain(mainDomain).then((results) => {
         if (results.numPages > 0) {
           indicateCATEntries(results.numPages);
           foundCATEntry(results.pageUrls[0]);

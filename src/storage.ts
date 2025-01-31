@@ -58,14 +58,14 @@ export class Preferences {
     };
 
     static async setStorage(key: string, value: any) {
-        await chrome.storage.sync.set({ [key]: value });
+        await chrome.storage.local.set({ [key]: value });
         console.log(`Save store: ${key} = ${value}`);
     };
 
     static async getStorage (key: string): Promise<any | undefined> {
         return new Promise((resolve) => {
             console.log(`Get store: ${key}`);
-            chrome.storage.sync.get(key, (result) => resolve(result[key]));
+            chrome.storage.local.get(key, (result) => resolve(result[key]));
         });
     };
 
