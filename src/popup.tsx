@@ -11,7 +11,16 @@ const Popup: React.FC = () => {
     const openCATPage = () => {
         // TODO:
     };
-    const openOpenOptionsPage = () => {
+
+    const allowThisSite = () => {
+        // TODO:
+    };
+
+    const excludeThisSite = () => {
+        // TODO:
+    };
+
+    const openOptionsPage = () => {
         chrome.runtime.openOptionsPage();
     };
 
@@ -24,7 +33,13 @@ const Popup: React.FC = () => {
             <button className="popup-button" onClick={() => openCATPage()}>
                 Open CAT page
             </button>
-            <button className="popup-button" onClick={() => openOpenOptionsPage()}>
+            <button className="popup-button" onClick={() => allowThisSite()}>
+                Allow this site
+            </button>
+            <button className="popup-button" onClick={() => excludeThisSite()}>
+                Exclude this site
+            </button>
+            <button className="popup-button" onClick={() => openOptionsPage()}>
                 Go to Options
             </button>
         </div>
