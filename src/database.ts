@@ -1,5 +1,5 @@
 
-export interface DomainResults {
+export interface PageResults {
     numPages: number;
     pageUrls: string[];
 }
@@ -68,14 +68,14 @@ export class PagesDB {
 
 
 
-    async getPagesForDomain(domain: string): Promise<DomainResults> {
+    async getPagesForDomain(domain: string): Promise<PageResults> {
 
         const pagesDB: string[] = await this.getCachedPagesDB();
         let pages: string[] = this.fuzzySearch(domain, pagesDB);
 
         console.log("Pages fuzzy search result: ", pages);
 
-        let result: DomainResults = {
+        let result: PageResults = {
             numPages: 0,
             pageUrls: [],
         };

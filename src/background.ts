@@ -1,49 +1,27 @@
 import {Preferences} from './storage'
-import {DomainResults, PagesDB} from "./database";
-
-chrome.runtime.onInstalled.addListener(() => {
-  console.log("ClintonCAT Extension Installed");
-  Preferences.initDefaults().then(() => {console.log(Preferences.toString())});
-});
+import {PageResults, PagesDB} from "./database";
+import {DomainTools} from "./domaintools";
 
 const pagesDatabase = new PagesDB();
+const domainTools = new DomainTools();
 
-function extractMainDomain(hostname: string) {
-  // TODO: https://publicsuffix.org
-  const twoLevelTLDs = ['co.uk', 'gov.uk', 'com.au', 'org.uk', 'ac.uk'];
 
-  const cleanHostname = hostname.replace(/^www\./, "");
-  const parts = cleanHostname.split(".");
+function onInstalled() : void {
+  console.log("ClintonCAT Extension Installed");
+  Preferences.initDefaults().then(() => {console.log(Preferences.toString())});
+}
 
-  for (let tld of twoLevelTLDs) {
-    const tldParts = tld.split('.');
-    if (
-        parts.length > tldParts.length &&
-        parts.slice(-tldParts.length).join('.') === tld
-    ) {
-      return parts.slice(-(tldParts.length + 1), -tldParts.length).join('.');
-    }
-  }
-
-  // Default case for regular TLDs like .com, .net, etc.
-  if (parts.length > 2) {
-    return parts.slice(-2, -1)[0];
-  } else {
-    return parts[0];
-  }
+function indicateDisabled() {
+  console.log("CAT is loafing (disabled)");
+  indicateCATEntries(0);
 }
 
 
-function isDomainExcluded(exclusions : string[], domain : string) :boolean  {
-  if (exclusions == null) {
-    return false;
+function processFoundPages(pages: PageResults) {
+  if (pages.numPages > 0) {
+    indicateCATEntries(pages.numPages);
   }
-  return exclusions.some((excludedDomain: string) => domain.includes(excludedDomain));
-}
-
-function foundCATPages(pages: DomainResults) {
-  indicateCATEntries(pages.numPages);
-  // TODO indicate: pages.pageUrls[0];
+  // TODO update popup, e.g. pages.pageUrls[0];
 }
 
 
@@ -56,38 +34,41 @@ async function indicateCATEntries(num: number) :Promise<void> {
   chrome.action.setBadgeText( {text: badgeText} );
 }
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  (async () => {
 
-    if (message.badgeText) {
-      chrome.action.setBadgeText({ text: message.badgeText });
-    } else {
-      await indicateCATEntries(0);
-    }
-
-    console.log("CAT is loafing?", Preferences.isEnabled);
-    if (!Preferences.isEnabled) {
-      await indicateCATEntries(0);
-      return;
-    }
+function onBadgeTextUpdate(text: string) : void {
+  chrome.action.setBadgeText({ text: text });
+}
 
 
-    const currentDomain = message.domain;
-    if (currentDomain) {
-      // ignore excluded domains
-      if ( isDomainExcluded(Preferences.domainExclusions, currentDomain) ){
-        return;
-      }
+function onPageLoaded(domain: string) : void {
 
-      const mainDomain = extractMainDomain(currentDomain);
-      console.log("Main domain: " + mainDomain);
+  const mainDomain = domainTools.extractMainDomain(domain);
+  console.log("Main domain: " + mainDomain);
 
-      pagesDatabase.getPagesForDomain(mainDomain).then((results) => {
-        if (results.numPages > 0) {
-          foundCATPages(results);
-        }
-      });
-    }
-  })();
-});
+  if (domainTools.isDomainExcluded(Preferences.domainExclusions, domain)) {
+    console.log("Excluded domain: " + mainDomain);
+    return;
+  }
 
+  pagesDatabase.getPagesForDomain(mainDomain).then((results) => {
+      processFoundPages(results);
+  });
+}
+
+
+
+function onMessage(message : any, sender: chrome.runtime.MessageSender, sendResponse : any): void  {
+
+  if (message.badgeText) {
+    onBadgeTextUpdate(message.badgeText);
+  } else if (!Preferences.isEnabled) {
+    indicateDisabled();
+  } else if (message.domain) {
+    onPageLoaded(message.domain);
+  }
+}
+
+
+// Register with Chrome event handlers
+chrome.runtime.onInstalled.addListener(onInstalled);
+chrome.runtime.onMessage.addListener(onMessage);
