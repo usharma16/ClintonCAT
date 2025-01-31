@@ -1,56 +1,137 @@
 import { OPTIONS_DOMAIN_EXCLUSIONS, STATE_OPEN_DOMAINS } from "./constants.js";
 
-const BASE_URL="https://wiki.rossmanngroup.com";
-const SEARCH_API_URL= BASE_URL+ "/api.php";
-const WIKI_URL= BASE_URL+ "/wiki";
-const CAT_DOMAIN = getMainDomain(BASE_URL);
+const WIKI_URL="https://wiki.rossmanngroup.com/wiki";
+
+const PAGES_DB_JSON_URL = "https://raw.githubusercontent.com/WayneKeenan/ClintonCAT/refs/heads/main/pages_db.json";
+const UPDATE_ALARM_NAME = "updatePagesDB";
+const CACHE_KEY = "cachedPagesDB";
+const CACHE_TIMESTAMP_KEY = "cachedPagesDBTimestamp";
+const FETCH_INTERVAL_MINUTES = 30; // Fetch every 30 minutes
+const FETCH_INTERVAL_MS = FETCH_INTERVAL_MINUTES * 60 * 1000;
 
 console.log("initial load");
 chrome.storage.local.set({ [STATE_OPEN_DOMAINS]: []});
 chrome.storage.local.set({ appDisable: false});
 
-
-const searchWiki = async (searchTerm) => {
-  const endpoint = SEARCH_API_URL;
-  const params = new URLSearchParams({
-    action: "query",
-    list: "search",
-    srsearch: searchTerm,
-    format: "json",
-    origin: "*" // Required for CORS if making the request from a browser
-  });
-
+async function fetchJson(url) {
   try {
-    const response = await fetch(`${endpoint}?${params}`);
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    const data = await response.json();
-    return data.query.search;
+    return await response.json();
   } catch (error) {
-    console.error("Error fetching data from MediaWiki API:", error);
-  }
-};
-
-
-function getMainDomain(hostname) {
-  try {
-    const cleanHostname = hostname.replace(/^www\./, "");
-    const parts = cleanHostname.split(".");
-
-    // If there are at least two parts, return the second-to-last part (main domain)
-    // Ignore the last part (TLD) and any preceding subdomains
-    if (parts.length > 2) {
-      return parts[parts.length - 2]; // Main domain
-    }
-
-    // If only two parts exist, return the first part (main domain)
-    return parts[0];
-  } catch (error) {
-    console.error("Invalid URL:", error);
-    return null;
+    console.error(`Failed to fetch JSON: ${error.message}`);
+    throw error;
   }
 }
+
+async function isCacheStale(epoch = Date.now()) {
+  // Get the last update timestamp
+  const { [CACHE_TIMESTAMP_KEY]: lastUpdated } = await chrome.storage.local.get(CACHE_TIMESTAMP_KEY);
+
+  if (!lastUpdated) {
+    return true;
+  }
+  return epoch - lastUpdated >= FETCH_INTERVAL_MS
+}
+
+async function saveCache(data, timestamp = Date.now()) {
+  await chrome.storage.local.set({ [CACHE_KEY]: data, [CACHE_TIMESTAMP_KEY]: timestamp });
+}
+
+// Function to fetch and cache the pages database
+async function updatePagesDB(force = false) {
+  try {
+    const now = Date.now();
+    const needsUpdate = force || await isCacheStale(now);
+    if (!needsUpdate) {
+      console.log("Skipping update: Cache TTL not reached.");
+    }
+
+    console.log("Fetching updated pages database...");
+    const jsonData = await fetchJson(PAGES_DB_JSON_URL);
+    await saveCache(jsonData, now);
+
+    console.log("Pages database updated successfully.");
+  } catch (error) {
+    console.error(`Failed to update pages database: ${error.message}`);
+  }
+}
+
+// Function to get the cached pages database
+async function getCachedPagesDB() {
+  const { [CACHE_KEY]: pagesDb } = await chrome.storage.local.get(CACHE_KEY);
+  return pagesDb || [];
+}
+
+// Alarm to trigger periodic updates
+chrome.alarms.create(UPDATE_ALARM_NAME, { periodInMinutes: FETCH_INTERVAL_MINUTES });
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === UPDATE_ALARM_NAME) {
+    updatePagesDB();
+  }
+});
+
+// Initial fetch on extension load
+updatePagesDB();
+
+function fuzzySearch(query, arr) {
+  const lowerQuery = query.toLowerCase();
+  return arr.filter(item => item.toLowerCase().includes(lowerQuery));
+}
+
+
+async function getPagesForDomain(domain) {
+
+  const pagesDB = await getCachedPagesDB();
+  const pages =  fuzzySearch(domain, pagesDB);
+
+  console.log("Pages fuzzy search result: ", pages);
+
+  let result = {
+    numPages: 0,
+    pageUrls: [],
+  };
+
+  if (pages && pages.length > 0) {
+      const pageUrl = `${WIKI_URL}/${encodeURIComponent(pages[0])}`;
+      result.numPages = pages.length;
+      result.pageUrls = [pageUrl];
+  }
+
+  return result;
+}
+
+
+
+
+function extractMainDomain(hostname) {
+  // TODO: https://publicsuffix.org
+  const twoLevelTLDs = ['co.uk', 'gov.uk', 'com.au', 'org.uk', 'ac.uk'];
+
+  const cleanHostname = hostname.replace(/^www\./, "");
+  const parts = cleanHostname.split(".");
+
+  for (let tld of twoLevelTLDs) {
+    const tldParts = tld.split('.');
+    if (
+        parts.length > tldParts.length &&
+        parts.slice(-tldParts.length).join('.') === tld
+    ) {
+      return parts.slice(-(tldParts.length + 1), -tldParts.length).join('.');
+    }
+  }
+
+  // Default case for regular TLDs like .com, .net, etc.
+  if (parts.length > 2) {
+    return parts.slice(-2, -1)[0];
+  } else {
+    return parts[0];
+  }
+}
+
+
 
 
 function openBackgroundTab(url) {
@@ -111,6 +192,21 @@ async function saveOpenDomains(domainName) {
   }
 }
 
+async function indicateCATEntries(num) {
+  if (num > 0) {
+    chrome.action.setBadgeText({text: `${num}`});
+  } else {
+    chrome.storage.sync.get(
+        null,
+        (items) => {
+          if (typeof items?.appDisabled === "boolean") {
+            let appDisabled = items.appDisabled;
+            chrome.action.setBadgeText( { text: appDisabled ? "off" : "on" });
+          }
+        },
+    );
+  }
+}
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   (async () => {
@@ -120,37 +216,41 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     if (message.badgeText) {
       chrome.action.setBadgeText({ text: message.badgeText });
+    } else {
+      await indicateCATEntries(0);
     }
 
     console.log("CAT is loafing?", options["appDisabled"]);
     if (options["appDisabled"]) {
+      await indicateCATEntries(0);
       return;
     }
 
 
-      const currentDomain = message.domain;
+    const currentDomain = message.domain;
     if (currentDomain) {
-      const searchTerm = getMainDomain(currentDomain);
-      // handle circular case.
       // ignore excluded domains
-      if ( (searchTerm === CAT_DOMAIN) || isDomainExcluded(options.domain_exclusions, currentDomain) ) {
+      if ( isDomainExcluded(options.domain_exclusions, currentDomain) ){
         return;
       }
 
-      // Block multiple tb openings due to multiple windows and potentially multiple async 'onMessage' invocations
+      const mainDomain = extractMainDomain(currentDomain);
+      console.log("Main domain: " + mainDomain);
+
+      // Block multiple tab openings due to multiple windows and potentially multiple async 'onMessage' invocations
+      // TODO: need to remove domains when tabs/windows close.
+      //       or somehow add state to the tabs we open and search that instead for supressing dupes
       const openDomains = await getOpenDomains();
-      if (openDomains.includes(searchTerm)) {
+      if (openDomains.includes(mainDomain)) {
         return;
       } else {
         saveOpenDomains(currentDomain);
       }
 
-
-      console.log("Searching for main domain: " + searchTerm);
-      searchWiki(searchTerm).then((results) => {
-        if (results.length > 0) {
-          const pageUrl = `${WIKI_URL}/${encodeURIComponent(results[0].title)}`;
-          foundCATEntry(pageUrl);
+      getPagesForDomain(mainDomain).then((results) => {
+        if (results.numPages > 0) {
+          indicateCATEntries(results.numPages);
+          foundCATEntry(results.pageUrls[0]);
         }
       });
     }

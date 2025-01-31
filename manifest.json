@@ -9,11 +9,10 @@
     "48": "icons/clinton48.png",
     "128": "icons/clinton128.png"
   },
-  "permissions": ["scripting", "activeTab", "storage"],
+  "permissions": ["scripting", "activeTab", "storage", "alarms"],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js",
-    "scripts": ["background.js"],
     "type": "module"
   },
   "content_scripts": [
