@@ -1,16 +1,18 @@
 import {Preferences} from './storage'
 import {PageResults, PagesDB} from "./database";
 import {DomainTools} from "./domaintools";
-
+import {ContentScanner} from "./contentscanner";
 
 export class Main {
 
     pagesDatabase : PagesDB;
     domainTools : DomainTools;
+    contentScanner : ContentScanner;
 
     constructor() {
         this.pagesDatabase = new PagesDB();
         this.domainTools = new DomainTools();
+        this.contentScanner = new ContentScanner();
     }
 
 
@@ -29,19 +31,34 @@ export class Main {
     }
 
 
-    onPageLoaded(domain: string) : void {
+    checkDomainIsExcluded(domain: string) : boolean {
+        return this.domainTools.isDomainExcluded(Preferences.domainExclusions, domain);
+    }
+
+    async onPageLoaded(domain: string, url: string) : Promise<void> {
 
         const mainDomain = this.domainTools.extractMainDomain(domain);
         console.log("Main domain: " + mainDomain);
 
-        if (this.domainTools.isDomainExcluded(Preferences.domainExclusions, domain)) {
+        if (this.checkDomainIsExcluded(mainDomain)) {
             console.log("Excluded domain: " + mainDomain);
             return;
         }
 
-        this.pagesDatabase.getPagesForDomain(mainDomain).then((results) => {
-            this.indicateCATPages(results);
-        });
+        let wikiPageResults : PageResults = {numPages: 0, pageUrls: []};
+
+        let domainResults = await this.pagesDatabase.getPagesForDomain(mainDomain);
+        wikiPageResults.numPages += domainResults.numPages;
+        wikiPageResults.pageUrls.push(...domainResults.pageUrls);
+
+        const pagesDBCache: string[] = await this.pagesDatabase.getCachedPagesDB();
+
+        let inPageResults = await this.contentScanner.checkPageContents(domain, mainDomain, url, this.pagesDatabase, pagesDBCache);
+        wikiPageResults.numPages += inPageResults.numPages;
+        wikiPageResults.pageUrls.push(...inPageResults.pageUrls);
+
+        this.indicateCATPages(wikiPageResults);
+
     }
 
 
@@ -63,7 +80,7 @@ export class Main {
             } else if (!Preferences.isEnabled) {
                 this.indicateStatus();
             } else if (message.domain) {
-                this.onPageLoaded(message.domain);
+                await this.onPageLoaded(message.domain, message.url);
             }
         })();
     }
