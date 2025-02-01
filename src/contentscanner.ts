@@ -38,25 +38,30 @@ export class ContentScanner {
 
   private static registerContentListener() {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      if (message.action === DOMQueryType.DOM_QUERY_SELECTOR_ALL) {
-        const nodes: NodeListOf<any> = document.querySelectorAll(
-          message.selector,
-        );
-        sendResponse(nodes);
-      } else if (
-        message.action === DOMQueryType.DOM_QUERY_SELECTOR_ALL_AS_TEXT
-      ) {
-        const nodes: NodeListOf<any> = document.querySelectorAll(
-          message.selector,
-        );
-        const text = Array.from(nodes)
-          .map((node) => node.textContent + node.innerText + node.innerHTML)
-          .join("\n");
-        sendResponse(text);
-      } else {
+      switch (message.action) {
+        case DOMQueryType.DOM_QUERY_SELECTOR_ALL: {
+          const nodes: NodeListOf<any> = document.querySelectorAll(
+            message.selector,
+          );
+          sendResponse(nodes);
+          break;
+        }
+
+        case DOMQueryType.DOM_QUERY_SELECTOR_ALL_AS_TEXT: {
+          const nodes: NodeListOf<any> = document.querySelectorAll(
+            message.selector,
+          );
+          const text = Array.from(nodes)
+            .map((node) => node.textContent + node.innerText + node.innerHTML)
+            .join("\n");
+          sendResponse(text);
+          break;
+        }
+
         // TODO: any other query types as required
+        default:
+          break;
       }
-      // return false;
     });
   }
 
