@@ -1,6 +1,6 @@
 import { ContentScanner } from './contentscanner';
 
-chrome.runtime.sendMessage({
+void chrome.runtime.sendMessage({
     domain: window.location.hostname,
     url: window.location.href,
 });

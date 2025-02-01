@@ -6,7 +6,7 @@ export class DefaultScanner implements IContentScannerPlugin {
         return 'default scanner';
     }
 
-    canHandleScan(params: IScanParameters): boolean {
+    canHandleScan(_params: IScanParameters): boolean {
         // skipped in plugin search, explicitly called if no other plugins can handle the params
         return false;
     }
@@ -14,7 +14,7 @@ export class DefaultScanner implements IContentScannerPlugin {
     async scan(params: IScanParameters): Promise<PageResults> {
         console.log(`Default Scanner: ${params.domain} - ${params.mainDomain}`);
 
-        let pageResults: PageResults = { numPages: 0, pageUrls: [] };
+        const pageResults: PageResults = { numPages: 0, pageUrls: [] };
 
         // const pNodes = await params.domHelper.queryDOM("p");
         // let pText : string = Array.from(pNodes).map(node => node.textContent?.trim() || "").join("\n");
@@ -34,10 +34,7 @@ export class DefaultScanner implements IContentScannerPlugin {
         console.log('p text', pText);
         console.log('div text', divText);
 
-        pageResults.pageUrls = params.pagesDb.fuzzySearch(
-            pText + divText,
-            params.pagesDbCachedList,
-        );
+        pageResults.pageUrls = params.pagesDb.fuzzySearch(pText + divText, params.pagesDbCachedList);
 
         pageResults.numPages = pageResults.pageUrls.length;
 

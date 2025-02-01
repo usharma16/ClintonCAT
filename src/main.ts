@@ -3,6 +3,12 @@ import { PageResults, PagesDB } from './database';
 import { DomainTools } from './domaintools';
 import { ContentScanner } from './contentscanner';
 
+export interface IMainMessage {
+    badgeText: string;
+    domain: string;
+    url: string;
+}
+
 export class Main {
     pagesDatabase: PagesDB;
     domainTools: DomainTools;
@@ -15,25 +21,23 @@ export class Main {
     }
 
     indicateStatus() {
-        chrome.action.setBadgeText({
+        void chrome.action.setBadgeText({
             text: Preferences.isEnabled ? 'on' : 'off',
         });
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     async indicateCATPages(pages: PageResults): Promise<void> {
-        chrome.action.setBadgeText({ text: `${pages.numPages}` });
+        void chrome.action.setBadgeText({ text: pages.numPages.toString() });
         // TODO: in page popup
     }
 
     onBadgeTextUpdate(text: string): void {
-        chrome.action.setBadgeText({ text: text });
+        void chrome.action.setBadgeText({ text: text });
     }
 
     checkDomainIsExcluded(domain: string): boolean {
-        return this.domainTools.isDomainExcluded(
-            Preferences.domainExclusions,
-            domain,
-        );
+        return this.domainTools.isDomainExcluded(Preferences.domainExclusions, domain);
     }
 
     async onPageLoaded(domain: string, url: string): Promise<void> {
@@ -45,43 +49,41 @@ export class Main {
             return;
         }
 
-        let wikiPageResults: PageResults = { numPages: 0, pageUrls: [] };
+        const wikiPageResults: PageResults = { numPages: 0, pageUrls: [] };
 
-        let domainResults =
-            await this.pagesDatabase.getPagesForDomain(mainDomain);
+        const domainResults = await this.pagesDatabase.getPagesForDomain(mainDomain);
         wikiPageResults.numPages += domainResults.numPages;
         wikiPageResults.pageUrls.push(...domainResults.pageUrls);
 
-        const pagesDBCache: string[] =
-            await this.pagesDatabase.getCachedPagesDB();
+        const pagesDBCache: string[] = await this.pagesDatabase.getCachedPagesDB();
 
-        let inPageResults = await this.contentScanner.checkPageContents(
+        const inPageResults = await this.contentScanner.checkPageContents(
             domain,
             mainDomain,
             url,
             this.pagesDatabase,
-            pagesDBCache,
+            pagesDBCache
         );
         wikiPageResults.numPages += inPageResults.numPages;
         wikiPageResults.pageUrls.push(...inPageResults.pageUrls);
 
-        this.indicateCATPages(wikiPageResults);
+        void this.indicateCATPages(wikiPageResults);
     }
 
     onBrowserExtensionInstalled(): void {
         console.log('ClintonCAT Extension Installed');
-        Preferences.initDefaults().then(() => {
+        void Preferences.initDefaults().then(() => {
             Preferences.dump();
             this.indicateStatus();
         });
     }
 
     onBrowserExtensionMessage(
-        message: any,
-        sender: chrome.runtime.MessageSender,
-        sendResponse: any,
+        message: IMainMessage,
+        _sender: chrome.runtime.MessageSender,
+        _sendResponse: VoidFunction
     ): void {
-        (async () => {
+        void (async () => {
             await Preferences.refresh();
             Preferences.dump();
 
