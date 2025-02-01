@@ -1,6 +1,7 @@
 export class DomainTools {
     private twoLevelTLDs = ['co.uk', 'gov.uk', 'com.au', 'org.uk', 'ac.uk'];
 
+    // eslint-disable-next-line @typescript-eslint/no-useless-constructor
     constructor() {
         // TODO: load https://publicsuffix.org into twoLevelTLDs
     }
@@ -9,15 +10,10 @@ export class DomainTools {
         const cleanHostname = hostname.replace(/^www\./, '');
         const parts = cleanHostname.split('.');
 
-        for (let tld of this.twoLevelTLDs) {
+        for (const tld of this.twoLevelTLDs) {
             const tldParts = tld.split('.');
-            if (
-                parts.length > tldParts.length &&
-                parts.slice(-tldParts.length).join('.') === tld
-            ) {
-                return parts
-                    .slice(-(tldParts.length + 1), -tldParts.length)
-                    .join('.');
+            if (parts.length > tldParts.length && parts.slice(-tldParts.length).join('.') === tld) {
+                return parts.slice(-(tldParts.length + 1), -tldParts.length).join('.');
             }
         }
 
@@ -30,11 +26,6 @@ export class DomainTools {
     }
 
     isDomainExcluded(exclusions: string[], domain: string): boolean {
-        if (exclusions == null) {
-            return false;
-        }
-        return exclusions.some((excludedDomain: string) =>
-            domain.includes(excludedDomain),
-        );
+        return exclusions.some((excludedDomain: string) => domain.includes(excludedDomain));
     }
 }

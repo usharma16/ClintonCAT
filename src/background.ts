@@ -1,10 +1,11 @@
-import { Main } from './main';
+import { IMainMessage, Main } from './main';
 
 const main = new Main();
-chrome.runtime.onInstalled.addListener(() =>
-    main.onBrowserExtensionInstalled(),
-);
+chrome.runtime.onInstalled.addListener(() => {
+    main.onBrowserExtensionInstalled();
+});
 chrome.runtime.onMessage.addListener(
-    (message: any, sender: chrome.runtime.MessageSender, sendResponse: any) =>
-        main.onBrowserExtensionMessage(message, sender, sendResponse),
+    (message: IMainMessage, sender: chrome.runtime.MessageSender, sendResponse: VoidFunction) => {
+        main.onBrowserExtensionMessage(message, sender, sendResponse);
+    }
 );

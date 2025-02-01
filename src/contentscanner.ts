@@ -1,5 +1,5 @@
 // The 'require.context' feature depends on WebPack (@types/webpack)
-const context = require.context('./contentscanners', false, /\.ts$/, 'sync');
+const context: __WebpackModuleApi.RequireContext = require.context('./contentscanners', false, /\.ts$/, 'sync');
 import { PageResults, PagesDB } from './database';
 import { DefaultScanner } from './contentscanners/default';
 
@@ -20,6 +20,11 @@ export interface IScanParameters {
     domHelper: DOMHelper;
 }
 
+export interface IContentScanMessage {
+    action: DOMQueryType;
+    selector: string;
+}
+
 export class ContentScanner {
     private scannerPlugins: IContentScannerPlugin[] = [];
     private defaultScannerPlugin: DefaultScanner = new DefaultScanner();
@@ -37,37 +42,28 @@ export class ContentScanner {
     }
 
     private static registerContentListener() {
-        chrome.runtime.onMessage.addListener(
-            (message, sender, sendResponse) => {
-                switch (message.action) {
-                    case DOMQueryType.DOM_QUERY_SELECTOR_ALL: {
-                        const nodes: NodeListOf<any> =
-                            document.querySelectorAll(message.selector);
-                        sendResponse(nodes);
-                        break;
-                    }
-
-                    case DOMQueryType.DOM_QUERY_SELECTOR_ALL_AS_TEXT: {
-                        const nodes: NodeListOf<any> =
-                            document.querySelectorAll(message.selector);
-                        const text = Array.from(nodes)
-                            .map(
-                                (node) =>
-                                    node.textContent +
-                                    node.innerText +
-                                    node.innerHTML,
-                            )
-                            .join('\n');
-                        sendResponse(text);
-                        break;
-                    }
-
-                    // TODO: any other query types as required
-                    default:
-                        break;
+        chrome.runtime.onMessage.addListener((message: IContentScanMessage, _sender, sendResponse) => {
+            switch (message.action) {
+                case DOMQueryType.DOM_QUERY_SELECTOR_ALL: {
+                    const nodes: NodeListOf<HTMLElement> = document.querySelectorAll(message.selector);
+                    sendResponse(nodes);
+                    break;
                 }
-            },
-        );
+
+                case DOMQueryType.DOM_QUERY_SELECTOR_ALL_AS_TEXT: {
+                    const nodes: NodeListOf<HTMLElement> = document.querySelectorAll(message.selector);
+                    const text = Array.from(nodes)
+                        .map((node) => (node.textContent ?? '') + node.innerText + node.innerHTML)
+                        .join('\n');
+                    sendResponse(text);
+                    break;
+                }
+
+                // TODO: any other query types as required
+                default:
+                    break;
+            }
+        });
     }
 
     public async checkPageContents(
@@ -75,7 +71,7 @@ export class ContentScanner {
         mainDomain: string,
         url: string,
         pagesDb: PagesDB,
-        pagesDBCachedList: string[],
+        pagesDBCachedList: string[]
     ): Promise<PageResults> {
         const scannerParameters: IScanParameters = {
             domain: domain.toLowerCase(),
@@ -86,12 +82,10 @@ export class ContentScanner {
             domHelper: this.domHelper,
         };
 
-        for (let plugin of this.scannerPlugins) {
+        for (const plugin of this.scannerPlugins) {
             // TODO: memoize the result ?
             if (plugin.canHandleScan(scannerParameters)) {
-                console.log(
-                    `Found a plugin that can handle request: ${scannerParameters.domain}`,
-                );
+                console.log(`Found a plugin that can handle request: ${scannerParameters.domain}`);
                 // TODO: allow multiple handlers
                 return await plugin.scan(scannerParameters);
             }
@@ -102,23 +96,22 @@ export class ContentScanner {
 
     private findScannerPlugins(): void {
         context.keys().map((key) => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const module = context(key);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             const className = Object.keys(module)[0];
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             const Class = module[className];
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
             const obj: IContentScannerPlugin = new Class();
             this.scannerPlugins.push(obj);
-            console.log(
-                'Added content scanner plugin: ',
-                className,
-                ' metainfo: ',
-                obj.metaInfo(),
-            );
+            console.log('Added content scanner plugin: ', className, ' metainfo: ', obj.metaInfo());
         });
     }
 }
 
 export interface DOMHelperInterface {
-    queryDOM(selector: string): Promise<any>;
+    queryDOM(selector: string): Promise<unknown>;
 
     // TODO: ? updateDOM(...) : void;
 }
@@ -131,25 +124,25 @@ enum DOMQueryType {
 class DOMHelper implements DOMHelperInterface {
     // TODO: not working...
     async queryDOM(selector: string): Promise<Node[]> {
-        let nodes: NodeListOf<any> = await this.sendMessageToCurrentTab({
+        const nodes: NodeListOf<HTMLElement> = (await this.sendMessageToCurrentTab({
             action: DOMQueryType.DOM_QUERY_SELECTOR_ALL,
             selector: selector,
-        });
+        })) as NodeListOf<HTMLElement>;
         console.dir(nodes);
-        let copy = Array.from(nodes).map((node) => node.cloneNode(true));
+        const copy = Array.from(nodes).map((node) => node.cloneNode(true));
         console.dir(copy);
         return copy;
     }
 
     // crude hack...
     async queryDOMAsText(selector: string): Promise<string> {
-        return await this.sendMessageToCurrentTab({
+        return (await this.sendMessageToCurrentTab({
             action: DOMQueryType.DOM_QUERY_SELECTOR_ALL_AS_TEXT,
             selector: selector,
-        });
+        })) as string;
     }
 
-    async sendMessageToCurrentTab(message: any): Promise<any> {
+    async sendMessageToCurrentTab(message: IContentScanMessage): Promise<unknown> {
         const tab = await this.getCurrentTab();
 
         if (!tab?.id) {
@@ -157,8 +150,8 @@ class DOMHelper implements DOMHelperInterface {
         }
 
         return new Promise((resolve, reject) => {
-            chrome.tabs.sendMessage(tab.id!, message, (response) => {
-                if (chrome.runtime.lastError) {
+            chrome.tabs.sendMessage(tab.id ?? -1, message, (response) => {
+                if (chrome.runtime.lastError instanceof Error) {
                     reject(chrome.runtime.lastError);
                 } else {
                     resolve(response);
@@ -166,7 +159,6 @@ class DOMHelper implements DOMHelperInterface {
             });
         });
     }
-
 
     async getCurrentTab(): Promise<chrome.tabs.Tab | undefined> {
         return new Promise((resolve) => {

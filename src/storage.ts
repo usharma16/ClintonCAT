@@ -10,7 +10,7 @@ export class Preferences {
 
     static set isEnabled(isEnabled: boolean) {
         this._isEnabled = isEnabled;
-        this.setPreference(Preferences.IS_ENABLED_KEY, isEnabled);
+        void this.setPreference(Preferences.IS_ENABLED_KEY, isEnabled);
     }
 
     private static _domainExclusions: string[] = [];
@@ -21,7 +21,7 @@ export class Preferences {
 
     static set domainExclusions(domains: string[]) {
         this._domainExclusions = domains;
-        this.setPreference(Preferences.DOMAIN_EXCLUSIONS_KEY, domains);
+        void this.setPreference(Preferences.DOMAIN_EXCLUSIONS_KEY, domains);
     }
 
     static async refresh() {
@@ -30,6 +30,7 @@ export class Preferences {
         await this.getPreference(this.DOMAIN_EXCLUSIONS_KEY);
     }
 
+    // eslint-disable-next-line @typescript-eslint/require-await
     static async initDefaults() {
         console.log('Defaulting settings');
         this.isEnabled = true;
@@ -37,32 +38,36 @@ export class Preferences {
     }
 
     public static dump(): void {
-        let msg: string = `IsEnabled = ${Preferences._isEnabled}, DomainExclusions = ${Preferences._domainExclusions}`;
+        const msg: string = `IsEnabled = ${
+            Preferences._isEnabled.toString()
+        }, DomainExclusions = ${Preferences._domainExclusions.toString()}`;
         console.log(msg);
     }
 
     // TODO: inject a 'backing store' implementation, type depends on browser API
-    static async setPreference(key: string, value: any) {
+    static async setPreference(key: string, value: unknown) {
         await chrome.storage.sync.set({ [key]: value });
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         console.log(`Set pref: ${key} = ${value}`);
     }
 
-    static async getPreference(key: string): Promise<any | undefined> {
+    static async getPreference(key: string): Promise<unknown> {
         return new Promise((resolve) => {
             console.log(`Get pref: ${key}`);
-            chrome.storage.sync.get(key, (result) => resolve(result[key]));
+            chrome.storage.sync.get(key, (result) => { resolve(result[key]); }); // TODO: Use return value instead (MV3)
         });
     }
 
-    static async setStorage(key: string, value: any) {
+    static async setStorage(key: string, value: unknown) {
         await chrome.storage.local.set({ [key]: value });
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         console.log(`Save store: ${key} = ${value}`);
     }
 
-    static async getStorage(key: string): Promise<any | undefined> {
+    static async getStorage(key: string): Promise<unknown> {
         return new Promise((resolve) => {
             console.log(`Get store: ${key}`);
-            chrome.storage.local.get(key, (result) => resolve(result[key]));
+            chrome.storage.local.get(key, (result) => { resolve(result[key]); }); // TODO: Use return value instead (MV3)
         });
     }
 }

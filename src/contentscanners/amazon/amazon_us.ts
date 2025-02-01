@@ -10,11 +10,10 @@ export class AmazonUSPageScanner implements IContentScannerPlugin {
         return params.mainDomain === 'amazon' && params.domain.endsWith('com');
     }
 
-    async scan(params: IScanParameters) {
-        console.log(
-            `Amazon US Scanner: ${params.domain} - ${params.mainDomain}`,
-        );
-        let pageResults: PageResults = { numPages: 0, pageUrls: [] };
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async scan(params: IScanParameters): Promise<PageResults> {
+        console.log(`Amazon US Scanner: ${params.domain} - ${params.mainDomain}`);
+        const pageResults: PageResults = { numPages: 0, pageUrls: [] };
         return pageResults;
     }
 }

@@ -35,7 +35,9 @@ const Options: React.FC = () => {
             <input
                 type="text"
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => {
+                    setInput(e.target.value);
+                }}
                 placeholder="Enter a string"
                 className="input-field"
             />
@@ -51,9 +53,10 @@ const Options: React.FC = () => {
                     <li key={index} className="list-item">
                         {item}
                         <button
-                            onClick={() => removeItem(index)}
-                            className="remove-btn"
-                        >
+                            onClick={() => {
+                                removeItem(index);
+                            }}
+                            className="remove-btn">
                             ❌
                         </button>
                     </li>
@@ -63,10 +66,14 @@ const Options: React.FC = () => {
     );
 };
 
-const root = createRoot(document.getElementById('root')!);
-
-root.render(
-    <React.StrictMode>
-        <Options />
-    </React.StrictMode>,
-);
+const rootElement: HTMLElement | null = document.getElementById('root');
+if (rootElement instanceof HTMLElement) {
+    const root = createRoot(rootElement);
+    root.render(
+        <React.StrictMode>
+            <Options />
+        </React.StrictMode>
+    );
+} else {
+    throw Error('No root element was found');
+}

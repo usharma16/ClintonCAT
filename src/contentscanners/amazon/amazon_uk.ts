@@ -7,16 +7,13 @@ export class AmazonUKPageScanner implements IContentScannerPlugin {
     }
 
     canHandleScan(params: IScanParameters): boolean {
-        return (
-            params.mainDomain === 'amazon' && params.domain.endsWith('co.uk')
-        );
+        return params.mainDomain === 'amazon' && params.domain.endsWith('co.uk');
     }
 
-    async scan(params: IScanParameters) {
-        console.log(
-            `Amazon UK Scanner: ${params.domain} - ${params.mainDomain}`,
-        );
-        let pageResults: PageResults = { numPages: 0, pageUrls: [] };
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async scan(params: IScanParameters): Promise<PageResults> {
+        console.log(`Amazon UK Scanner: ${params.domain} - ${params.mainDomain}`);
+        const pageResults: PageResults = { numPages: 0, pageUrls: [] };
         return pageResults;
     }
 }
