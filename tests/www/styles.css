@@ -1,0 +1,19 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 50px;
+}
+.product {
+    border: 1px solid #ddd;
+    padding: 15px;
+    width: 200px;
+}
+.product img {
+    width: 100%;
+    height: auto;
+}
