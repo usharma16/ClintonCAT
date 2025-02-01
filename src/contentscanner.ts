@@ -1,84 +1,44 @@
-// This handy feature requires the use of WebPack (@types/webpack)
-const context = require.context("./contentscanners", true, /\.ts$/, "sync");
-import {DefaultScanner} from "./contentscanners/default";
+// The 'require.context' feature depends on WebPack (@types/webpack)
+const context = require.context("./contentscanners", false, /\.ts$/, "sync");
 import {PageResults, PagesDB} from "./database";
+import {DefaultScanner} from "./contentscanners/default";
 
-export interface DOMHelperInterface {
-    queryDOM(selector: string): string;
-    // TODO: ? updateDOM(...) : void;
+
+export interface IContentScannerPlugin {
+    metaInfo() : string;
+    canHandleScan(params: IScanParameters) : boolean;
+    scan(params: IScanParameters) : Promise<PageResults>;
 }
 
-class DOMHelper implements DOMHelperInterface {
-
-    queryDOM(selector: string): string {
-        let results : string = "";
-
-        chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-            if (tabs[0]?.id) {
-                chrome.tabs.sendMessage(tabs[0].id, {action: "queryDom", selector: selector}, (response) => {
-                    console.log(response);
-                    results = response?.text;
-                });
-            }
-        });
-        console.log("selector returned:", results);
-        return results;
-    }
-}
-
-export interface ScannerParameters {
+export interface IScanParameters {
     domain : string,
     mainDomain : string,
     url : string,
     pagesDb: PagesDB,
-    pagesDbCachedList : string[],     // TODO: should be removed and only use pagesDb in the plugins
+    pagesDbCachedList : string[],     // TODO: should be removed and only pass pagesDb to the plugins
     domHelper: DOMHelper
-
 }
-
-export interface ContentScannerPluginInterface {
-    metaInfo() : string;
-    canHandleScan(params: ScannerParameters) : boolean;
-    scan(params: ScannerParameters) : PageResults;
-}
-
-
 
 export class ContentScanner {
 
-    private scannerPlugins: ContentScannerPluginInterface[] = [];
-    private domHelper: DOMHelper = new DOMHelper();
+    private scannerPlugins: IContentScannerPlugin[] = [];
     private defaultScannerPlugin: DefaultScanner = new DefaultScanner();
+    private domHelper: DOMHelper = new DOMHelper();
 
     constructor() {
         this.findScannerPlugins();
         this.domHelper = new DOMHelper();
     }
 
+    // Must be called from content.js
     public static init() {
-        // Required for accessing the DOM via method 1 below;
+        // Required for accessing the DOM via service worker
         this.registerContentListener();
     }
 
-    private findScannerPlugins() : void {
-        console.log("Scanner classes:");
-
-        context.keys().map((key) => {
-            const module = context(key);
-            const className = Object.keys(module)[0];
-            const Class = module[className];
-            const obj : ContentScannerPluginInterface = new Class();
-            this.scannerPlugins.push(obj);
-            console.log("Added content scanner plugin: ", className, " metainfo", obj.metaInfo());
-        });
-
-    }
-
-
-    // Accessing the DOM from service worker, method 1
     public async checkPageContents(domain:string, mainDomain:string, url: string, pagesDb: PagesDB, pagesDBCachedList : string[]): Promise<PageResults> {
 
-        const scannerParameters : ScannerParameters = {
+        const scannerParameters : IScanParameters = {
             domain: domain.toLowerCase(),
             mainDomain: mainDomain.toLowerCase(),
             url: url,
@@ -87,54 +47,103 @@ export class ContentScanner {
             domHelper: this.domHelper
         };
 
-        // this.scannerPlugins.forEach(plugin => {
-        //     // TODO: memoize the result
-        //     if (plugin.canHandleScan(scannerParameters)) {
-        //         console.log(`Plugin for ${plugin.metaInfo()} can handle domain: ${scannerParameters.domain}`);
-        //         return plugin.scan(scannerParameters);
-        //     }
-        // });
+        for (let plugin of this.scannerPlugins) {
+            // TODO: memoize the result ?
+            if (plugin.canHandleScan(scannerParameters)) {
+                console.log(`Found a plugin that can handle request: ${scannerParameters.domain}`);
+                // TODO: allow multiple handlers
+                return await plugin.scan(scannerParameters);
+            }
+        }
+        console.log("Using default content scanner");
+        return await this.defaultScannerPlugin.scan(scannerParameters);
 
-        return this.defaultScannerPlugin.scan(scannerParameters);
+    }
+
+    private findScannerPlugins() : void {
+        context.keys().map((key) => {
+            const module = context(key);
+            const className = Object.keys(module)[0];
+            const Class = module[className];
+            const obj : IContentScannerPlugin = new Class();
+            this.scannerPlugins.push(obj);
+            console.log("Added content scanner plugin: ", className, " metainfo: ", obj.metaInfo());
+        });
 
     }
 
     private static registerContentListener() {
         chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-            if (message.action === "queryDom") {
-                const nodes = document.querySelectorAll(message.selector);
-                sendResponse({text: Array.from(nodes).map(node => node.textContent)});
-                return false; // make syncronous
+            if (message.action === DOMQueryType.DOM_QUERY_SELECTOR_ALL) {
+                const nodes : NodeListOf<any> = document.querySelectorAll(message.selector);
+                sendResponse( nodes );
+            } else if (message.action === DOMQueryType.DOM_QUERY_SELECTOR_ALL_AS_TEXT) {
+                const nodes: NodeListOf<any> = document.querySelectorAll(message.selector);
+                const text = Array.from(nodes).map(node => node.textContent + node.innerText + node.innerHTML).join("\n");
+                sendResponse( text );
+            }else {
+                // TODO: any other query types as required
             }
+            // return false;
         });
     }
 
+}
 
 
-    // Accessing the DOM from service worker, method 2
-    // checkPageContents(): PageResults {
-    //
-    //     let pageResults : PageResults = {numPages: 0, pageUrls: []};
-    //     let selector = "p";
-    //
-    //     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    //         if (tabs[0]?.id) {
-    //             chrome.scripting.executeScript({
-    //                 target: { tabId: tabs[0].id },
-    //                 func: function () {                                  // Cant use a TypeScript function here
-    //                     const paragraphs = document.querySelectorAll(selector);
-    //                     return Array.from(paragraphs).map(p => p.textContent);
-    //                 }
-    //             }).then((results) => {
-    //                 console.log("Extracted Text:", results[0].result);
-    //             }).catch((error) => {
-    //                 console.error("Error accessing DOM:", error);
-    //             });
-    //         }
-    //
-    //     });
-    //
-    //     return pageResults;
-    // }
+
+
+export interface DOMHelperInterface {
+    queryDOM(selector: string): Promise<any>;
+    // TODO: ? updateDOM(...) : void;
+}
+
+enum DOMQueryType {
+    DOM_QUERY_SELECTOR_ALL = "DOM_QUERY_SELECTOR_ALL",
+    DOM_QUERY_SELECTOR_ALL_AS_TEXT = "DOM_QUERY_SELECTOR_ALL_AS_TEXT",
+}
+
+class DOMHelper implements DOMHelperInterface {
+
+    // TODO: not working...
+    async queryDOM(selector: string): Promise<Node[]> {
+        let nodes :NodeListOf<any> = await this.sendMessageToCurrentTab( {action: DOMQueryType.DOM_QUERY_SELECTOR_ALL, selector: selector});
+        console.dir(nodes);
+        let copy =  Array.from(nodes).map(node => node.cloneNode(true));
+        console.dir(copy);
+        return copy;
+    }
+
+    // crude hack...
+    async queryDOMAsText(selector: string): Promise<string> {
+        return await this.sendMessageToCurrentTab( {action: DOMQueryType.DOM_QUERY_SELECTOR_ALL_AS_TEXT, selector: selector});
+    }
+
+    async sendMessageToCurrentTab(message: any): Promise<any> {
+        const tab = await this.getCurrentTab();
+
+        if (!tab?.id) {
+            throw new Error("No active tab found");
+        }
+
+        return new Promise((resolve, reject) => {
+            chrome.tabs.sendMessage(tab.id!, message, (response) => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError);
+                } else {
+                    resolve(response);
+                }
+            });
+        });
+    }
+
+    async getCurrentTab(): Promise<chrome.tabs.Tab | undefined> {
+        return new Promise((resolve) => {
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                resolve(tabs[0]);
+            });
+        });
+    }
 
 }
+

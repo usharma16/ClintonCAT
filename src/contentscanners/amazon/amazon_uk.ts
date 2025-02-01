@@ -1,20 +1,19 @@
-import {ScannerParameters, ContentScannerPluginInterface} from "../../contentscanner";
+import {IScanParameters, IContentScannerPlugin} from "../../contentscanner";
 import {PageResults} from "../../database";
 
-export class AmazonUKPageScanner implements ContentScannerPluginInterface {
+export class AmazonUKPageScanner implements IContentScannerPlugin {
 
     metaInfo() : string {
         return "amazon.co.uk";
     }
 
-    canHandleScan(params: ScannerParameters) : boolean {
+    canHandleScan(params: IScanParameters) : boolean {
         return (params.mainDomain === "amazon" && params.domain.endsWith("co.uk"));
     }
 
-    scan(params: ScannerParameters) {
+    async scan(params: IScanParameters) {
         console.log(`Amazon UK Scanner: ${params.domain} - ${params.mainDomain}`);
         let pageResults : PageResults = {numPages: 0, pageUrls: []};
-
         return pageResults
     }
 }

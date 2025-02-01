@@ -90,7 +90,7 @@ export class PagesDB {
     }
 
 
-    fuzzySearch(query: string, arr: string[]) {
+    fuzzySearch(query: string, arr: string[]) : string[] {
         const lowerQuery = query.toLowerCase();
         return arr.filter((item: string) => item.toLowerCase().includes(lowerQuery));
     }
