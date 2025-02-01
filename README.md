@@ -22,6 +22,21 @@ As this is not yet on the Chrome Web Store it's necessary to download and manual
 4. Click `Load Unpacked`
 5. Navigate to the cloned/unzipped folder.
 
+r
+# Developer
+
+To checkout and build the extension:
+
+```shell
+git checkout git@github.com:WayneKeenan/ClintonCAT.git
+cd ClintonCAT
+npm install
+npx webpack
+
+```
+
+Compiled extension will in the `dist` folder.
+
 # Contributions
 
 Thanks to:
