@@ -1,4 +1,4 @@
-Thank you for your contribution to the ClintonCAT repo. 
+Thank you for your contribution to the ClintonCAT repo.
 Before submitting this PR, please make sure:
 
 - [ ] The target of this PR is the `main` branch.
