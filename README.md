@@ -22,7 +22,7 @@ As this is not yet on the Chrome Web Store it's necessary to download and manual
 4. Click `Load Unpacked`
 5. Navigate to the cloned/unzipped folder.
 
-r
+
 # Developer
 
 Checkout and build the extension:
