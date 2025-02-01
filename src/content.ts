@@ -1,7 +1,7 @@
-import { ContentScanner } from "./contentscanner";
+import { ContentScanner } from './contentscanner';
 
 chrome.runtime.sendMessage({
-  domain: window.location.hostname,
-  url: window.location.href,
+    domain: window.location.hostname,
+    url: window.location.href,
 });
 ContentScanner.init();
