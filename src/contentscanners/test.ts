@@ -33,11 +33,16 @@ export class TestScanner implements IContentScannerPlugin {
             // const h2: IElementData | undefined | null = await _params.dom.querySelectorByParentId(divId, ':scope > h2');
 
             const h2Text = h2?.innerText;
-            console.log('h2 ', h2Text);
+            console.log('h2 id: ', h2?.id);
+            console.log('h2 text: ', h2Text);
 
             if (h2Text) {
                 const pagesFound = await _params.pagesDb.fuzzySearch(h2Text);
                 console.log('pagesFound', pagesFound);
+                if (pagesFound.totalPagesFound) {
+                    console.log('Adding the CAT html');
+                    await _params.dom.createElement(divId, 'p', 'Hello, <strong>TypeScript!</strong');
+                }
                 pageResults.addResults(pagesFound);
             }
         }

@@ -23,7 +23,9 @@ export interface IScanParameters {
 export interface IContentScanMessage {
     action: DOMQueryType;
     id?: string;
-    selector: string;
+    selector?: string;
+    element?: string;
+    html?: string;
 }
 
 export interface IElementData {
