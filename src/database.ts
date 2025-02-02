@@ -18,6 +18,10 @@ export class CATWikiPageSearchResults {
     get totalPagesFound(): number {
         return this._foundCount;
     }
+
+    addResults(other: CATWikiPageSearchResults): void {
+        this.addPageUrls(other.pageUrls);
+    }
 }
 
 export class PagesDB {
