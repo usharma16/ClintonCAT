@@ -6,7 +6,7 @@ export class CATWikiPageSearchResults {
         this.addPageUrls(pageUrls);
     }
 
-    public addPageUrls(pageUrls: string[]): void {
+    public addPageUrls(pageUrls: ReadonlyArray<string>): void {
         this._foundCount += pageUrls.length;
         this._pageUrls = [...new Set([...this.pageUrls, ...pageUrls])];
     }
@@ -93,28 +93,38 @@ export class PagesDB {
     }
 
     async getPagesForDomain(domain: string): Promise<CATWikiPageSearchResults> {
-        const foundPages: string[] = await this.fuzzySearch(domain);
-        console.log('Pages fuzzy search result: ', foundPages);
-        return new CATWikiPageSearchResults(foundPages);
+        return await this.fuzzySearch(domain);
     }
 
-    public async simpleSearch(query: string): Promise<string[]> {
+    public async simpleSearch(query: string): Promise<CATWikiPageSearchResults> {
         const pagesDB: string[] = await this.getCachedPagesDB();
         const lowerQuery = query.toLowerCase();
-        return pagesDB.filter((item: string) => item.toLowerCase().includes(lowerQuery));
+        const pageTitles = pagesDB.filter((item: string) => item.toLowerCase().includes(lowerQuery));
+        const pageUrls = this.urlsForPages(pageTitles);
+        return new CATWikiPageSearchResults(pageUrls);
     }
 
     // TODO: fix producing some false positives in results
-    public async fuzzySearch(query: string, matchAllWords: boolean = false): Promise<string[]> {
+    public async fuzzySearch(query: string, matchAllWords: boolean = false): Promise<CATWikiPageSearchResults> {
         const pagesDB: string[] = await this.getCachedPagesDB();
         const lowerQuery = query.toLowerCase().split(/\s+/);
 
-        return pagesDB.filter((pageTitle) => {
+        const pageTitles = pagesDB.filter((pageTitle) => {
             const lowerPageTitle = pageTitle.toLowerCase();
             return matchAllWords
                 ? lowerQuery.every((word) => lowerPageTitle.includes(word))
                 : lowerQuery.some((word) => lowerPageTitle.includes(word));
         });
+        const pageUrls = this.urlsForPages(pageTitles);
+        return new CATWikiPageSearchResults(pageUrls);
+    }
+
+    public urlForPage(pageTitle: string): string {
+        return `${PagesDB.WIKI_URL}/${encodeURIComponent(pageTitle)}`;
+    }
+
+    public urlsForPages(pageTitles: ReadonlyArray<string>): string[] {
+        return pageTitles.map((pageTitle) => this.urlForPage(pageTitle));
     }
 
     async fetchJson(url: string): Promise<string> {

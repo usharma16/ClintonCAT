@@ -14,7 +14,7 @@ export class DefaultScanner implements IContentScannerPlugin {
     async scan(params: IScanParameters): Promise<CATWikiPageSearchResults> {
         console.log(`Default Scanner: ${params.domain} - ${params.mainDomain}`);
         const pText = await params.dom.querySelectorAllAsText('p');
-        return new CATWikiPageSearchResults(await params.pagesDb.simpleSearch(pText));
+        return await params.pagesDb.simpleSearch(pText);
     }
 }
 ``;

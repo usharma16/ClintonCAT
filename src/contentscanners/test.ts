@@ -38,7 +38,7 @@ export class TestScanner implements IContentScannerPlugin {
             if (h2Text) {
                 const pagesFound = await _params.pagesDb.fuzzySearch(h2Text);
                 console.log('pagesFound', pagesFound);
-                pageResults.addPageUrls(pagesFound);
+                pageResults.addPageUrls(pagesFound.pageUrls);
             }
         }
 
