@@ -17,7 +17,6 @@ export interface IScanParameters {
     mainDomain: string;
     url: string;
     pagesDb: PagesDB;
-    pagesDbCachedList: string[]; // TODO: should be removed and only pass pagesDb to the plugins
     dom: IDOMHelperInterface;
 }
 
@@ -48,15 +47,13 @@ export class ContentScanner {
         domain: string,
         mainDomain: string,
         url: string,
-        pagesDb: PagesDB,
-        pagesDBCachedList: string[]
+        pagesDb: PagesDB
     ): Promise<PageResults> {
         const scannerParameters: IScanParameters = {
             domain: domain.toLowerCase(),
             mainDomain: mainDomain.toLowerCase(),
             url: url,
             pagesDb: pagesDb,
-            pagesDbCachedList: pagesDBCachedList,
             dom: this.domHelper,
         };
 

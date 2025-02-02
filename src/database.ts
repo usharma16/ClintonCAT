@@ -13,6 +13,8 @@ export class PagesDB {
     static readonly FETCH_INTERVAL_MINUTES: number = 30; // Fetch every 30 minutes
     static readonly FETCH_INTERVAL_MS: number = PagesDB.FETCH_INTERVAL_MINUTES * 60 * 1000;
 
+    static pagesList: string[] = []; // keep another local copy.
+
     constructor() {
         // Alarm to trigger periodic updates
         void chrome.alarms.create(PagesDB.UPDATE_ALARM_NAME, {
@@ -74,8 +76,7 @@ export class PagesDB {
     }
 
     async getPagesForDomain(domain: string): Promise<PageResults> {
-        const pagesDB: string[] = await this.getCachedPagesDB();
-        const pages: string[] = this.fuzzySearch(domain, pagesDB);
+        const pages: string[] = await this.fuzzySearch(domain);
 
         console.log('Pages fuzzy search result: ', pages);
 
@@ -93,16 +94,18 @@ export class PagesDB {
         return result;
     }
 
-    simpleSearch(query: string, pagesTitles: string[]): string[] {
+    public async simpleSearch(query: string): Promise<string[]> {
+        const pagesDB: string[] = await this.getCachedPagesDB();
         const lowerQuery = query.toLowerCase();
-        return pagesTitles.filter((item: string) => item.toLowerCase().includes(lowerQuery));
+        return pagesDB.filter((item: string) => item.toLowerCase().includes(lowerQuery));
     }
 
-    // TODO: fix producing some false negatives in results
-    fuzzySearch(query: string, pageTitles: string[], matchAllWords: boolean = false): string[] {
+    // TODO: fix producing some false positives in results
+    public async fuzzySearch(query: string, matchAllWords: boolean = false): Promise<string[]> {
+        const pagesDB: string[] = await this.getCachedPagesDB();
         const lowerQuery = query.toLowerCase().split(/\s+/);
 
-        return pageTitles.filter((pageTitle) => {
+        return pagesDB.filter((pageTitle) => {
             const lowerPageTitle = pageTitle.toLowerCase();
             return matchAllWords
                 ? lowerQuery.every((word) => lowerPageTitle.includes(word))

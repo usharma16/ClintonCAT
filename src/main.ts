@@ -56,15 +56,7 @@ export class Main {
         wikiPageResults.pagesFound += domainResults.pagesFound;
         wikiPageResults.pageUrls.push(...domainResults.pageUrls);
 
-        const pagesDBCache: string[] = await this.pagesDatabase.getCachedPagesDB();
-
-        const inPageResults = await this.contentScanner.checkPageContents(
-            domain,
-            mainDomain,
-            url,
-            this.pagesDatabase,
-            pagesDBCache
-        );
+        const inPageResults = await this.contentScanner.checkPageContents(domain, mainDomain, url, this.pagesDatabase);
         wikiPageResults.pagesFound += inPageResults.pagesFound;
         wikiPageResults.pageUrls.push(...inPageResults.pageUrls);
 

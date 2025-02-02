@@ -16,8 +16,9 @@ export class DefaultScanner implements IContentScannerPlugin {
 
         const pageResults: PageResults = { pagesFound: 0, pageUrls: [] };
         const pText = await params.dom.querySelectorAllAsText('p');
-        pageResults.pageUrls = params.pagesDb.simpleSearch(pText, params.pagesDbCachedList);
+        pageResults.pageUrls = await params.pagesDb.simpleSearch(pText);
         pageResults.pagesFound = pageResults.pageUrls.length;
         return pageResults;
     }
 }
+``;
