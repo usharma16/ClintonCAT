@@ -1,5 +1,5 @@
 import { Preferences } from './storage';
-import { PageResults, PagesDB } from './database';
+import { CATWikiPageSearchResults, PagesDB } from './database';
 import { DomainTools } from './domaintools';
 import { ContentScanner } from './contentscanner';
 
@@ -27,8 +27,8 @@ export class Main {
     }
 
     // eslint-disable-next-line @typescript-eslint/require-await
-    async indicateCATPages(pages: PageResults): Promise<void> {
-        void chrome.action.setBadgeText({ text: pages.pagesFound.toString() });
+    async indicateCATPages(pages: CATWikiPageSearchResults): Promise<void> {
+        void chrome.action.setBadgeText({ text: pages.totalPagesFound.toString() });
         console.log(pages);
         // TODO: in page popup
     }
@@ -50,17 +50,12 @@ export class Main {
             return;
         }
 
-        const wikiPageResults: PageResults = { pagesFound: 0, pageUrls: [] };
-
         const domainResults = await this.pagesDatabase.getPagesForDomain(mainDomain);
-        wikiPageResults.pagesFound += domainResults.pagesFound;
-        wikiPageResults.pageUrls.push(...domainResults.pageUrls);
-
         const inPageResults = await this.contentScanner.checkPageContents(domain, mainDomain, url, this.pagesDatabase);
-        wikiPageResults.pagesFound += inPageResults.pagesFound;
-        wikiPageResults.pageUrls.push(...inPageResults.pageUrls);
+        // combine the results
+        domainResults.addPageUrls([...inPageResults.pageUrls]);
 
-        void this.indicateCATPages(wikiPageResults);
+        void this.indicateCATPages(domainResults);
     }
 
     onBrowserExtensionInstalled(): void {

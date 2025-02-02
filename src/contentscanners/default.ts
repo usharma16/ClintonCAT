@@ -1,5 +1,5 @@
 import { IContentScannerPlugin, IScanParameters } from '../contentscanner';
-import { PageResults } from '../database';
+import { CATWikiPageSearchResults } from '../database';
 
 export class DefaultScanner implements IContentScannerPlugin {
     metaInfo(): string {
@@ -11,14 +11,10 @@ export class DefaultScanner implements IContentScannerPlugin {
         return false;
     }
 
-    async scan(params: IScanParameters): Promise<PageResults> {
+    async scan(params: IScanParameters): Promise<CATWikiPageSearchResults> {
         console.log(`Default Scanner: ${params.domain} - ${params.mainDomain}`);
-
-        const pageResults: PageResults = { pagesFound: 0, pageUrls: [] };
         const pText = await params.dom.querySelectorAllAsText('p');
-        pageResults.pageUrls = await params.pagesDb.simpleSearch(pText);
-        pageResults.pagesFound = pageResults.pageUrls.length;
-        return pageResults;
+        return new CATWikiPageSearchResults(await params.pagesDb.simpleSearch(pText));
     }
 }
 ``;

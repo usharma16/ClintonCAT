@@ -1,5 +1,5 @@
 import { IContentScannerPlugin, IScanParameters, IElementData } from '../contentscanner';
-import { PageResults } from '../database';
+import { CATWikiPageSearchResults } from '../database';
 
 // Simple test for simple test page, e.g.
 // https://waynekeenan.github.io/ClintonCAT/tests/www/3products_1cat.html
@@ -14,13 +14,13 @@ export class TestScanner implements IContentScannerPlugin {
         return _params.domain.endsWith('waynekeenan.github.io') || _params.domain === 'localhost';
     }
 
-    async scan(_params: IScanParameters): Promise<PageResults> {
+    async scan(_params: IScanParameters): Promise<CATWikiPageSearchResults> {
         console.log(`Test Scanner: ${_params.domain} - ${_params.mainDomain}`);
-
-        const pageResults: PageResults = { pagesFound: 0, pageUrls: [] };
 
         const divElements: IElementData[] = await _params.dom.querySelectorAll('div');
         console.dir(divElements);
+
+        let pageResults = new CATWikiPageSearchResults();
 
         for (let i = 0; i < divElements.length; i++) {
             const divId = divElements[i].id;
@@ -38,8 +38,7 @@ export class TestScanner implements IContentScannerPlugin {
             if (h2Text) {
                 const pagesFound = await _params.pagesDb.fuzzySearch(h2Text);
                 console.log('pagesFound', pagesFound);
-                pageResults.pagesFound += pagesFound.length;
-                pageResults.pageUrls.push(...pagesFound);
+                pageResults.addPageUrls(pagesFound);
             }
         }
 

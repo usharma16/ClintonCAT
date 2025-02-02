@@ -1,6 +1,23 @@
-export interface PageResults {
-    pagesFound: number; // will reflect multiple occurances
-    pageUrls: string[]; // should not contain duplicate urls
+export class CATWikiPageSearchResults {
+    private _pageUrls: string[] = [];
+    private _foundCount: number = 0;
+
+    constructor(pageUrls: string[] = []) {
+        this.addPageUrls(pageUrls);
+    }
+
+    public addPageUrls(pageUrls: string[]): void {
+        this._foundCount += pageUrls.length;
+        this._pageUrls = [...new Set([...this.pageUrls, ...pageUrls])];
+    }
+
+    get pageUrls(): ReadonlyArray<string> {
+        return this._pageUrls;
+    }
+
+    get totalPagesFound(): number {
+        return this._foundCount;
+    }
 }
 
 export class PagesDB {
@@ -75,23 +92,10 @@ export class PagesDB {
         return (pagesDb as string[] | undefined) ?? [];
     }
 
-    async getPagesForDomain(domain: string): Promise<PageResults> {
-        const pages: string[] = await this.fuzzySearch(domain);
-
-        console.log('Pages fuzzy search result: ', pages);
-
-        const result: PageResults = {
-            pagesFound: 0,
-            pageUrls: [],
-        };
-
-        if (pages.length > 0) {
-            const pageUrl = `${PagesDB.WIKI_URL}/${encodeURIComponent(pages[0])}`;
-            result.pagesFound = pages.length;
-            result.pageUrls = [pageUrl];
-        }
-
-        return result;
+    async getPagesForDomain(domain: string): Promise<CATWikiPageSearchResults> {
+        const foundPages: string[] = await this.fuzzySearch(domain);
+        console.log('Pages fuzzy search result: ', foundPages);
+        return new CATWikiPageSearchResults(foundPages);
     }
 
     public async simpleSearch(query: string): Promise<string[]> {

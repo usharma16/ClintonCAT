@@ -1,6 +1,6 @@
 // The 'require.context' feature depends on WebPack (@types/webpack)
 const context: __WebpackModuleApi.RequireContext = require.context('./contentscanners', true, /\.ts$/, 'sync');
-import { PageResults, PagesDB } from './database';
+import { CATWikiPageSearchResults, PagesDB } from './database';
 import { DefaultScanner } from './contentscanners/default';
 import { IDOMHelperInterface, DOMHelper, DOMQueryType } from './domhelper';
 
@@ -9,7 +9,7 @@ export interface IContentScannerPlugin {
 
     canScanContent(params: IScanParameters): boolean;
 
-    scan(params: IScanParameters): Promise<PageResults>;
+    scan(params: IScanParameters): Promise<CATWikiPageSearchResults>;
 }
 
 export interface IScanParameters {
@@ -48,7 +48,7 @@ export class ContentScanner {
         mainDomain: string,
         url: string,
         pagesDb: PagesDB
-    ): Promise<PageResults> {
+    ): Promise<CATWikiPageSearchResults> {
         const scannerParameters: IScanParameters = {
             domain: domain.toLowerCase(),
             mainDomain: mainDomain.toLowerCase(),
