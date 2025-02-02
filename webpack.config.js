@@ -50,4 +50,5 @@ module.exports = {
         }),
         new MiniCssExtractPlugin(),
     ],
+    devtool: 'source-map',
 };

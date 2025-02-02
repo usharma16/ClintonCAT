@@ -1,7 +1,7 @@
-import { ContentScanner } from './contentscanner';
+import { DOMHelper } from './domhelper';
 
 void chrome.runtime.sendMessage({
     domain: window.location.hostname,
     url: window.location.href,
 });
-ContentScanner.init();
+DOMHelper.registerContentListener();

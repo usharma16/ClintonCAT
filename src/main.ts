@@ -28,7 +28,8 @@ export class Main {
 
     // eslint-disable-next-line @typescript-eslint/require-await
     async indicateCATPages(pages: PageResults): Promise<void> {
-        void chrome.action.setBadgeText({ text: pages.numPages.toString() });
+        void chrome.action.setBadgeText({ text: pages.pagesFound.toString() });
+        console.log(pages);
         // TODO: in page popup
     }
 
@@ -49,10 +50,10 @@ export class Main {
             return;
         }
 
-        const wikiPageResults: PageResults = { numPages: 0, pageUrls: [] };
+        const wikiPageResults: PageResults = { pagesFound: 0, pageUrls: [] };
 
         const domainResults = await this.pagesDatabase.getPagesForDomain(mainDomain);
-        wikiPageResults.numPages += domainResults.numPages;
+        wikiPageResults.pagesFound += domainResults.pagesFound;
         wikiPageResults.pageUrls.push(...domainResults.pageUrls);
 
         const pagesDBCache: string[] = await this.pagesDatabase.getCachedPagesDB();
@@ -64,7 +65,7 @@ export class Main {
             this.pagesDatabase,
             pagesDBCache
         );
-        wikiPageResults.numPages += inPageResults.numPages;
+        wikiPageResults.pagesFound += inPageResults.pagesFound;
         wikiPageResults.pageUrls.push(...inPageResults.pageUrls);
 
         void this.indicateCATPages(wikiPageResults);

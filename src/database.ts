@@ -1,6 +1,6 @@
 export interface PageResults {
-    numPages: number;
-    pageUrls: string[];
+    pagesFound: number; // will reflect multiple occurances
+    pageUrls: string[]; // should not contain duplicate urls
 }
 
 export class PagesDB {
@@ -80,22 +80,34 @@ export class PagesDB {
         console.log('Pages fuzzy search result: ', pages);
 
         const result: PageResults = {
-            numPages: 0,
+            pagesFound: 0,
             pageUrls: [],
         };
 
         if (pages.length > 0) {
             const pageUrl = `${PagesDB.WIKI_URL}/${encodeURIComponent(pages[0])}`;
-            result.numPages = pages.length;
+            result.pagesFound = pages.length;
             result.pageUrls = [pageUrl];
         }
 
         return result;
     }
 
-    fuzzySearch(query: string, arr: string[]): string[] {
+    simpleSearch(query: string, pagesTitles: string[]): string[] {
         const lowerQuery = query.toLowerCase();
-        return arr.filter((item: string) => item.toLowerCase().includes(lowerQuery));
+        return pagesTitles.filter((item: string) => item.toLowerCase().includes(lowerQuery));
+    }
+
+    // TODO: fix producing some false negatives in results
+    fuzzySearch(query: string, pageTitles: string[], matchAllWords: boolean = false): string[] {
+        const lowerQuery = query.toLowerCase().split(/\s+/);
+
+        return pageTitles.filter((pageTitle) => {
+            const lowerPageTitle = pageTitle.toLowerCase();
+            return matchAllWords
+                ? lowerQuery.every((word) => lowerPageTitle.includes(word))
+                : lowerQuery.some((word) => lowerPageTitle.includes(word));
+        });
     }
 
     async fetchJson(url: string): Promise<string> {

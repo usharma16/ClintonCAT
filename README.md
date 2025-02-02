@@ -25,7 +25,7 @@ As this is not yet on the Chrome Web Store it's necessary to download and manual
 
 # Developer
 
-Checkout and build the extension:
+## Checkout and build the extension:
 
 ```shell
 git checkout git@github.com:WayneKeenan/ClintonCAT.git
@@ -35,6 +35,15 @@ npx webpack
 ```
 
 Compiled extension will be output in the `dist` folder.
+
+
+## Test using local http server
+
+```shell
+npx http-server tests/www 
+
+# install using: npm install --global http-server
+```
 
 # Contributions
 
