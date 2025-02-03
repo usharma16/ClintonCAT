@@ -42,6 +42,8 @@ export class TestScanner implements IContentScannerPlugin {
             if (h2Text) {
                 const pagesFound = await _params.pagesDb.fuzzySearch(h2Text);
                 console.log('pagesFound', pagesFound);
+                pageResults.addResults(pagesFound);
+
                 if (pagesFound.totalPagesFound) {
                     console.log('Adding the CAT html: ', alertImgUrl);
                     await _params.dom.createElement(
@@ -59,7 +61,6 @@ export class TestScanner implements IContentScannerPlugin {
 
                     break; // Only add the first found page alert
                 }
-                pageResults.addResults(pagesFound);
             }
         }
 
