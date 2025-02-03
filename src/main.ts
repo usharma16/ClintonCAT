@@ -50,6 +50,7 @@ export class Main {
             return;
         }
 
+        // TODO: remove specialised step for domain as it can be handled by plugins (e.g. th    e default)
         const domainResults = await this.pagesDatabase.getPagesForDomain(mainDomain);
         const inPageResults = await this.contentScanner.checkPageContents(domain, mainDomain, url, this.pagesDatabase);
         // combine the results
