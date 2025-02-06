@@ -2,7 +2,7 @@
 const context: __WebpackModuleApi.RequireContext = require.context('./contentscanners', true, /\.ts$/, 'sync');
 import { CATWikiPageSearchResults, PagesDB } from './database';
 import { DefaultScanner } from './contentscanners/default';
-import { IDOMHelperInterface, DOMHelper, DOMQueryType } from './domhelper';
+import { IDOMHelperInterface, DOMHelper, DOMHelperMessageType } from './domhelper';
 
 export interface IContentScannerPlugin {
     metaInfo(): string;
@@ -20,8 +20,9 @@ export interface IScanParameters {
     dom: IDOMHelperInterface;
 }
 
+// TODO: break this up into per DOMQuery types?
 export interface IContentScanMessage {
-    action: DOMQueryType;
+    action: DOMHelperMessageType;
     id?: string;
     selector?: string;
     element?: string;
