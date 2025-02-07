@@ -1,5 +1,6 @@
 import { Preferences } from './storage';
 import { CATWikiPageSearchResults, PagesDB } from './database';
+import { StorageCache } from './storagecache';
 import { DomainTools } from './domaintools';
 import { ContentScanner } from './contentscanner';
 
@@ -10,12 +11,14 @@ export interface IMainMessage {
 }
 
 export class Main {
+    storageCache: StorageCache;
     pagesDatabase: PagesDB;
     domainTools: DomainTools;
     contentScanner: ContentScanner;
 
     constructor() {
         this.pagesDatabase = new PagesDB();
+        this.storageCache = new StorageCache(this.pagesDatabase);
         this.domainTools = new DomainTools();
         this.contentScanner = new ContentScanner();
     }
