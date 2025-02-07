@@ -25,22 +25,42 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build extension
+      - name: Build Chrome extension
         run: npm run build:chromium
 
-      - name: Run tests
+      - name: Run Chrome tests
         run: npm test
 
-      - name: Package Extension
+      - name: Package Chrome Extension
         run: |
           mv dist clintoncat-chrome-extension
           zip -r clintoncat-chrome-extension.zip clintoncat-chrome-extension/*
 
-      - name: Create GitHub release
+      - name: Create GitHub Chrome release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: clintoncat-chrome-extension.zip
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_CLINTONCAT_PAT }}
+
+      - name: Build Firefox extension
+        run: npm run build:gecko
+
+      - name: Run Firefox tests
+        run: npm test
+
+      - name: Package Firefox Extension
+        run: |
+          mv dist clintoncat-firefox-extension
+          zip -r clintoncat-firefox-extension.zip clintoncat-firefox-extension/*
+
+      - name: Create GitHub Firefox release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: firefox-chrome-extension.zip
           prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GH_CLINTONCAT_PAT }}
