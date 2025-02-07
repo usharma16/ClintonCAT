@@ -1,12 +1,20 @@
 const path = require('path');
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TouchManifestPlugin = require('./webpack-plugins/TouchManifestPlugin');
+const PostBuildManifestPlugin = require('./webpack-plugins/PostBuildManifestPlugin');
+const ReloadExtensionPlugin = require('./webpack-plugins/ReloadExtensionPlugin');
 
 module.exports = (env, argv) => {
+    const isDevelopment = argv.mode === 'development';
+
+    const browserTarget = env.browser || 'chromium';
+    const manifestPath = `engines/${browserTarget}/manifest.json`;
+
     return {
-        mode: 'production',
+        mode: isDevelopment ? 'development' : 'production',
         entry: {
             background: './src/background.ts',
             content: './src/content.ts',
@@ -34,6 +42,8 @@ module.exports = (env, argv) => {
             ],
         },
         plugins: [
+            // new TouchManifestPlugin(),
+            // new PostBuildManifestPlugin(),
             new CleanWebpackPlugin(),
             new HtmlWebpackPlugin({
                 template: 'public/options.html',
@@ -47,6 +57,7 @@ module.exports = (env, argv) => {
             }),
             new CopyWebpackPlugin({
                 patterns: [
+                    { from: manifestPath, to: 'manifest.json' },
                     { from: 'public/icons/clinton16.png', to: 'icon16.png' },
                     { from: 'public/icons/clinton32.png', to: 'icon32.png' },
                     { from: 'public/icons/clinton48.png', to: 'icon48.png' },
@@ -55,7 +66,10 @@ module.exports = (env, argv) => {
                 ],
             }),
             new MiniCssExtractPlugin(),
+            new TouchManifestPlugin(),
+            new PostBuildManifestPlugin(),
+            new ReloadExtensionPlugin(),
         ],
-        devtool: 'source-map',
+        devtool: isDevelopment ? 'cheap-module-source-map' : 'source-map',
     };
 };
