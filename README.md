@@ -76,5 +76,5 @@ Thanks to contributions from the following people that I added outside of a PR:
 
 # Attributions
 
-- [Icons by Gatoon Team](https://www.iconarchive.com/show/gartoon-devices-icons-by-gartoon-team.html)
+- [Icons on the html test page by Gatoon Team](https://www.iconarchive.com/show/gartoon-devices-icons-by-gartoon-team.html)
 
