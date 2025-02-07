@@ -5,6 +5,8 @@
     "private": true,
     "scripts": {
         "test": "jest",
+        "lint": "eslint \"src/**/*.{ts,tsx}\"",
+        "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
         "dev:chromium": "webpack --watch --mode development --env browser=chromium --config engines/chromium/webpack.config.js",
         "dev:gecko": "webpack --watch --mode development --env browser=gecko --config engines/gecko/webpack.config.js",
         "build:chromium": "rm -rf dist && webpack --mode production --config engines/chromium/webpack.config.js",
