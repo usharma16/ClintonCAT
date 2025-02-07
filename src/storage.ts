@@ -38,9 +38,7 @@ export class Preferences {
     }
 
     public static dump(): void {
-        const msg: string = `IsEnabled = ${
-            Preferences._isEnabled.toString()
-        }, DomainExclusions = ${Preferences._domainExclusions.toString()}`;
+        const msg: string = `IsEnabled = ${Preferences._isEnabled.toString()}, DomainExclusions = ${Preferences._domainExclusions.toString()}`;
         console.log(msg);
     }
 
@@ -54,7 +52,9 @@ export class Preferences {
     static async getPreference(key: string): Promise<unknown> {
         return new Promise((resolve) => {
             console.log(`Get pref: ${key}`);
-            chrome.storage.sync.get(key, (result) => { resolve(result[key]); }); // TODO: Use return value instead (MV3)
+            chrome.storage.sync.get(key, (result) => {
+                resolve(result[key]);
+            }); // TODO: Use return value instead (MV3)
         });
     }
 
@@ -67,7 +67,9 @@ export class Preferences {
     static async getStorage(key: string): Promise<unknown> {
         return new Promise((resolve) => {
             console.log(`Get store: ${key}`);
-            chrome.storage.local.get(key, (result) => { resolve(result[key]); }); // TODO: Use return value instead (MV3)
+            chrome.storage.local.get(key, (result) => {
+                resolve(result[key]);
+            }); // TODO: Use return value instead (MV3)
         });
     }
 }
