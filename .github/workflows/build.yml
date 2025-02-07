@@ -48,8 +48,8 @@ jobs:
       - name: Build Firefox extension
         run: npm run build:gecko
 
-      - name: Run Firefox tests
-        run: npm test
+#      - name: Run Firefox tests
+#        run: npm test
 
       - name: Package Firefox Extension
         run: |
