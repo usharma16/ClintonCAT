@@ -6,22 +6,32 @@
 
 Chrome Browser Extension for automatically
 searching [Rossmann's Consumer Action Taskforce (CAT)](https://wiki.rossmanngroup.com/wiki/Mission_statement) articles
-for the current site being visited.
+for the current page being visited.
 
 ## Operation
 
-If a CAT wiki page for the domain is found then a new tab is opened in the background with the wiki article.
+If a CAT wiki page for the website is found then the plugin toolbar icon will indicate the number of controversies found.
+You might also see a clickable angry cat image in the page.
 
 ## Install
 
-As this is not yet on the Chrome Web Store it's necessary to download and manually install it:
+As this is not yet on the Chrome Web Store it's necessary to download and manually install it.
+
+For Chrome:
 
 1. Download a [release](https://github.com/WayneKeenan/ClintonCAT/releases) .
 2. Open Extension settings: e.g. `chrome://extensions/`  or `brave://extensions/` etc.
 3. Enable Developer Mode
 4. Click `Load Unpacked`
-5. Navigate to the cloned/unzipped folder.
+5. Navigate to the unzipped folder.
 
+
+For Firefox:
+
+1. Open: about:debugging#/runtime/this-firefox
+2. Expand 'Temporary Extenstions'
+3. Click 'Load Temporary Add-on...'
+4. Navigate to the unzipped folder and open `manifest.json`
 
 # Developer
 
@@ -31,13 +41,22 @@ As this is not yet on the Chrome Web Store it's necessary to download and manual
 git checkout git@github.com:WayneKeenan/ClintonCAT.git
 cd ClintonCAT
 npm install
-npx webpack
+npm run build:chromium    # Chrome
+# or
+npm run build:gecko       # Firefox 
 ```
 
-Compiled extension will be output in the `dist` folder.
+The compiled extension will be output in the `dist` folder.
 
+## Testing
 
-## Test using local http server
+### Automated unit, integration and browser testing
+
+```shell
+npm test
+```
+
+### Manual testing using local http server
 
 ```shell
 npx http-server tests/www 
