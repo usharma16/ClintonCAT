@@ -7,7 +7,12 @@ const pathToExtension = path.resolve(__dirname, '../dist');
 
 test('should load Chrome Extension popup', async () => {
     const browser = await puppeteer.launch({
-        args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`],
+        args: [
+            `--disable-extensions-except=${pathToExtension}`,
+            `--load-extension=${pathToExtension}`,
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+        ],
     });
 
     const workerTarget = await browser.waitForTarget(
