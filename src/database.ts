@@ -10,12 +10,12 @@ export class CATWikiPageSearchResults {
         this.addPageUrls(pageUrls);
     }
 
-    public addPageUrls(pageUrls: ReadonlyArray<string>): void {
+    public addPageUrls(pageUrls: readonly string[]): void {
         this._foundCount += pageUrls.length;
         this._pageUrls = [...new Set([...this.pageUrls, ...pageUrls])];
     }
 
-    get pageUrls(): ReadonlyArray<string> {
+    get pageUrls(): readonly string[] {
         return this._pageUrls;
     }
 
@@ -65,7 +65,7 @@ export class PagesDB {
         return `${PagesDB.WIKI_URL}/${encodeURIComponent(pageTitle)}`;
     }
 
-    public urlsForPages(pageTitles: ReadonlyArray<string>): string[] {
+    public urlsForPages(pageTitles: readonly string[]): string[] {
         return pageTitles.map((pageTitle) => this.urlForPage(pageTitle));
     }
 }
