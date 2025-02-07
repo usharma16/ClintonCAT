@@ -42,8 +42,6 @@ module.exports = (env, argv) => {
             ],
         },
         plugins: [
-            // new TouchManifestPlugin(),
-            // new PostBuildManifestPlugin(),
             new CleanWebpackPlugin(),
             new HtmlWebpackPlugin({
                 template: 'public/options.html',
