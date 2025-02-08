@@ -14,10 +14,10 @@ export class PageEntry implements IPageEntry {
     private _popupText: string;
     private _category: string;
 
-    constructor(pageTitle: string = '', popupText: string = '', category: string = '') {
-        this._pageTitle = pageTitle;
-        this._popupText = popupText;
-        this._category = category;
+    constructor(pageEntry: IPageEntry) {
+        this._pageTitle = pageEntry.pageTitle;
+        this._popupText = pageEntry.popupText;
+        this._category = pageEntry.category;
     }
 
     get pageTitle(): string {
@@ -44,30 +44,34 @@ export class PageEntry implements IPageEntry {
         this._category = value;
     }
 
-    public pageUrl(): string {
+    public url(): string {
         return `${PageEntry.WIKI_URL}/${encodeURIComponent(this.pageTitle)}`;
     }
 }
 
 export class CATWikiPageSearchResults {
-    private _pageUrls: IPageEntry[] = [];
-    private _foundCount: number = 0;
+    private _pageEntries: IPageEntry[] = [];
 
-    constructor(pageUrls: IPageEntry[] = []) {
-        this.addPageUrls(pageUrls);
+    constructor(pageEntries: IPageEntry[] = []) {
+        this.addPageEntries(pageEntries);
     }
 
-    public addPageUrls(pageUrls: readonly IPageEntry[]): void {
-        this._foundCount += pageUrls.length;
-        this._pageUrls = [...new Set([...this.pageUrls, ...pageUrls])];
+    public addPageEntry(pageEntry: IPageEntry): void {
+        this._pageEntries = [...this._pageEntries, new PageEntry(pageEntry)];
     }
 
-    get pageUrls(): readonly IPageEntry[] {
-        return this._pageUrls;
+    public addPageEntries(pageEntries: readonly IPageEntry[]): void {
+        for (const pageEntry of pageEntries) {
+            this.addPageEntry(pageEntry);
+        }
     }
 
     get totalPagesFound(): number {
-        return this._foundCount;
+        return this._pageEntries.length;
+    }
+
+    get pageEntries(): readonly IPageEntry[] {
+        return this._pageEntries;
     }
 }
 
@@ -75,7 +79,7 @@ export class PagesDB {
     private pagesList: IPageEntry[] = []; // keep another local copy.
 
     public setPages(pages: IPageEntry[]) {
-        console.log('setPages', pages);
+        // console.log('setPages', pages);
         this.pagesList = pages;
     }
     public getPagesForDomain(domain: string): CATWikiPageSearchResults {
@@ -83,27 +87,29 @@ export class PagesDB {
     }
 
     public simpleSearch(query: string): CATWikiPageSearchResults {
-        // const lowerQuery = query.toLowerCase();
-        // const pageTitles = this.pagesList.filter((item: string) => item.toLowerCase().includes(lowerQuery));
-        // const pageUrls = this.urlsForPages(pageTitles);
-        return new CATWikiPageSearchResults();
+        const lowerQuery = query.toLowerCase();
+        const results = new CATWikiPageSearchResults();
+        for (const pageEntry of this.pagesList) {
+            if (pageEntry.pageTitle.toLowerCase().includes(lowerQuery)) {
+                results.addPageEntry(pageEntry);
+            }
+        }
+        return results;
     }
 
     // TODO: fix producing some false positives in results
     public fuzzySearch(query: string, matchAllWords: boolean = false): CATWikiPageSearchResults {
-        // const lowerQuery = query.toLowerCase().split(/\s+/);
-        //
-        // const pageTitles = this.pagesList.filter((pageTitle: string) => {
-        //     const lowerPageTitle = pageTitle.toLowerCase();
-        //     return matchAllWords
-        //         ? lowerQuery.every((word) => lowerPageTitle.includes(word))
-        //         : lowerQuery.some((word) => lowerPageTitle.includes(word));
-        // });
-        // const pageUrls = this.urlsForPages(pageTitles);
-        return new CATWikiPageSearchResults();
-    }
+        const lowerQuery = query.toLowerCase().split(/\s+/);
+        const results = new CATWikiPageSearchResults();
 
-    // public urlsForPages(pageTitles: readonly string[]): string[] {
-    //     return pageTitles.map((pageTitle) => this.urlForPage(pageTitle));
-    // }
+        const pageEntries = this.pagesList.filter((pageEntry: IPageEntry) => {
+            const lowerPageTitle = pageEntry.pageTitle.toLowerCase();
+            return matchAllWords
+                ? lowerQuery.every((word) => lowerPageTitle.includes(word))
+                : lowerQuery.some((word) => lowerPageTitle.includes(word));
+        });
+        results.addPageEntries(pageEntries);
+
+        return results;
+    }
 }

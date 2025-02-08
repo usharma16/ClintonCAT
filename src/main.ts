@@ -57,7 +57,7 @@ export class Main {
         const domainResults = this.pagesDatabase.getPagesForDomain(mainDomain);
         const inPageResults = await this.contentScanner.checkPageContents(domain, mainDomain, url, this.pagesDatabase);
         // combine the results
-        // TODOdomainResults.ad(inPageResults);
+        domainResults.addPageEntries(inPageResults.pageEntries);
 
         void this.indicateCATPages(domainResults);
     }
