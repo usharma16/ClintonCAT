@@ -203,7 +203,7 @@ export class DOMHelper implements IDOMHelperInterface {
                         const newElement = document.createElement(message.element);
                         console.log('DOM_CREATE_ELEMENT html: ', message.html);
 
-                        newElement.innerHTML = message.html;
+                        newElement.innerHTML = (message.html ?? '');
                         try {
                             parent.appendChild(newElement);
                         } catch (error) {

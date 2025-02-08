@@ -25,7 +25,7 @@ export class Main {
 
     indicateStatus() {
         void chrome.action.setBadgeText({
-            text: Preferences.isEnabled ? 'on' : 'off',
+            text: Preferences.isEnabled.value ? 'on' : 'off',
         });
     }
 
@@ -41,7 +41,7 @@ export class Main {
     }
 
     checkDomainIsExcluded(domain: string): boolean {
-        return this.domainTools.isDomainExcluded(Preferences.domainExclusions, domain);
+        return this.domainTools.isDomainExcluded(Preferences.domainExclusions.value, domain);
     }
 
     async onPageLoaded(domain: string, url: string): Promise<void> {
@@ -81,7 +81,7 @@ export class Main {
 
             if (message.badgeText) {
                 this.onBadgeTextUpdate(message.badgeText);
-            } else if (!Preferences.isEnabled) {
+            } else if (!Preferences.isEnabled.value) {
                 this.indicateStatus();
             } else if (message.domain) {
                 await this.onPageLoaded(message.domain, message.url);
