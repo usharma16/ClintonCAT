@@ -17,19 +17,19 @@ You might also see a clickable angry cat image in the page.
 
 As this is not yet on the Chrome Web Store it's necessary to download and manually install it.
 
-For Chrome:
+**For Chrome:**
 
-1. Download a [release](https://github.com/WayneKeenan/ClintonCAT/releases) .
+1. Download a [release](https://github.com/WayneKeenan/ClintonCAT/releases).
 2. Open Extension settings: e.g. `chrome://extensions/`  or `brave://extensions/` etc.
 3. Enable Developer Mode
 4. Click `Load Unpacked`
 5. Navigate to the unzipped folder.
 
 
-For Firefox:
+**For Firefox:**
 
 1. Open: about:debugging#/runtime/this-firefox
-2. Expand 'Temporary Extenstions'
+2. Expand 'Temporary Extensions'
 3. Click 'Load Temporary Add-on...'
 4. Navigate to the unzipped folder and open `manifest.json`
 
@@ -48,21 +48,9 @@ npm run build:gecko       # Firefox
 
 The compiled extension will be output in the `dist` folder.
 
-## Testing
+## Contributing
 
-### Automated unit, integration and browser testing
-
-```shell
-npm test
-```
-
-### Manual testing using local http server
-
-```shell
-npx http-server tests/www 
-
-# install using: npm install --global http-server
-```
+We welcome contributions! Please read our [CONTRIBUTING.md](.github/CONTRIBUTING.md) guide for details on how to contribute.
 
 # Contributions
 
