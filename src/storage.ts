@@ -1,28 +1,11 @@
+import { ValueListener, OrderedSetListener } from './listeners';
+
 export class Preferences {
     static readonly IS_ENABLED_KEY = 'is_enabled';
     static readonly DOMAIN_EXCLUSIONS_KEY = 'domain_exclusions';
 
-    private static _isEnabled: boolean = true;
-
-    static get isEnabled(): boolean {
-        return this._isEnabled;
-    }
-
-    static set isEnabled(isEnabled: boolean) {
-        this._isEnabled = isEnabled;
-        void this.setPreference(Preferences.IS_ENABLED_KEY, isEnabled);
-    }
-
-    private static _domainExclusions: string[] = [];
-
-    static get domainExclusions(): string[] {
-        return this._domainExclusions;
-    }
-
-    static set domainExclusions(domains: string[]) {
-        this._domainExclusions = domains;
-        void this.setPreference(Preferences.DOMAIN_EXCLUSIONS_KEY, domains);
-    }
+    static isEnabled = new ValueListener<boolean>(true);
+    static domainExclusions = new OrderedSetListener<string>();
 
     static async refresh() {
         console.log('Refreshing settings');
@@ -30,15 +13,27 @@ export class Preferences {
         await this.getPreference(this.DOMAIN_EXCLUSIONS_KEY);
     }
 
+    static init() {
+        this.isEnabled.removeAllListeners();
+        this.isEnabled.value = true;
+        this.isEnabled.addListener(this.IS_ENABLED_KEY, (result: boolean) => {
+            void this.setPreference(Preferences.IS_ENABLED_KEY, result);
+        });
+        this.domainExclusions.removeAllListeners();
+        this.domainExclusions.value = [];
+        this.domainExclusions.addListener(this.DOMAIN_EXCLUSIONS_KEY, (result: string[]) => {
+            void this.setPreference(Preferences.DOMAIN_EXCLUSIONS_KEY, result);
+        });
+    }
+
     // eslint-disable-next-line @typescript-eslint/require-await
     static async initDefaults() {
-        console.log('Defaulting settings');
-        this.isEnabled = true;
-        this.domainExclusions = [];
+        console.log('Defaulting settings'); // TODO: Get from localStorage
+        this.init();
     }
 
     public static dump(): void {
-        const msg: string = `IsEnabled = ${Preferences._isEnabled.toString()}, DomainExclusions = ${Preferences._domainExclusions.toString()}`;
+        const msg: string = `IsEnabled = ${Preferences.isEnabled.toString()}, DomainExclusions = ${Preferences.domainExclusions.toString()}`;
         console.log(msg);
     }
 
