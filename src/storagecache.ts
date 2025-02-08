@@ -1,8 +1,8 @@
-import { PagesDB } from './database';
+import { PagesDB, IPageEntry } from './database';
 
 export class StorageCache {
     static readonly PAGES_DB_JSON_URL: string =
-        'https://raw.githubusercontent.com/WayneKeenan/ClintonCAT/refs/heads/main/data/pages_db.json';
+        'https://raw.githubusercontent.com/WayneKeenan/ClintonCAT/refs/heads/main/data/pages_db_v2.json';
     static readonly UPDATE_ALARM_NAME: string = 'updatePagesDB';
     static readonly CACHE_KEY: string = 'cachedPagesDB';
     static readonly CACHE_TIMESTAMP_KEY: string = 'cachedPagesDBTimestamp';
@@ -59,7 +59,8 @@ export class StorageCache {
             console.log('Fetching updated pages database...');
             const jsonData: string = await this.fetchJson(StorageCache.PAGES_DB_JSON_URL);
             await this.saveCache(jsonData, now);
-            this.pagesDb.setPages(jsonData as unknown as string[]);
+            console.log(jsonData);
+            this.pagesDb.setPages(jsonData as unknown as IPageEntry[]);
 
             console.log('Pages database updated successfully.');
         } catch (error: unknown) {

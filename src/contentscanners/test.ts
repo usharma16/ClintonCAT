@@ -42,7 +42,7 @@ export class TestScanner implements IContentScannerPlugin {
             if (h2Text) {
                 const pagesFound = _params.pagesDb.fuzzySearch(h2Text);
                 console.log('pagesFound', pagesFound);
-                pageResults.addResults(pagesFound);
+                // TODO: pageResults.addResults(pagesFound);
 
                 if (pagesFound.totalPagesFound) {
                     console.log('Adding the CAT html: ', alertImgUrl);
