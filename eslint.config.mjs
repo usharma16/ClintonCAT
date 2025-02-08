@@ -40,6 +40,12 @@ export default tseslint.config(
     },
     includeIgnoreFile(gitignorePath),
     {
-        ignores: ["**/webpack.config.js", "**/eslint.config.mjs"],
+        ignores: [
+            "**/webpack.config.js",
+            "**/eslint.config.mjs",
+            "**/jest.config.ts",
+            "**/webpack-plugins",
+            "**/scripts",
+        ],
     }
 );

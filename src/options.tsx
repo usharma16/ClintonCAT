@@ -6,27 +6,28 @@ import './options.css';
 const Options: React.FC = () => {
     const [items, setItems] = useState<string[]>([]);
     const [input, setInput] = useState('');
+    Preferences.init();
+    Preferences.domainExclusions.addListener('exclude-options', (result: string[]) => {
+        setItems([...result]); // Forces UI update: https://stackoverflow.com/questions/69836737/react-state-is-not-updating-the-ui
+    });
 
     useEffect(() => {
-        setItems(Preferences.domainExclusions);
+        setItems(Preferences.domainExclusions.value);
     }, []);
 
     const addItem = () => {
         if (input.trim() !== '') {
-            setItems([...items, input]);
-            Preferences.domainExclusions = items;
+            Preferences.domainExclusions.add(input.trim());
             setInput('');
         }
     };
 
     const removeItem = (index: number) => {
-        setItems(items.filter((_, i) => i !== index));
-        Preferences.domainExclusions = items;
+        Preferences.domainExclusions.deleteAt(index);
     };
 
     const clearList = () => {
-        Preferences.domainExclusions = [];
-        setItems([]);
+        Preferences.domainExclusions.value = [];
     };
 
     return (
