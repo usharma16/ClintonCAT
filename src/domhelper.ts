@@ -62,12 +62,12 @@ export class DOMHelper implements IDOMHelperInterface {
     }
 
     // TODO: createElementWithChildSelector ?
-    public async createElementWithChildSelector(
-        parentId: string,
-        selector: string,
-        newElement: string,
-        html: string
-    ): Promise<void> {}
+    // public async createElementWithChildSelector(
+    //     parentId: string,
+    //     selector: string,
+    //     newElement: string,
+    //     html: string
+    // ): Promise<void> {}
 
     // TODO: Exwcute JS?
     // see: https://developer.chrome.com/docs/extensions/reference/api/scripting

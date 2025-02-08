@@ -36,7 +36,7 @@ export class PagesDB {
     public setPages(pages: string[]) {
         this.pagesList = pages;
     }
-    getPagesForDomain(domain: string): CATWikiPageSearchResults {
+    public getPagesForDomain(domain: string): CATWikiPageSearchResults {
         return this.fuzzySearch(domain);
     }
 

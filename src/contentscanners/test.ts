@@ -20,16 +20,16 @@ export class TestScanner implements IContentScannerPlugin {
         const divElements: IElementData[] = await _params.dom.querySelectorAll('div');
         console.dir(divElements);
 
-        let pageResults = new CATWikiPageSearchResults();
+        const pageResults = new CATWikiPageSearchResults();
 
         const alertImgUrl = chrome.runtime.getURL('alert.png');
 
-        for (let i = 0; i < divElements.length; i++) {
-            const divId = divElements[i].id;
+        for (const divElement of divElements) {
+            const divId = divElement.id;
             console.log('element', divId);
 
             const productTitleSelector = `#${divId} h2`;
-            const imgSelector = `#${divId} h2`;
+            // const imgSelector = `#${divId} h2`;
             console.log('productTitleSelector:', productTitleSelector);
             const h2: IElementData | undefined | null = await _params.dom.querySelector(productTitleSelector);
             // const h2: IElementData | undefined | null = await _params.dom.querySelectorByParentId(divId, 'h2');
@@ -40,7 +40,7 @@ export class TestScanner implements IContentScannerPlugin {
             console.log('h2 text: ', h2Text);
 
             if (h2Text) {
-                const pagesFound = await _params.pagesDb.fuzzySearch(h2Text);
+                const pagesFound = _params.pagesDb.fuzzySearch(h2Text);
                 console.log('pagesFound', pagesFound);
                 pageResults.addResults(pagesFound);
 
