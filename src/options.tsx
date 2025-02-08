@@ -3,10 +3,11 @@ import { createRoot } from 'react-dom/client';
 import { Preferences } from './storage';
 import './options.css';
 
+Preferences.init();
+
 const Options: React.FC = () => {
     const [items, setItems] = useState<string[]>([]);
     const [input, setInput] = useState('');
-    Preferences.init();
     Preferences.domainExclusions.addListener('exclude-options', (result: string[]) => {
         setItems([...result]); // Forces UI update: https://stackoverflow.com/questions/69836737/react-state-is-not-updating-the-ui
     });
