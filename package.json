@@ -4,13 +4,15 @@
     "main": "index.js",
     "private": true,
     "scripts": {
+        "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+        "lint": "eslint \"**/*.{ts,tsx,js,jsx,json,md}\"",
+        "typecheck": "tsc --noEmit",
         "test": "jest",
-        "lint": "eslint \"src/**/*.{ts,tsx}\"",
-        "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
         "dev:chromium": "webpack --watch --mode development --env browser=chromium --config engines/chromium/webpack.config.js",
         "dev:gecko": "webpack --watch --mode development --env browser=gecko --config engines/gecko/webpack.config.js",
-        "build:chromium": "rm -rf dist && webpack --mode production --config engines/chromium/webpack.config.js",
-        "build:gecko": "rm -rf dist && webpack --mode production --config engines/gecko/webpack.config.js"
+        "build:chromium": "webpack --mode production --config engines/chromium/webpack.config.js",
+        "build:gecko": "webpack --mode production --config engines/gecko/webpack.config.js",
+        "prepare": "husky"
     },
     "keywords": [
         "ClintonCAT",
@@ -35,8 +37,11 @@
         "copy-webpack-plugin": "^12.0.2",
         "css-loader": "^7.1.2",
         "eslint": "^9.19.0",
+        "eslint-config-prettier": "^10.0.1",
+        "eslint-plugin-prettier": "^5.2.3",
         "eslint-plugin-react": "^7.37.4",
         "html-webpack-plugin": "^5.6.3",
+        "husky": "^9.1.7",
         "jest": "^29.7.0",
         "mini-css-extract-plugin": "^2.9.2",
         "prettier": "^3.4.2",
