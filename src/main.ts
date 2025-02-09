@@ -3,6 +3,7 @@ import { CATWikiPageSearchResults, PagesDB } from './database';
 import { StorageCache } from './storagecache';
 import { DomainTools } from './domaintools';
 import { ContentScanner } from './contentscanner';
+import ChromeSyncStorage from './storage/ChromeSyncStorage';
 
 export interface IMainMessage {
     badgeText: string;
@@ -17,6 +18,8 @@ export class Main {
     contentScanner: ContentScanner;
 
     constructor() {
+        // TODO: need a ChromeLocalStorage for pages db
+        Preferences.setBackingStores(new ChromeSyncStorage(), new ChromeSyncStorage());
         this.pagesDatabase = new PagesDB();
         this.storageCache = new StorageCache(this.pagesDatabase);
         this.domainTools = new DomainTools();

@@ -10,6 +10,8 @@ class Preferences {
     static domainExclusions = new OrderedSetListener<string>();
 
     // Injected storage backends  (TODO: do we need both?)
+    // Sync is used to share data across browsers if logged in, e.g. plugin settings
+    // Local is for 'this' browser only storage and can have more space available, e.g. for the pages db
     private static preferenceStore: Nullable<IStorageBackend> = null;
     private static localStore: Nullable<IStorageBackend> = null;
 
