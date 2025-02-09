@@ -4,9 +4,10 @@
     "main": "index.js",
     "private": true,
     "scripts": {
-        "test": "jest",
-        "lint": "eslint \"**/*.{ts,tsx,js,jsx,json,md}\"",
         "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+        "lint": "eslint \"**/*.{ts,tsx,js,jsx,json,md}\"",
+        "typecheck": "tsc --noEmit",
+        "test": "jest",
         "dev:chromium": "webpack --watch --mode development --env browser=chromium --config engines/chromium/webpack.config.js",
         "dev:gecko": "webpack --watch --mode development --env browser=gecko --config engines/gecko/webpack.config.js",
         "build:chromium": "webpack --mode production --config engines/chromium/webpack.config.js",

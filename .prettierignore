@@ -1,6 +1,7 @@
 .github
 .husky
 .vscode
+.idea
 node_modules
 dist
 data
