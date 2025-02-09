@@ -53,7 +53,7 @@ const Options = () => {
                             <button onClick={addItem} className={classNames(styles.btn, styles.addBtn)}>
                                 Add
                             </button>
-                            <button onClick={addItem} className={classNames(styles.btn, styles.clearBtn)}>
+                            <button onClick={clearList} className={classNames(styles.btn, styles.clearBtn)}>
                                 Clear
                             </button>
                         </div>
