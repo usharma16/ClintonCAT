@@ -23,6 +23,7 @@ export default tseslint.config(
     {
         rules: {
             '@typescript-eslint/no-confusing-void-expression': 'off',
+            '@typescript-eslint/ no-floating-promises': 'off',
             '@typescript-eslint/no-unused-vars': [
                 'error',
                 {
