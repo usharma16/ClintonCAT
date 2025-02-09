@@ -1,41 +1,28 @@
 {
-  "manifest_version": 3,
-  "name": "Clinton CAT",
-  "permissions": [
-    "scripting",
-    "activeTab",
-    "storage",
-    "alarms"
-  ],
-  "host_permissions": [
-    "<all_urls>"
-  ],
-  "content_scripts": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "content.js"
-      ]
+    "manifest_version": 3,
+    "name": "Clinton CAT",
+    "permissions": ["scripting", "activeTab", "storage", "alarms"],
+    "host_permissions": ["<all_urls>"],
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["alert.png"],
+            "matches": ["<all_urls>"]
+        }
+    ],
+    "options_page": "options.html",
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "{11e4e61d-44d6-4d8c-af69-8d879d411a84}",
+            "strict_min_version": "58.0"
+        }
     }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["alert.png"],
-      "matches": [
-        "<all_urls>"
-      ]
-    }
-  ],
-  "options_page": "options.html",
-  "action": {
-    "default_popup": "popup.html"
-  },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "{11e4e61d-44d6-4d8c-af69-8d879d411a84}",
-      "strict_min_version": "58.0"
-    }
-  }
 }
