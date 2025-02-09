@@ -1,3 +1,4 @@
+npm run format
 npm run lint
 # chromium build is generated as all of the tests are currently run on chromium
 npm run build:chromium
