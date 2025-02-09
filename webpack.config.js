@@ -37,7 +37,25 @@ module.exports = (env, argv) => {
                     exclude: /node_modules/,
                 },
                 {
+                    test: /\.module\.css$/,
+                    use: [
+                        MiniCssExtractPlugin.loader,
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                esModule: true,
+                                modules: {
+                                    namedExport: true,
+                                    localIdentName: '[name]__[local]__[hash:base64:5]',
+                                },
+                            },
+                        },
+                    ],
+                },
+
+                {
                     test: /\.css$/,
+                    exclude: /\.module\.css$/,
                     use: [MiniCssExtractPlugin.loader, 'css-loader'],
                 },
             ],

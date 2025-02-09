@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import './options.css';
+import * as styles from './options.module.css';
+import classNames from 'classnames';
 import Preferences from './Preferences';
 
 Preferences.init();
@@ -35,33 +36,33 @@ const Options = () => {
     };
 
     return (
-        <div className="options-page">
-            <h1 className="page-title">Extension Options</h1>
-            <div className="options-container">
-                <div className="settings-column">
-                    <h2 className="column-title">Excluded Domains</h2>
-                    <div className="settings-container">
-                        <div className="input-group">
+        <div className={styles.optionsPage}>
+            <h1 className={styles.pageTitle}>Extension Options</h1>
+            <div className={styles.optionsContainer}>
+                <div className={styles.settingsColumn}>
+                    <h2 className={styles.columnTitle}>Excluded Domains</h2>
+                    <div className={styles.settingsContainer}>
+                        <div className={styles.inputGroup}>
                             <input
                                 type="text"
                                 value={domainInput}
                                 onChange={(e) => setDomainInput(e.target.value)}
                                 placeholder="Enter a domain"
-                                className="input-field"
+                                className={styles.inputField}
                             />
-                            <button onClick={addItem} className="btn add-btn">
+                            <button onClick={addItem} className={classNames(styles.btn, styles.addBtn)}>
                                 Add
                             </button>
-                            <button onClick={clearList} className="btn clear-btn">
+                            <button onClick={clearList} className={classNames(styles.btn, styles.clearBtn)}>
                                 Clear
                             </button>
                         </div>
                     </div>
-                    <ul className="excluded-list">
+                    <ul className={styles.excludedList}>
                         {items.map((item, index) => (
-                            <li key={index} className="excluded-item">
+                            <li key={index} className={styles.excludedItem}>
                                 <span>{item}</span>
-                                <button onClick={() => removeItem(index)} className="remove-btn">
+                                <button onClick={() => removeItem(index)} className={styles.removeBtn}>
                                     &times;
                                 </button>
                             </li>
@@ -69,14 +70,14 @@ const Options = () => {
                     </ul>
                 </div>
 
-                <div className="settings-column">
-                    <h2 className="column-title">Other Settings</h2>
-                    <div className="settings-container">
+                <div className={styles.settingsColumn}>
+                    <h2 className={styles.columnTitle}>Other Settings</h2>
+                    <div className={styles.settingsContainer}>
                         <p>TODO</p>
-                        <label className="toggle-label">
+                        <label className={styles.toggleLabel}>
                             <span>Enable Feature XYZ</span>
                             <input type="checkbox" />
-                            <span className="toggle-slider" />
+                            <span className={styles.toggleSlider} />
                         </label>
                     </div>
                 </div>
