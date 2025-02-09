@@ -1,4 +1,4 @@
-.options-page {
+.optionsPage {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     background-color: #f5f6fa;
     padding: 20px;
@@ -6,12 +6,12 @@
     color: #333;
 }
 
-.page-title {
+.pageTitle {
     text-align: center;
     margin-bottom: 30px;
 }
 
-.options-container {
+.optionsContainer {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -20,7 +20,7 @@
     margin: 0 auto;
 }
 
-.settings-column {
+.settingsColumn {
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -29,7 +29,7 @@
     box-sizing: border-box;
 }
 
-.column-title {
+.columnTitle {
     margin-top: 0;
     margin-bottom: 20px;
     font-size: 1.2rem;
@@ -37,14 +37,14 @@
     padding-bottom: 10px;
 }
 
-.input-group {
+.inputGroup {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 20px;
 }
 
-.input-field {
+.inputField {
     flex: 1;
     padding: 10px;
     border: 1px solid #ccc;
@@ -61,29 +61,29 @@
     transition: background-color 0.2s ease;
 }
 
-.add-btn {
+.addBtn {
     background-color: #2563eb;
 }
 
-.add-btn:hover {
+.addBtn:hover {
     background-color: #1d4ed8;
 }
 
-.clear-btn {
+.clearBtn {
     background-color: #ef4444;
 }
 
-.clear-btn:hover {
+.clearBtn:hover {
     background-color: #dc2626;
 }
 
-.excluded-list {
+.excludedList {
     list-style-type: none;
     padding-left: 0;
     margin: 0;
 }
 
-.excluded-item {
+.excludedItem {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -94,7 +94,7 @@
     padding: 10px 14px;
 }
 
-.remove-btn {
+.removeBtn {
     background: none;
     border: none;
     color: #dc2626;
@@ -104,15 +104,15 @@
     line-height: 1;
 }
 
-.remove-btn:hover {
+.removeBtn:hover {
     color: #b91c1c;
 }
 
-.settings-container {
+.settingsContainer {
     margin-top: 2em;
 }
 
-.toggle-label {
+.toggleLabel {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -122,11 +122,11 @@
     user-select: none;
 }
 
-.toggle-label input {
+.toggleLabel input {
     display: none;
 }
 
-.toggle-slider {
+.toggleSlider {
     width: 44px;
     height: 22px;
     background-color: #ccc;
@@ -136,7 +136,7 @@
     position: relative;
 }
 
-.toggle-slider::before {
+.toggleSlider::before {
     content: "";
     position: absolute;
     width: 18px;
@@ -148,10 +148,10 @@
     transition: 0.2s;
 }
 
-.toggle-label input:checked + .toggle-slider {
+.toggleLabel input:checked + .toggleSlider {
     background-color: #2563eb;
 }
 
-.toggle-label input:checked + .toggle-slider::before {
+.toggleLabel input:checked + .toggleSlider::before {
     transform: translateX(22px);
 }

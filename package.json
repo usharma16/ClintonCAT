@@ -6,6 +6,7 @@
     "scripts": {
         "test": "jest",
         "lint": "eslint \"src/**/*.{ts,tsx}\"",
+        "typecheck": "tsc --noEmit",
         "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
         "dev:chromium": "webpack --watch --mode development --env browser=chromium --config engines/chromium/webpack.config.js",
         "dev:gecko": "webpack --watch --mode development --env browser=gecko --config engines/gecko/webpack.config.js",
@@ -53,5 +54,8 @@
         "webpack": "^5.97.1",
         "webpack-cli": "^6.0.1",
         "webpack-dev-server": "^5.2.0"
+    },
+    "dependencies": {
+        "classnames": "^2.5.1"
     }
 }
