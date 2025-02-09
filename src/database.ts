@@ -1,6 +1,8 @@
 // export interface IPagesDB {
 //     void updatePages();
 // }
+import escapeRegex from './utils/escapeRegex';
+
 export interface IPageEntry {
     pageTitle: string;
     popupText: string;
@@ -97,19 +99,29 @@ export class PagesDB {
         return results;
     }
 
-    // TODO: fix producing some false positives in results
     public fuzzySearch(query: string, matchAllWords: boolean = false): CATWikiPageSearchResults {
-        const lowerQuery = query.toLowerCase().split(/\s+/);
+        const lowerQueryWords = query.toLowerCase().split(/\s+/);
         const results = new CATWikiPageSearchResults();
 
-        const pageEntries = this.pagesList.filter((pageEntry: IPageEntry) => {
-            const lowerPageTitle = pageEntry.pageTitle.toLowerCase();
-            return matchAllWords
-                ? lowerQuery.every((word) => lowerPageTitle.includes(word))
-                : lowerQuery.some((word) => lowerPageTitle.includes(word));
-        });
-        results.addPageEntries(pageEntries);
+        const pageEntries = this.pagesList
+            .map((pageEntry) => {
+                const lowerTitle = pageEntry.pageTitle.toLowerCase();
+                let matchCount = 0;
+                for (const word of lowerQueryWords) {
+                    // Use word boundaries to reduce false positives
+                    // and escape special regex characters to handle queries like "(test)".
+                    const regex = new RegExp(`\\b${escapeRegex(word)}\\b`, 'i');
+                    if (regex.test(lowerTitle)) {
+                        matchCount++;
+                    }
+                }
+                return { pageEntry, matchCount };
+            })
+            .filter(({ matchCount }) => (matchAllWords ? matchCount === lowerQueryWords.length : matchCount > 0))
+            .sort((a, b) => b.matchCount - a.matchCount)
+            .map(({ pageEntry }) => pageEntry);
 
+        results.addPageEntries(pageEntries);
         return results;
     }
 }
