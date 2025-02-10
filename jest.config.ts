@@ -3,6 +3,6 @@ module.exports = {
     testEnvironment: 'node',
     modulePathIgnorePatterns: ['src/contentscanners/test.ts'],
     moduleNameMapper: {
-        "^@/(.*)$": "<rootDir>/src/$1",
+        '^@/(.*)$': '<rootDir>/src/$1',
     },
 };

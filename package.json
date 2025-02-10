@@ -4,7 +4,7 @@
     "main": "index.js",
     "private": true,
     "scripts": {
-        "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,html}\"",
+        "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,html}\" && git add -u",
         "lint": "eslint \"**/*.{ts,tsx,js,jsx,json,md,html}\"",
         "typecheck": "tsc --noEmit",
         "test": "jest",
