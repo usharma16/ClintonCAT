@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import * as styles from './options.module.css';
 import classNames from 'classnames';
-import Preferences from './Preferences';
+import Preferences from './preferences';
 
 Preferences.init();
 

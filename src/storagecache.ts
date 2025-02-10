@@ -2,7 +2,7 @@ import { PagesDB, IPageEntry } from './database';
 
 export class StorageCache {
     static readonly PAGES_DB_JSON_URL: string =
-        'https://raw.githubusercontent.com/WayneKeenan/ClintonCAT/refs/heads/main/data/pages_db_v2.json';
+        'https://raw.githubusercontent.com/WayneKeenan/ClintonCAT/refs/heads/main/data/pages-db-v2.json';
     static readonly UPDATE_ALARM_NAME: string = 'updatePagesDB';
     static readonly CACHE_KEY: string = 'cachedPagesDB';
     static readonly CACHE_TIMESTAMP_KEY: string = 'cachedPagesDBTimestamp';

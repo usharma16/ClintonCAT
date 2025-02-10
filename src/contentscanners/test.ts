@@ -2,7 +2,7 @@ import { IContentScannerPlugin, IScanParameters, IElementData } from '../content
 import { CATWikiPageSearchResults, PageEntry } from '../database';
 
 // Simple test for simple test page, e.g.
-// https://waynekeenan.github.io/ClintonCAT/tests/www/3products_1cat.html
+// https://waynekeenan.github.io/ClintonCAT/tests/www/3products-1cat.html
 
 // TODO: fix: accidentally reusing classnames will silently override other classes
 export class TestScanner implements IContentScannerPlugin {

@@ -1,9 +1,9 @@
-import Preferences from './Preferences';
+import Preferences from './preferences';
 import { CATWikiPageSearchResults, PagesDB } from './database';
 import { StorageCache } from './storagecache';
 import { DomainTools } from './domaintools';
 import { ContentScanner } from './contentscanner';
-import ChromeSyncStorage from './storage/ChromeSyncStorage';
+import ChromeSyncStorage from './storage/chrome-sync-storage';
 
 export interface IMainMessage {
     badgeText: string;
