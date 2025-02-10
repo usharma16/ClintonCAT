@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import * as styles from './popup.module.css';
-import Preferences from './Preferences';
+import Preferences from './preferences';
 
 const Popup = () => {
     const [isEnabled, setIsEnabled] = useState(false);

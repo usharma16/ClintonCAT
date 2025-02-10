@@ -4,7 +4,7 @@ const { exec } = require('child_process');
 class PostBuildManifestPlugin {
     apply(compiler) {
         compiler.hooks.done.tap('PostBuildManifestPlugin', () => {
-            exec('node scripts/post-build-update-manifest.js', (err, stdout, stderr) => {
+            exec('npx tsx scripts/post-build-update-manifest.ts', (err, stdout, stderr) => {
                 if (err) {
                     console.error(`❌ Error updating manifest: ${stderr}`);
                 } else {

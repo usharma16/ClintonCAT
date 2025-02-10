@@ -1,7 +1,7 @@
-import getChromeLastError from '../utils/getChromeLastError';
-import { IStorageBackend } from './IStorageBackend';
+import getChromeLastError from '@/utils/helpers/get-chrome-last-error';
+import { IStorageBackend } from './istorage-backend';
 
-class ChromeLocalStorage implements IStorageBackend {
+class ChromeSyncStorage implements IStorageBackend {
     /**
      * Stores a value under the given key in chrome.storage.local.
      * The value is JSON-stringified first.
@@ -9,10 +9,10 @@ class ChromeLocalStorage implements IStorageBackend {
     async set(key: string, value: unknown): Promise<void> {
         const toStore = JSON.stringify(value);
         return new Promise((resolve, reject) => {
-            chrome.storage.local.set({ [key]: toStore }, () => {
+            chrome.storage.sync.set({ [key]: toStore }, () => {
                 if (chrome.runtime.lastError) return reject(getChromeLastError());
 
-                console.log(`ChromeLocalStorage.set: ${key} = ${toStore}`);
+                console.log(`ChromeSyncStorage.set: ${key} = ${toStore}`);
                 resolve();
             });
         });
@@ -24,7 +24,7 @@ class ChromeLocalStorage implements IStorageBackend {
      */
     async get(key: string): Promise<unknown> {
         return new Promise((resolve, reject) => {
-            chrome.storage.local.get(key, (result) => {
+            chrome.storage.sync.get(key, (result) => {
                 if (chrome.runtime.lastError) return reject(getChromeLastError());
 
                 const rawValue: unknown = result[key];
@@ -69,4 +69,4 @@ class ChromeLocalStorage implements IStorageBackend {
     }
 }
 
-export default ChromeLocalStorage;
+export default ChromeSyncStorage;

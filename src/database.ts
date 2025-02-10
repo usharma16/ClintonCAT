@@ -1,7 +1,7 @@
 // export interface IPagesDB {
 //     void updatePages();
 // }
-import escapeRegex from './utils/escapeRegex';
+import escapeRegex from '@/utils/helpers/escape-regex';
 
 export interface IPageEntry {
     pageTitle: string;

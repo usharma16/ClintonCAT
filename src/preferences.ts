@@ -1,5 +1,5 @@
 import { OrderedSetListener, ValueListener } from './listeners';
-import { IStorageBackend } from './storage/IStorageBackend';
+import { IStorageBackend } from './storage/istorage-backend';
 import { Nullable } from './utils/utils.types';
 
 class Preferences {

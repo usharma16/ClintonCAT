@@ -1,5 +1,5 @@
-import { IContentScannerPlugin, IScanParameters } from '../../contentscanner';
-import { CATWikiPageSearchResults } from '../../database';
+import { IContentScannerPlugin, IScanParameters } from '@/contentscanner';
+import { CATWikiPageSearchResults } from '@/database';
 
 export class AmazonUKPageScanner implements IContentScannerPlugin {
     metaInfo(): string {

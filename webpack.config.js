@@ -3,9 +3,9 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const TouchManifestPlugin = require('./webpack-plugins/TouchManifestPlugin');
-const PostBuildManifestPlugin = require('./webpack-plugins/PostBuildManifestPlugin');
-const ReloadExtensionPlugin = require('./webpack-plugins/ReloadExtensionPlugin');
+const PostBuildManifestPlugin = require('./webpack-plugins/post-build-manifest-plugin');
+const ReloadExtensionPlugin = require('./webpack-plugins/reload-extension-plugin');
+const TouchManifestPlugin = require('./webpack-plugins/touch-manifest-plugin');
 
 module.exports = (env, argv) => {
     const isDevelopment = argv.mode === 'development';
@@ -27,6 +27,9 @@ module.exports = (env, argv) => {
             clean: true,
         },
         resolve: {
+            alias: {
+                '@': path.resolve(__dirname, 'src'),
+            },
             extensions: ['.tsx', '.ts', '.js'],
         },
         module: {
@@ -83,9 +86,9 @@ module.exports = (env, argv) => {
                 ],
             }),
             new MiniCssExtractPlugin(),
-            new TouchManifestPlugin(),
             new PostBuildManifestPlugin(),
             new ReloadExtensionPlugin(),
+            new TouchManifestPlugin(),
         ],
         devtool: isDevelopment ? 'cheap-module-source-map' : 'source-map',
     };
