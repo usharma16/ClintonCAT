@@ -99,6 +99,41 @@ export class PagesDB {
         return results;
     }
 
+    public findConsecutiveWords(query: string, maxResults = 1, onlyFromStart = true): CATWikiPageSearchResults {
+        if (maxResults != 1) {
+            throw new Error('maxResults != 1');
+        }
+        if (!onlyFromStart) {
+            throw new Error('onlyFromStart = false');
+        }
+
+        const searchWords = query.toLowerCase().split(' ');
+        let maxInOrderCount = 0;
+        let foundPage = null;
+
+        for (const pageEntry of this.pagesList) {
+            const titleWords = pageEntry.pageTitle.toLowerCase().split(' ');
+            let thisInOrderCount = 0;
+            const maxIndex = Math.min(searchWords.length, titleWords.length);
+
+            for (let index = 0; index < maxIndex; index++) {
+                if (searchWords[index] === titleWords[index]) {
+                    thisInOrderCount++;
+                }
+            }
+            if (thisInOrderCount > maxInOrderCount) {
+                maxInOrderCount = thisInOrderCount;
+                foundPage = pageEntry;
+            }
+        }
+        const results = new CATWikiPageSearchResults();
+
+        if (foundPage != null) {
+            results.addPageEntry(foundPage);
+        }
+        return results;
+    }
+
     public fuzzySearch(query: string, matchAllWords: boolean = false): CATWikiPageSearchResults {
         const lowerQueryWords = query.toLowerCase().split(/\s+/);
         const results = new CATWikiPageSearchResults();

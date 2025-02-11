@@ -40,7 +40,7 @@ export class TestScanner implements IContentScannerPlugin {
             console.log('h2 text: ', h2Text);
 
             if (h2Text) {
-                const searchResult = _params.pagesDb.fuzzySearch(h2Text);
+                const searchResult = _params.pagesDb.findConsecutiveWords(h2Text);
                 console.log('searchResult', searchResult);
                 pageResults.addPageEntries(searchResult.pageEntries);
 

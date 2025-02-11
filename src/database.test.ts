@@ -82,4 +82,44 @@ describe('PagesDB', () => {
             expect(matchedTitles[0]).toBe('Laptop Repair Info');
         });
     });
+
+    describe('PagesDB findConsecutiveWords search', () => {
+        let pagesDb: PagesDB;
+
+        beforeEach(() => {
+            pagesDb = new PagesDB();
+            pagesDb.setPages([
+                {
+                    pageTitle: 'LG G4 Fiasco',
+                    popupText: '(Placeholder text for article in LG)',
+                    category: 'LG',
+                },
+                {
+                    pageTitle: 'LG',
+                    popupText: '(Placeholder text for article in Electronics companies)',
+                    category: 'Electronics companies',
+                },
+                {
+                    pageTitle: 'LG refrigerator warranty scandal',
+                    popupText: '(Placeholder text for article in LG)',
+                    category: 'LG',
+                },
+                {
+                    pageTitle: 'LG Television sale of personal data',
+                    popupText: '(Placeholder text for article in LG)',
+                    category: 'LG',
+                },
+                {
+                    pageTitle: 'Xiaomi Phone unlock requirements and procedure',
+                    popupText: '(Placeholder text for article in Xiaomi)',
+                    category: 'Xiaomi',
+                },
+            ]);
+        });
+
+        test('find only LG G4 phone Fiasco article', () => {
+            const results1 = pagesDb.findConsecutiveWords('LG G4 Phone');
+            expect(results1.totalPagesFound).toBe(1); // To find the product only
+        });
+    });
 });
