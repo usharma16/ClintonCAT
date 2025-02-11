@@ -101,10 +101,10 @@ export class PagesDB {
 
     public findConsecutiveWords(query: string, maxResults = 1, onlyFromStart = true): CATWikiPageSearchResults {
         if (maxResults != 1) {
-            throw new Error('maxResults != 1');
+            throw new Error('Unimplemented: maxResults != 1');
         }
         if (!onlyFromStart) {
-            throw new Error('onlyFromStart = false');
+            throw new Error('Unimplemented: onlyFromStart = false');
         }
 
         const searchWords = query.toLowerCase().split(' ');
