@@ -8,6 +8,7 @@
         "lint": "eslint \"**/*.{mjs,js,jsx,mts,ts,tsx,json,md,html}\"",
         "typecheck": "tsc --noEmit",
         "test": "jest",
+        "test:coverage": "COVERAGE=true jest",
         "dev:chromium": "webpack --watch --mode development --env browser=chromium --config engines/chromium/webpack.config.js",
         "dev:gecko": "webpack --watch --mode development --env browser=gecko --config engines/gecko/webpack.config.js",
         "build:chromium": "webpack --mode production --config engines/chromium/webpack.config.js",
