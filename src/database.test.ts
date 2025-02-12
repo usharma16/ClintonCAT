@@ -122,4 +122,20 @@ describe('PagesDB', () => {
             expect(results1.totalPagesFound).toBe(1); // To find the product only
         });
     });
+
+    describe('PagesDB how do you like them apples', () => {
+        let pagesDb: PagesDB;
+
+        beforeEach(() => {
+            pagesDb = new PagesDB();
+            pagesDb.setPages([{ pageTitle: 'Apple', popupText: 'shiny stuff alert', category: 'Hardware' }]);
+        });
+
+        test('should match the single word "Apple" only in whole-word contexts', () => {
+            const results = pagesDb.fuzzySearch('apple');
+            const matchedTitles = results.pageEntries.map((entry) => entry.pageTitle);
+
+            expect(matchedTitles).toEqual(['Apple']);
+        });
+    });
 });

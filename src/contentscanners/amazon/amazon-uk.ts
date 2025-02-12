@@ -1,5 +1,4 @@
 import { IContentScannerPlugin, IScanParameters } from '@/contentscanner';
-import { CATWikiPageSearchResults } from '@/database';
 
 export class AmazonUKPageScanner implements IContentScannerPlugin {
     metaInfo(): string {
@@ -11,8 +10,8 @@ export class AmazonUKPageScanner implements IContentScannerPlugin {
     }
 
     // eslint-disable-next-line @typescript-eslint/require-await
-    async scan(params: IScanParameters): Promise<CATWikiPageSearchResults> {
+    async scan(params: IScanParameters): Promise<boolean> {
         console.log(`Amazon UK Scanner: ${params.domain} - ${params.mainDomain}`);
-        return new CATWikiPageSearchResults();
+        return false;
     }
 }

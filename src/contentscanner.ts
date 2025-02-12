@@ -2,14 +2,14 @@
 const context: __WebpackModuleApi.RequireContext = require.context('./contentscanners', true, /\.ts$/, 'sync');
 import { CATWikiPageSearchResults, PagesDB } from './database';
 import { DefaultScanner } from './contentscanners/default';
-import { IDOMHelperInterface, DOMHelper, DOMHelperMessageType } from './domhelper';
+import { IDOMHelperInterface, DOMHelperMessageType } from './domhelper';
 
 export interface IContentScannerPlugin {
     metaInfo(): string;
 
     canScanContent(params: IScanParameters): boolean;
 
-    scan(params: IScanParameters): Promise<CATWikiPageSearchResults>;
+    scan(params: IScanParameters): Promise<boolean>;
 }
 
 export interface IScanParameters {
@@ -18,6 +18,7 @@ export interface IScanParameters {
     url: string;
     pagesDb: PagesDB;
     dom: IDOMHelperInterface;
+    notify: (result: CATWikiPageSearchResults) => void;
 }
 
 // TODO: break this up into per DOMQuery types?
@@ -40,36 +41,25 @@ export interface IElementData {
 export class ContentScanner {
     private scannerPlugins: IContentScannerPlugin[] = [];
     private defaultScannerPlugin: IContentScannerPlugin = new DefaultScanner();
-    private domHelper: IDOMHelperInterface = new DOMHelper();
 
     constructor() {
         this.findScannerPlugins();
     }
 
-    public async checkPageContents(
-        domain: string,
-        mainDomain: string,
-        url: string,
-        pagesDb: PagesDB
-    ): Promise<CATWikiPageSearchResults> {
-        const scannerParameters: IScanParameters = {
-            domain: domain.toLowerCase(),
-            mainDomain: mainDomain.toLowerCase(),
-            url: url,
-            pagesDb: pagesDb,
-            dom: this.domHelper,
-        };
-
+    public async checkPageContents(scannerParameters: IScanParameters): Promise<void> {
         for (const plugin of this.scannerPlugins) {
             // TODO: memoize the result ?
             if (plugin.canScanContent(scannerParameters)) {
                 console.log(`Found a plugin that can handle request: ${scannerParameters.domain}`);
                 // TODO: allow multiple handlers ?
-                return await plugin.scan(scannerParameters);
+                const didFindPages = await plugin.scan(scannerParameters);
+                if (didFindPages) {
+                    return;
+                }
             }
         }
         console.log('Using default content scanner');
-        return await this.defaultScannerPlugin.scan(scannerParameters);
+        await this.defaultScannerPlugin.scan(scannerParameters);
     }
 
     private findScannerPlugins(): void {

@@ -10,17 +10,22 @@ export class TestScanner implements IContentScannerPlugin {
         return 'test scanner';
     }
 
-    canScanContent(_params: IScanParameters): boolean {
-        return _params.domain.endsWith('waynekeenan.github.io') || _params.domain === 'localhost';
+    canScanContent(params: IScanParameters): boolean {
+        return params.domain.endsWith('waynekeenan.github.io') || params.domain === 'localhost';
     }
 
-    async scan(_params: IScanParameters): Promise<CATWikiPageSearchResults> {
-        console.log(`Test Scanner: ${_params.domain} - ${_params.mainDomain}`);
-
-        const divElements: IElementData[] = await _params.dom.querySelectorAll('div');
-        console.dir(divElements);
+    async scan(params: IScanParameters): Promise<boolean> {
+        console.log(`Test Scanner: ${params.domain} - ${params.mainDomain}`);
 
         const pageResults = new CATWikiPageSearchResults();
+
+        // Anything in the domain?
+        const domainResults = params.pagesDb.getPagesForDomain(params.domain);
+        pageResults.addPageEntries(domainResults.pageEntries);
+
+        // Check the page
+        const divElements: IElementData[] = await params.dom.querySelectorAll('div');
+        console.dir(divElements);
 
         const alertImgUrl = chrome.runtime.getURL('alert.png');
 
@@ -31,7 +36,7 @@ export class TestScanner implements IContentScannerPlugin {
             const productTitleSelector = `#${divId} h2`;
             // const imgSelector = `#${divId} h2`;
             console.log('productTitleSelector:', productTitleSelector);
-            const h2: IElementData | undefined | null = await _params.dom.querySelector(productTitleSelector);
+            const h2: IElementData | undefined | null = await params.dom.querySelector(productTitleSelector);
             // const h2: IElementData | undefined | null = await _params.dom.querySelectorByParentId(divId, 'h2');
             // const h2: IElementData | undefined | null = await _params.dom.querySelectorByParentId(divId, ':scope > h2');
 
@@ -40,7 +45,7 @@ export class TestScanner implements IContentScannerPlugin {
             console.log('h2 text: ', h2Text);
 
             if (h2Text) {
-                const searchResult = _params.pagesDb.findConsecutiveWords(h2Text);
+                const searchResult = params.pagesDb.findConsecutiveWords(h2Text);
                 console.log('searchResult', searchResult);
                 pageResults.addPageEntries(searchResult.pageEntries);
 
@@ -50,7 +55,7 @@ export class TestScanner implements IContentScannerPlugin {
                     console.dir(pageEntry);
                     const pageUrl: string = pageEntry.url();
                     const popupText: string = pageEntry.popupText;
-                    await _params.dom.createElement(
+                    await params.dom.createElement(
                         divId,
                         'p',
                         `<a href="${pageUrl}"  target="_blank"><img id="alertIcon"  src="${alertImgUrl}" alt="" title="${popupText}"/></a>`
@@ -64,10 +69,11 @@ export class TestScanner implements IContentScannerPlugin {
                     );
 
                     break; // Only add the first found page alert
+                    // TODO: the _params.notify might publish results on the fly to interested subscribers
                 }
             }
         }
-
-        return pageResults;
+        params.notify(pageResults);
+        return pageResults.totalPagesFound > 0;
     }
 }

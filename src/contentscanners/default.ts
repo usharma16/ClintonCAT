@@ -11,9 +11,19 @@ export class DefaultScanner implements IContentScannerPlugin {
         return false;
     }
 
-    async scan(params: IScanParameters): Promise<CATWikiPageSearchResults> {
+    async scan(params: IScanParameters): Promise<boolean> {
         console.log(`Default Scanner: ${params.domain} - ${params.mainDomain}`);
-        const pText = await params.dom.querySelectorAllAsText('p');
-        return params.pagesDb.simpleSearch(pText);
+        const results = new CATWikiPageSearchResults();
+        console.log(results);
+        const domainResults = params.pagesDb.getPagesForDomain(params.mainDomain);
+        results.addPageEntries(domainResults.pageEntries);
+
+        // TODO:
+        // const pText = await params.dom.querySelectorAllAsText('p');
+        // const pageResults = params.pagesDb.findConsecutiveWords(pText);
+        // results.addPageEntries(pageResults.pageEntries);
+
+        params.notify(results);
+        return Promise.resolve(true);
     }
 }
