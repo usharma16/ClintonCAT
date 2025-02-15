@@ -22,6 +22,7 @@ export class Main {
         // TODO: need a ChromeLocalStorage for pages db
         Preferences.setBackingStores(new ChromeSyncStorage(), new ChromeSyncStorage());
         this.pagesDatabase = new PagesDB();
+        this.pagesDatabase.initDefaultPages();
         this.storageCache = new StorageCache(this.pagesDatabase);
         this.domainTools = new DomainTools();
         this.contentScanner = new ContentScanner();

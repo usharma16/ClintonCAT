@@ -1,4 +1,4 @@
-import { PagesDB } from './database';
+import { PageEntry, PagesDB } from './database';
 
 describe('PagesDB', () => {
     describe('PagesDB page entries', () => {
@@ -159,6 +159,28 @@ describe('PagesDB', () => {
             const matchedTitles = results.pageEntries.map((entry) => entry.pageTitle);
 
             expect(matchedTitles).toEqual(['Apple']);
+        });
+    });
+
+    describe('Ensure the baked-in default PagesDB has some content', () => {
+        let pagesDb: PagesDB;
+
+        beforeEach(() => {
+            pagesDb = new PagesDB();
+            pagesDb.initDefaultPages();
+        });
+
+        test('ensure there is at least one page entry', () => {
+            const pages = pagesDb.getDefaultPages();
+            expect(pages.length).toBeGreaterThan(0);
+        });
+
+        test('ensure the first entry is a valid PageEntry', () => {
+            const pages = pagesDb.getDefaultPages();
+            expect(pages.length).toBeGreaterThan(0);
+            const page = new PageEntry(pages[0]);
+            expect(page.pageId).toBeGreaterThan(0);
+            // TODO: expect(pages[0]).toBeInstanceOf(PageEntry);
         });
     });
 });

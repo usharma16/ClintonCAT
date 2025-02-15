@@ -1,7 +1,5 @@
-// export interface IPagesDB {
-//     void updatePages();
-// }
 import escapeRegex from '@/utils/helpers/escape-regex';
+import pagesDbDefaultJson from '../data/pages_db.json'; // assert { type: 'json' };
 
 export interface IPageEntry {
     pageId: number;
@@ -92,6 +90,17 @@ export class PagesDB {
     static readonly PAGES_DB_JSON_URL: string =
         'https://raw.githubusercontent.com/WayneKeenan/ClintonCAT/refs/heads/main/data/pages_db.json';
     private pagesList: IPageEntry[] = []; // keep another local copy.
+
+    static readonly pagesDbDefault: IPageEntry[] = pagesDbDefaultJson;
+
+    // load the baked in pagesdb json as an initial db, just in case...
+    public initDefaultPages(): void {
+        this.setPages(PagesDB.pagesDbDefault);
+    }
+
+    public getDefaultPages(): readonly IPageEntry[] {
+        return PagesDB.pagesDbDefault;
+    }
 
     public setPages(pages: IPageEntry[]) {
         // console.log('setPages', pages);

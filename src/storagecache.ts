@@ -64,7 +64,8 @@ export class StorageCache {
         } catch (error: unknown) {
             if (error instanceof Error) {
                 console.error(`Failed to update pages database: ${error.message}`);
-                throw error;
+                // PagesDB has an initial baked in default, however...
+                // TODO: as simply re-throwing kills the plugin it would be better to update UI
             }
         }
     }
