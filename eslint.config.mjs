@@ -66,6 +66,7 @@ export default tseslint.config(
             '**/jest.config.ts',
             '**/webpack-plugins',
             '**/scripts',
+            '**/engines/safari',
         ],
     }
 );

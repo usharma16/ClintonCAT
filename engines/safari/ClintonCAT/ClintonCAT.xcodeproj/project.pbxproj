@@ -1,0 +1,1033 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B0018D9E2D6117FB00A7ED4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0018D9D2D6117FB00A7ED4C /* AppDelegate.swift */; };
+		B0018DA02D6117FB00A7ED4C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0018D9F2D6117FB00A7ED4C /* SceneDelegate.swift */; };
+		B0018DA32D6117FB00A7ED4C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B0018DA12D6117FB00A7ED4C /* LaunchScreen.storyboard */; };
+		B0018DA62D6117FB00A7ED4C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B0018DA42D6117FB00A7ED4C /* Main.storyboard */; };
+		B0018DAF2D6117FB00A7ED4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0018DAE2D6117FB00A7ED4C /* AppDelegate.swift */; };
+		B0018DB22D6117FB00A7ED4C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B0018DB02D6117FB00A7ED4C /* Main.storyboard */; };
+		B0018DBA2D6117FB00A7ED4C /* ClintonCAT Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B0018DB92D6117FB00A7ED4C /* ClintonCAT Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B0018DC42D6117FB00A7ED4C /* ClintonCAT Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B0018DC32D6117FB00A7ED4C /* ClintonCAT Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B0018DCA2D6117FB00A7ED4C /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = B0018D8D2D6117FA00A7ED4C /* Main.html */; };
+		B0018DCB2D6117FB00A7ED4C /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = B0018D8D2D6117FA00A7ED4C /* Main.html */; };
+		B0018DCC2D6117FB00A7ED4C /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B0018D8F2D6117FA00A7ED4C /* Icon.png */; };
+		B0018DCD2D6117FB00A7ED4C /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B0018D8F2D6117FA00A7ED4C /* Icon.png */; };
+		B0018DCE2D6117FB00A7ED4C /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = B0018D902D6117FA00A7ED4C /* Style.css */; };
+		B0018DCF2D6117FB00A7ED4C /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = B0018D902D6117FA00A7ED4C /* Style.css */; };
+		B0018DD02D6117FB00A7ED4C /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = B0018D912D6117FA00A7ED4C /* Script.js */; };
+		B0018DD12D6117FB00A7ED4C /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = B0018D912D6117FA00A7ED4C /* Script.js */; };
+		B0018DD22D6117FB00A7ED4C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0018D922D6117FA00A7ED4C /* ViewController.swift */; };
+		B0018DD32D6117FB00A7ED4C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0018D922D6117FA00A7ED4C /* ViewController.swift */; };
+		B0018DD42D6117FB00A7ED4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0018D932D6117FB00A7ED4C /* Assets.xcassets */; };
+		B0018DD52D6117FB00A7ED4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0018D932D6117FB00A7ED4C /* Assets.xcassets */; };
+		B0018DD62D6117FB00A7ED4C /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0018D952D6117FB00A7ED4C /* SafariWebExtensionHandler.swift */; };
+		B0018DD72D6117FB00A7ED4C /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0018D952D6117FB00A7ED4C /* SafariWebExtensionHandler.swift */; };
+		B0018DFF2D6117FB00A7ED4C /* icon16.png in Resources */ = {isa = PBXBuildFile; fileRef = B0018DE92D6117FB00A7ED4C /* icon16.png */; };
+		B0018E002D6117FB00A7ED4C /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = B0018DEA2D6117FB00A7ED4C /* popup.js */; };
+		B0018E012D6117FB00A7ED4C /* popup.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0018DED2D6117FB00A7ED4C /* popup.js.LICENSE.txt */; };
+		B0018E022D6117FB00A7ED4C /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = B0018DEE2D6117FB00A7ED4C /* background.js */; };
+		B0018E032D6117FB00A7ED4C /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = B0018DEF2D6117FB00A7ED4C /* popup.html */; };
+		B0018E042D6117FB00A7ED4C /* icon48.png in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF02D6117FB00A7ED4C /* icon48.png */; };
+		B0018E052D6117FB00A7ED4C /* options.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF12D6117FB00A7ED4C /* options.js.LICENSE.txt */; };
+		B0018E062D6117FB00A7ED4C /* options.js in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF22D6117FB00A7ED4C /* options.js */; };
+		B0018E072D6117FB00A7ED4C /* alert.png in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF32D6117FB00A7ED4C /* alert.png */; };
+		B0018E082D6117FB00A7ED4C /* icon128.png in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF42D6117FB00A7ED4C /* icon128.png */; };
+		B0018E092D6117FB00A7ED4C /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF72D6117FB00A7ED4C /* manifest.json */; };
+		B0018E0A2D6117FB00A7ED4C /* options.html in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF82D6117FB00A7ED4C /* options.html */; };
+		B0018E0B2D6117FB00A7ED4C /* popup.css in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF92D6117FB00A7ED4C /* popup.css */; };
+		B0018E0C2D6117FB00A7ED4C /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = B0018DFA2D6117FB00A7ED4C /* content.js */; };
+		B0018E0D2D6117FB00A7ED4C /* options.css in Resources */ = {isa = PBXBuildFile; fileRef = B0018DFC2D6117FB00A7ED4C /* options.css */; };
+		B0018E0E2D6117FB00A7ED4C /* icon32.png in Resources */ = {isa = PBXBuildFile; fileRef = B0018DFD2D6117FB00A7ED4C /* icon32.png */; };
+		B0018E0F2D6117FB00A7ED4C /* icon16.png in Resources */ = {isa = PBXBuildFile; fileRef = B0018DE92D6117FB00A7ED4C /* icon16.png */; };
+		B0018E102D6117FB00A7ED4C /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = B0018DEA2D6117FB00A7ED4C /* popup.js */; };
+		B0018E112D6117FB00A7ED4C /* popup.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0018DED2D6117FB00A7ED4C /* popup.js.LICENSE.txt */; };
+		B0018E122D6117FB00A7ED4C /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = B0018DEE2D6117FB00A7ED4C /* background.js */; };
+		B0018E132D6117FB00A7ED4C /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = B0018DEF2D6117FB00A7ED4C /* popup.html */; };
+		B0018E142D6117FB00A7ED4C /* icon48.png in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF02D6117FB00A7ED4C /* icon48.png */; };
+		B0018E152D6117FB00A7ED4C /* options.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF12D6117FB00A7ED4C /* options.js.LICENSE.txt */; };
+		B0018E162D6117FB00A7ED4C /* options.js in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF22D6117FB00A7ED4C /* options.js */; };
+		B0018E172D6117FB00A7ED4C /* alert.png in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF32D6117FB00A7ED4C /* alert.png */; };
+		B0018E182D6117FB00A7ED4C /* icon128.png in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF42D6117FB00A7ED4C /* icon128.png */; };
+		B0018E192D6117FB00A7ED4C /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF72D6117FB00A7ED4C /* manifest.json */; };
+		B0018E1A2D6117FB00A7ED4C /* options.html in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF82D6117FB00A7ED4C /* options.html */; };
+		B0018E1B2D6117FB00A7ED4C /* popup.css in Resources */ = {isa = PBXBuildFile; fileRef = B0018DF92D6117FB00A7ED4C /* popup.css */; };
+		B0018E1C2D6117FB00A7ED4C /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = B0018DFA2D6117FB00A7ED4C /* content.js */; };
+		B0018E1D2D6117FB00A7ED4C /* options.css in Resources */ = {isa = PBXBuildFile; fileRef = B0018DFC2D6117FB00A7ED4C /* options.css */; };
+		B0018E1E2D6117FB00A7ED4C /* icon32.png in Resources */ = {isa = PBXBuildFile; fileRef = B0018DFD2D6117FB00A7ED4C /* icon32.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B0018DBB2D6117FB00A7ED4C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B0018D872D6117FA00A7ED4C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B0018DB82D6117FB00A7ED4C;
+			remoteInfo = "ClintonCAT Extension (iOS)";
+		};
+		B0018DC52D6117FB00A7ED4C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B0018D872D6117FA00A7ED4C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B0018DC22D6117FB00A7ED4C;
+			remoteInfo = "ClintonCAT Extension (macOS)";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B0018DDD2D6117FB00A7ED4C /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B0018DBA2D6117FB00A7ED4C /* ClintonCAT Extension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0018DE42D6117FB00A7ED4C /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B0018DC42D6117FB00A7ED4C /* ClintonCAT Extension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		B0018D8E2D6117FA00A7ED4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = Base.lproj/Main.html; sourceTree = "<group>"; };
+		B0018D8F2D6117FA00A7ED4C /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		B0018D902D6117FA00A7ED4C /* Style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
+		B0018D912D6117FA00A7ED4C /* Script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Script.js; sourceTree = "<group>"; };
+		B0018D922D6117FA00A7ED4C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		B0018D932D6117FB00A7ED4C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B0018D952D6117FB00A7ED4C /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		B0018D9A2D6117FB00A7ED4C /* ClintonCAT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClintonCAT.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0018D9D2D6117FB00A7ED4C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B0018D9F2D6117FB00A7ED4C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		B0018DA22D6117FB00A7ED4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B0018DA52D6117FB00A7ED4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		B0018DA72D6117FB00A7ED4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B0018DAC2D6117FB00A7ED4C /* ClintonCAT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClintonCAT.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0018DAE2D6117FB00A7ED4C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B0018DB12D6117FB00A7ED4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		B0018DB32D6117FB00A7ED4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B0018DB42D6117FB00A7ED4C /* ClintonCAT.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ClintonCAT.entitlements; sourceTree = "<group>"; };
+		B0018DB92D6117FB00A7ED4C /* ClintonCAT Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ClintonCAT Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0018DBE2D6117FB00A7ED4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B0018DC32D6117FB00A7ED4C /* ClintonCAT Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ClintonCAT Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B0018DC82D6117FB00A7ED4C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B0018DC92D6117FB00A7ED4C /* ClintonCAT.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ClintonCAT.entitlements; sourceTree = "<group>"; };
+		B0018DE92D6117FB00A7ED4C /* icon16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon16.png; path = ../../../../dist/icon16.png; sourceTree = "<group>"; };
+		B0018DEA2D6117FB00A7ED4C /* popup.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = popup.js; path = ../../../../dist/popup.js; sourceTree = "<group>"; };
+		B0018DEB2D6117FB00A7ED4C /* options.css.map */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = options.css.map; path = ../../../../dist/options.css.map; sourceTree = "<group>"; };
+		B0018DEC2D6117FB00A7ED4C /* popup.js.map */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = popup.js.map; path = ../../../../dist/popup.js.map; sourceTree = "<group>"; };
+		B0018DED2D6117FB00A7ED4C /* popup.js.LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = popup.js.LICENSE.txt; path = ../../../../dist/popup.js.LICENSE.txt; sourceTree = "<group>"; };
+		B0018DEE2D6117FB00A7ED4C /* background.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = background.js; path = ../../../../dist/background.js; sourceTree = "<group>"; };
+		B0018DEF2D6117FB00A7ED4C /* popup.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = popup.html; path = ../../../../dist/popup.html; sourceTree = "<group>"; };
+		B0018DF02D6117FB00A7ED4C /* icon48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon48.png; path = ../../../../dist/icon48.png; sourceTree = "<group>"; };
+		B0018DF12D6117FB00A7ED4C /* options.js.LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = options.js.LICENSE.txt; path = ../../../../dist/options.js.LICENSE.txt; sourceTree = "<group>"; };
+		B0018DF22D6117FB00A7ED4C /* options.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = options.js; path = ../../../../dist/options.js; sourceTree = "<group>"; };
+		B0018DF32D6117FB00A7ED4C /* alert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = alert.png; path = ../../../../dist/alert.png; sourceTree = "<group>"; };
+		B0018DF42D6117FB00A7ED4C /* icon128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon128.png; path = ../../../../dist/icon128.png; sourceTree = "<group>"; };
+		B0018DF52D6117FB00A7ED4C /* options.js.map */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = options.js.map; path = ../../../../dist/options.js.map; sourceTree = "<group>"; };
+		B0018DF62D6117FB00A7ED4C /* content.js.map */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = content.js.map; path = ../../../../dist/content.js.map; sourceTree = "<group>"; };
+		B0018DF72D6117FB00A7ED4C /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = ../../../../dist/manifest.json; sourceTree = "<group>"; };
+		B0018DF82D6117FB00A7ED4C /* options.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = options.html; path = ../../../../dist/options.html; sourceTree = "<group>"; };
+		B0018DF92D6117FB00A7ED4C /* popup.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = popup.css; path = ../../../../dist/popup.css; sourceTree = "<group>"; };
+		B0018DFA2D6117FB00A7ED4C /* content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = content.js; path = ../../../../dist/content.js; sourceTree = "<group>"; };
+		B0018DFB2D6117FB00A7ED4C /* background.js.map */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = background.js.map; path = ../../../../dist/background.js.map; sourceTree = "<group>"; };
+		B0018DFC2D6117FB00A7ED4C /* options.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = options.css; path = ../../../../dist/options.css; sourceTree = "<group>"; };
+		B0018DFD2D6117FB00A7ED4C /* icon32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon32.png; path = ../../../../dist/icon32.png; sourceTree = "<group>"; };
+		B0018DFE2D6117FB00A7ED4C /* popup.css.map */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = popup.css.map; path = ../../../../dist/popup.css.map; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B0018D972D6117FB00A7ED4C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0018DA92D6117FB00A7ED4C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0018DB62D6117FB00A7ED4C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0018DC02D6117FB00A7ED4C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B0018D862D6117FA00A7ED4C = {
+			isa = PBXGroup;
+			children = (
+				B0018D8B2D6117FA00A7ED4C /* Shared (App) */,
+				B0018D942D6117FB00A7ED4C /* Shared (Extension) */,
+				B0018D9C2D6117FB00A7ED4C /* iOS (App) */,
+				B0018DAD2D6117FB00A7ED4C /* macOS (App) */,
+				B0018DBD2D6117FB00A7ED4C /* iOS (Extension) */,
+				B0018DC72D6117FB00A7ED4C /* macOS (Extension) */,
+				B0018D9B2D6117FB00A7ED4C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B0018D8B2D6117FA00A7ED4C /* Shared (App) */ = {
+			isa = PBXGroup;
+			children = (
+				B0018D922D6117FA00A7ED4C /* ViewController.swift */,
+				B0018D932D6117FB00A7ED4C /* Assets.xcassets */,
+				B0018D8C2D6117FA00A7ED4C /* Resources */,
+			);
+			path = "Shared (App)";
+			sourceTree = "<group>";
+		};
+		B0018D8C2D6117FA00A7ED4C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B0018D8D2D6117FA00A7ED4C /* Main.html */,
+				B0018D8F2D6117FA00A7ED4C /* Icon.png */,
+				B0018D902D6117FA00A7ED4C /* Style.css */,
+				B0018D912D6117FA00A7ED4C /* Script.js */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		B0018D942D6117FB00A7ED4C /* Shared (Extension) */ = {
+			isa = PBXGroup;
+			children = (
+				B0018DE82D6117FB00A7ED4C /* Resources */,
+				B0018D952D6117FB00A7ED4C /* SafariWebExtensionHandler.swift */,
+			);
+			path = "Shared (Extension)";
+			sourceTree = "<group>";
+		};
+		B0018D9B2D6117FB00A7ED4C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B0018D9A2D6117FB00A7ED4C /* ClintonCAT.app */,
+				B0018DAC2D6117FB00A7ED4C /* ClintonCAT.app */,
+				B0018DB92D6117FB00A7ED4C /* ClintonCAT Extension.appex */,
+				B0018DC32D6117FB00A7ED4C /* ClintonCAT Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B0018D9C2D6117FB00A7ED4C /* iOS (App) */ = {
+			isa = PBXGroup;
+			children = (
+				B0018D9D2D6117FB00A7ED4C /* AppDelegate.swift */,
+				B0018D9F2D6117FB00A7ED4C /* SceneDelegate.swift */,
+				B0018DA12D6117FB00A7ED4C /* LaunchScreen.storyboard */,
+				B0018DA42D6117FB00A7ED4C /* Main.storyboard */,
+				B0018DA72D6117FB00A7ED4C /* Info.plist */,
+			);
+			path = "iOS (App)";
+			sourceTree = "<group>";
+		};
+		B0018DAD2D6117FB00A7ED4C /* macOS (App) */ = {
+			isa = PBXGroup;
+			children = (
+				B0018DAE2D6117FB00A7ED4C /* AppDelegate.swift */,
+				B0018DB02D6117FB00A7ED4C /* Main.storyboard */,
+				B0018DB32D6117FB00A7ED4C /* Info.plist */,
+				B0018DB42D6117FB00A7ED4C /* ClintonCAT.entitlements */,
+			);
+			path = "macOS (App)";
+			sourceTree = "<group>";
+		};
+		B0018DBD2D6117FB00A7ED4C /* iOS (Extension) */ = {
+			isa = PBXGroup;
+			children = (
+				B0018DBE2D6117FB00A7ED4C /* Info.plist */,
+			);
+			path = "iOS (Extension)";
+			sourceTree = "<group>";
+		};
+		B0018DC72D6117FB00A7ED4C /* macOS (Extension) */ = {
+			isa = PBXGroup;
+			children = (
+				B0018DC82D6117FB00A7ED4C /* Info.plist */,
+				B0018DC92D6117FB00A7ED4C /* ClintonCAT.entitlements */,
+			);
+			path = "macOS (Extension)";
+			sourceTree = "<group>";
+		};
+		B0018DE82D6117FB00A7ED4C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B0018DE92D6117FB00A7ED4C /* icon16.png */,
+				B0018DEA2D6117FB00A7ED4C /* popup.js */,
+				B0018DEB2D6117FB00A7ED4C /* options.css.map */,
+				B0018DEC2D6117FB00A7ED4C /* popup.js.map */,
+				B0018DED2D6117FB00A7ED4C /* popup.js.LICENSE.txt */,
+				B0018DEE2D6117FB00A7ED4C /* background.js */,
+				B0018DEF2D6117FB00A7ED4C /* popup.html */,
+				B0018DF02D6117FB00A7ED4C /* icon48.png */,
+				B0018DF12D6117FB00A7ED4C /* options.js.LICENSE.txt */,
+				B0018DF22D6117FB00A7ED4C /* options.js */,
+				B0018DF32D6117FB00A7ED4C /* alert.png */,
+				B0018DF42D6117FB00A7ED4C /* icon128.png */,
+				B0018DF52D6117FB00A7ED4C /* options.js.map */,
+				B0018DF62D6117FB00A7ED4C /* content.js.map */,
+				B0018DF72D6117FB00A7ED4C /* manifest.json */,
+				B0018DF82D6117FB00A7ED4C /* options.html */,
+				B0018DF92D6117FB00A7ED4C /* popup.css */,
+				B0018DFA2D6117FB00A7ED4C /* content.js */,
+				B0018DFB2D6117FB00A7ED4C /* background.js.map */,
+				B0018DFC2D6117FB00A7ED4C /* options.css */,
+				B0018DFD2D6117FB00A7ED4C /* icon32.png */,
+				B0018DFE2D6117FB00A7ED4C /* popup.css.map */,
+			);
+			name = Resources;
+			path = "Shared (Extension)";
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B0018D992D6117FB00A7ED4C /* ClintonCAT (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B0018DDE2D6117FB00A7ED4C /* Build configuration list for PBXNativeTarget "ClintonCAT (iOS)" */;
+			buildPhases = (
+				B0018D962D6117FB00A7ED4C /* Sources */,
+				B0018D972D6117FB00A7ED4C /* Frameworks */,
+				B0018D982D6117FB00A7ED4C /* Resources */,
+				B0018DDD2D6117FB00A7ED4C /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B0018DBC2D6117FB00A7ED4C /* PBXTargetDependency */,
+			);
+			name = "ClintonCAT (iOS)";
+			packageProductDependencies = (
+			);
+			productName = "ClintonCAT (iOS)";
+			productReference = B0018D9A2D6117FB00A7ED4C /* ClintonCAT.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B0018DAB2D6117FB00A7ED4C /* ClintonCAT (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B0018DE52D6117FB00A7ED4C /* Build configuration list for PBXNativeTarget "ClintonCAT (macOS)" */;
+			buildPhases = (
+				B0018DA82D6117FB00A7ED4C /* Sources */,
+				B0018DA92D6117FB00A7ED4C /* Frameworks */,
+				B0018DAA2D6117FB00A7ED4C /* Resources */,
+				B0018DE42D6117FB00A7ED4C /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B0018DC62D6117FB00A7ED4C /* PBXTargetDependency */,
+			);
+			name = "ClintonCAT (macOS)";
+			packageProductDependencies = (
+			);
+			productName = "ClintonCAT (macOS)";
+			productReference = B0018DAC2D6117FB00A7ED4C /* ClintonCAT.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B0018DB82D6117FB00A7ED4C /* ClintonCAT Extension (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B0018DDA2D6117FB00A7ED4C /* Build configuration list for PBXNativeTarget "ClintonCAT Extension (iOS)" */;
+			buildPhases = (
+				B0018DB52D6117FB00A7ED4C /* Sources */,
+				B0018DB62D6117FB00A7ED4C /* Frameworks */,
+				B0018DB72D6117FB00A7ED4C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ClintonCAT Extension (iOS)";
+			packageProductDependencies = (
+			);
+			productName = "ClintonCAT Extension (iOS)";
+			productReference = B0018DB92D6117FB00A7ED4C /* ClintonCAT Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		B0018DC22D6117FB00A7ED4C /* ClintonCAT Extension (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B0018DE12D6117FB00A7ED4C /* Build configuration list for PBXNativeTarget "ClintonCAT Extension (macOS)" */;
+			buildPhases = (
+				B0018DBF2D6117FB00A7ED4C /* Sources */,
+				B0018DC02D6117FB00A7ED4C /* Frameworks */,
+				B0018DC12D6117FB00A7ED4C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ClintonCAT Extension (macOS)";
+			packageProductDependencies = (
+			);
+			productName = "ClintonCAT Extension (macOS)";
+			productReference = B0018DC32D6117FB00A7ED4C /* ClintonCAT Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B0018D872D6117FA00A7ED4C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					B0018D992D6117FB00A7ED4C = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					B0018DAB2D6117FB00A7ED4C = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					B0018DB82D6117FB00A7ED4C = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					B0018DC22D6117FB00A7ED4C = {
+						CreatedOnToolsVersion = 16.2;
+					};
+				};
+			};
+			buildConfigurationList = B0018D8A2D6117FA00A7ED4C /* Build configuration list for PBXProject "ClintonCAT" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B0018D862D6117FA00A7ED4C;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = B0018D9B2D6117FB00A7ED4C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B0018D992D6117FB00A7ED4C /* ClintonCAT (iOS) */,
+				B0018DAB2D6117FB00A7ED4C /* ClintonCAT (macOS) */,
+				B0018DB82D6117FB00A7ED4C /* ClintonCAT Extension (iOS) */,
+				B0018DC22D6117FB00A7ED4C /* ClintonCAT Extension (macOS) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B0018D982D6117FB00A7ED4C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0018DCC2D6117FB00A7ED4C /* Icon.png in Resources */,
+				B0018DA32D6117FB00A7ED4C /* LaunchScreen.storyboard in Resources */,
+				B0018DCA2D6117FB00A7ED4C /* Main.html in Resources */,
+				B0018DD02D6117FB00A7ED4C /* Script.js in Resources */,
+				B0018DD42D6117FB00A7ED4C /* Assets.xcassets in Resources */,
+				B0018DA62D6117FB00A7ED4C /* Main.storyboard in Resources */,
+				B0018DCE2D6117FB00A7ED4C /* Style.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0018DAA2D6117FB00A7ED4C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0018DCD2D6117FB00A7ED4C /* Icon.png in Resources */,
+				B0018DCF2D6117FB00A7ED4C /* Style.css in Resources */,
+				B0018DB22D6117FB00A7ED4C /* Main.storyboard in Resources */,
+				B0018DD12D6117FB00A7ED4C /* Script.js in Resources */,
+				B0018DD52D6117FB00A7ED4C /* Assets.xcassets in Resources */,
+				B0018DCB2D6117FB00A7ED4C /* Main.html in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0018DB72D6117FB00A7ED4C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0018E122D6117FB00A7ED4C /* background.js in Resources */,
+				B0018E162D6117FB00A7ED4C /* options.js in Resources */,
+				B0018E1D2D6117FB00A7ED4C /* options.css in Resources */,
+				B0018E172D6117FB00A7ED4C /* alert.png in Resources */,
+				B0018E132D6117FB00A7ED4C /* popup.html in Resources */,
+				B0018E142D6117FB00A7ED4C /* icon48.png in Resources */,
+				B0018E192D6117FB00A7ED4C /* manifest.json in Resources */,
+				B0018E112D6117FB00A7ED4C /* popup.js.LICENSE.txt in Resources */,
+				B0018E0F2D6117FB00A7ED4C /* icon16.png in Resources */,
+				B0018E152D6117FB00A7ED4C /* options.js.LICENSE.txt in Resources */,
+				B0018E182D6117FB00A7ED4C /* icon128.png in Resources */,
+				B0018E1E2D6117FB00A7ED4C /* icon32.png in Resources */,
+				B0018E102D6117FB00A7ED4C /* popup.js in Resources */,
+				B0018E1A2D6117FB00A7ED4C /* options.html in Resources */,
+				B0018E1C2D6117FB00A7ED4C /* content.js in Resources */,
+				B0018E1B2D6117FB00A7ED4C /* popup.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0018DC12D6117FB00A7ED4C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0018E022D6117FB00A7ED4C /* background.js in Resources */,
+				B0018E062D6117FB00A7ED4C /* options.js in Resources */,
+				B0018E0D2D6117FB00A7ED4C /* options.css in Resources */,
+				B0018E072D6117FB00A7ED4C /* alert.png in Resources */,
+				B0018E032D6117FB00A7ED4C /* popup.html in Resources */,
+				B0018E042D6117FB00A7ED4C /* icon48.png in Resources */,
+				B0018E092D6117FB00A7ED4C /* manifest.json in Resources */,
+				B0018E012D6117FB00A7ED4C /* popup.js.LICENSE.txt in Resources */,
+				B0018DFF2D6117FB00A7ED4C /* icon16.png in Resources */,
+				B0018E052D6117FB00A7ED4C /* options.js.LICENSE.txt in Resources */,
+				B0018E082D6117FB00A7ED4C /* icon128.png in Resources */,
+				B0018E0E2D6117FB00A7ED4C /* icon32.png in Resources */,
+				B0018E002D6117FB00A7ED4C /* popup.js in Resources */,
+				B0018E0A2D6117FB00A7ED4C /* options.html in Resources */,
+				B0018E0C2D6117FB00A7ED4C /* content.js in Resources */,
+				B0018E0B2D6117FB00A7ED4C /* popup.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B0018D962D6117FB00A7ED4C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0018DD22D6117FB00A7ED4C /* ViewController.swift in Sources */,
+				B0018D9E2D6117FB00A7ED4C /* AppDelegate.swift in Sources */,
+				B0018DA02D6117FB00A7ED4C /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0018DA82D6117FB00A7ED4C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0018DD32D6117FB00A7ED4C /* ViewController.swift in Sources */,
+				B0018DAF2D6117FB00A7ED4C /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0018DB52D6117FB00A7ED4C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0018DD62D6117FB00A7ED4C /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B0018DBF2D6117FB00A7ED4C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0018DD72D6117FB00A7ED4C /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B0018DBC2D6117FB00A7ED4C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B0018DB82D6117FB00A7ED4C /* ClintonCAT Extension (iOS) */;
+			targetProxy = B0018DBB2D6117FB00A7ED4C /* PBXContainerItemProxy */;
+		};
+		B0018DC62D6117FB00A7ED4C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B0018DC22D6117FB00A7ED4C /* ClintonCAT Extension (macOS) */;
+			targetProxy = B0018DC52D6117FB00A7ED4C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		B0018D8D2D6117FA00A7ED4C /* Main.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B0018D8E2D6117FA00A7ED4C /* Base */,
+			);
+			name = Main.html;
+			sourceTree = "<group>";
+		};
+		B0018DA12D6117FB00A7ED4C /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B0018DA22D6117FB00A7ED4C /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		B0018DA42D6117FB00A7ED4C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B0018DA52D6117FB00A7ED4C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		B0018DB02D6117FB00A7ED4C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B0018DB12D6117FB00A7ED4C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B0018DD82D6117FB00A7ED4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		B0018DD92D6117FB00A7ED4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		B0018DDB2D6117FB00A7ED4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "ClintonCAT Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wkdlabs.ClintonCAT.Extension;
+				PRODUCT_NAME = "ClintonCAT Extension";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B0018DDC2D6117FB00A7ED4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "ClintonCAT Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wkdlabs.ClintonCAT.Extension;
+				PRODUCT_NAME = "ClintonCAT Extension";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B0018DDF2D6117FB00A7ED4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ClintonCAT;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wkdlabs.ClintonCAT;
+				PRODUCT_NAME = ClintonCAT;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B0018DE02D6117FB00A7ED4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ClintonCAT;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wkdlabs.ClintonCAT;
+				PRODUCT_NAME = ClintonCAT;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B0018DE22D6117FB00A7ED4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "macOS (Extension)/ClintonCAT.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "ClintonCAT Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wkdlabs.ClintonCAT.Extension;
+				PRODUCT_NAME = "ClintonCAT Extension";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B0018DE32D6117FB00A7ED4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "macOS (Extension)/ClintonCAT.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "ClintonCAT Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wkdlabs.ClintonCAT.Extension;
+				PRODUCT_NAME = "ClintonCAT Extension";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		B0018DE62D6117FB00A7ED4C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "macOS (App)/ClintonCAT.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ClintonCAT;
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wkdlabs.ClintonCAT;
+				PRODUCT_NAME = ClintonCAT;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B0018DE72D6117FB00A7ED4C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "macOS (App)/ClintonCAT.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ClintonCAT;
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wkdlabs.ClintonCAT;
+				PRODUCT_NAME = ClintonCAT;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B0018D8A2D6117FA00A7ED4C /* Build configuration list for PBXProject "ClintonCAT" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B0018DD82D6117FB00A7ED4C /* Debug */,
+				B0018DD92D6117FB00A7ED4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B0018DDA2D6117FB00A7ED4C /* Build configuration list for PBXNativeTarget "ClintonCAT Extension (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B0018DDB2D6117FB00A7ED4C /* Debug */,
+				B0018DDC2D6117FB00A7ED4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B0018DDE2D6117FB00A7ED4C /* Build configuration list for PBXNativeTarget "ClintonCAT (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B0018DDF2D6117FB00A7ED4C /* Debug */,
+				B0018DE02D6117FB00A7ED4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B0018DE12D6117FB00A7ED4C /* Build configuration list for PBXNativeTarget "ClintonCAT Extension (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B0018DE22D6117FB00A7ED4C /* Debug */,
+				B0018DE32D6117FB00A7ED4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B0018DE52D6117FB00A7ED4C /* Build configuration list for PBXNativeTarget "ClintonCAT (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B0018DE62D6117FB00A7ED4C /* Debug */,
+				B0018DE72D6117FB00A7ED4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B0018D872D6117FA00A7ED4C /* Project object */;
+}
