@@ -4,22 +4,33 @@
 import escapeRegex from '@/utils/helpers/escape-regex';
 
 export interface IPageEntry {
+    pageId: number;
     pageTitle: string;
     popupText: string;
     category: string;
 }
 
 export class PageEntry implements IPageEntry {
-    static readonly WIKI_URL: string = 'https://wiki.rossmanngroup.com/wiki';
+    static readonly WIKI_URL: string = 'https://wiki.rossmanngroup.com/wiki/index.php?curid=';
 
+    private _pageId: number;
     private _pageTitle: string;
     private _popupText: string;
     private _category: string;
 
     constructor(pageEntry: IPageEntry) {
+        this._pageId = pageEntry.pageId;
         this._pageTitle = pageEntry.pageTitle;
         this._popupText = pageEntry.popupText;
         this._category = pageEntry.category;
+    }
+
+    get pageId(): number {
+        return this._pageId;
+    }
+
+    set pageId(value: number) {
+        this._pageId = value;
     }
 
     get pageTitle(): string {
@@ -47,7 +58,7 @@ export class PageEntry implements IPageEntry {
     }
 
     public url(): string {
-        return `${PageEntry.WIKI_URL}/${encodeURIComponent(this.pageTitle)}`;
+        return `${PageEntry.WIKI_URL}/${this.pageId.toString()}`;
     }
 }
 

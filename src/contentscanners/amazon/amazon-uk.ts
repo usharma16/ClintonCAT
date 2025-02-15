@@ -5,8 +5,9 @@ export class AmazonUKPageScanner implements IContentScannerPlugin {
         return 'amazon.co.uk';
     }
 
-    canScanContent(params: IScanParameters): boolean {
-        return params.mainDomain === 'amazon' && params.domain.endsWith('co.uk');
+    canScanContent(_params: IScanParameters): boolean {
+        return false; // just aa skeleton placeholder, as an example, for now
+        //return params.mainDomain === 'amazon' && params.domain.endsWith('co.uk');
     }
 
     // eslint-disable-next-line @typescript-eslint/require-await

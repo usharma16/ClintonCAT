@@ -6,8 +6,9 @@ export class AmazonUSPageScanner implements IContentScannerPlugin {
         return 'amazon.com';
     }
 
-    canScanContent(params: IScanParameters): boolean {
-        return params.mainDomain === 'amazon' && params.domain.endsWith('com');
+    canScanContent(_params: IScanParameters): boolean {
+        return false; // just a skeleton placeholder, as an example, for now
+        // return params.mainDomain === 'amazon' && params.domain.endsWith('com');
     }
 
     // eslint-disable-next-line @typescript-eslint/require-await

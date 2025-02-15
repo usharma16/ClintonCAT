@@ -20,7 +20,7 @@ export class TestScanner implements IContentScannerPlugin {
         const pageResults = new CATWikiPageSearchResults();
 
         // Anything in the domain?
-        const domainResults = params.pagesDb.getPagesForDomain(params.domain);
+        const domainResults = params.pagesDb.getPagesForDomain(params.mainDomain);
         pageResults.addPageEntries(domainResults.pageEntries);
 
         // Check the page
