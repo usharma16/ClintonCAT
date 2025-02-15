@@ -89,6 +89,8 @@ export class CATWikiPageSearchResults {
 }
 
 export class PagesDB {
+    static readonly PAGES_DB_JSON_URL: string =
+        'https://raw.githubusercontent.com/WayneKeenan/ClintonCAT/refs/heads/main/data/pages_db.json';
     private pagesList: IPageEntry[] = []; // keep another local copy.
 
     public setPages(pages: IPageEntry[]) {
