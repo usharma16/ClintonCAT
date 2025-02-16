@@ -26,7 +26,8 @@ You might also see a clickable angry cat image in the page.
 
 ## Install
 
-As this is not yet on the Chrome Web Store it's necessary to download and manually install it.
+As this is not yet on any Web Store it's necessary to download and manually install it.
+Note: the current latest release is very old, and it's recommended to build from source.
 
 ### For Chrome:
 
@@ -43,9 +44,15 @@ As this is not yet on the Chrome Web Store it's necessary to download and manual
 3. Click 'Load Temporary Add-on...'
 4. Navigate to the unzipped folder and open `manifest.json`
 
+### For Safari
+
+1. Build from source.
+
 # Developer
 
 ## Checkout and build the extension:
+
+### Chrome & Firefox
 
 ```shell
 git checkout git@github.com:WayneKeenan/ClintonCAT.git
@@ -57,6 +64,10 @@ npm run build:gecko       # Firefox
 ```
 
 The compiled extension will be output in the `dist` folder.
+
+### Safari (iOS and macOS)
+
+Perform the above steps for the `chromium` build then open the [XCode project](engines/safari/ClintonCAT/ClintonCAT.xcodeproj) and build for your preferred OS(es).
 
 ## Contributing
 
