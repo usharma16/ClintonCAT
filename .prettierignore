@@ -1,7 +1,10 @@
+.github
+.husky
+.vscode
 .idea
-sandpit
 node_modules
 dist
+data
 coverage
 
 .DS_Store

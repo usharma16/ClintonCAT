@@ -1,0 +1,157 @@
+.optionsPage {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    background-color: #f5f6fa;
+    padding: 20px;
+    min-height: 100vh;
+    color: #333;
+}
+
+.pageTitle {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.optionsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.settingsColumn {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.columnTitle {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.inputGroup {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.inputField {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.addBtn {
+    background-color: #2563eb;
+}
+
+.addBtn:hover {
+    background-color: #1d4ed8;
+}
+
+.clearBtn {
+    background-color: #ef4444;
+}
+
+.clearBtn:hover {
+    background-color: #dc2626;
+}
+
+.excludedList {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.excludedItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 10px 14px;
+}
+
+.removeBtn {
+    background: none;
+    border: none;
+    color: #dc2626;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 5px;
+    line-height: 1;
+}
+
+.removeBtn:hover {
+    color: #b91c1c;
+}
+
+.settingsContainer {
+    margin-top: 2em;
+}
+
+.toggleLabel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1rem 0;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggleLabel input {
+    display: none;
+}
+
+.toggleSlider {
+    width: 44px;
+    height: 22px;
+    background-color: #ccc;
+    border-radius: 22px;
+    transition: 0.2s;
+    margin-left: 10px;
+    position: relative;
+}
+
+.toggleSlider::before {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 2px;
+    top: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.2s;
+}
+
+.toggleLabel input:checked + .toggleSlider {
+    background-color: #2563eb;
+}
+
+.toggleLabel input:checked + .toggleSlider::before {
+    transform: translateX(22px);
+}
