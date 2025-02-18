@@ -11,7 +11,7 @@
 
 ## About
 
-# EXPERIMENTAL
+# BETA
 
 Chrome Browser Extension for automatically
 searching [Rossmann's Consumer Action Taskforce (CAT)](https://wiki.rossmanngroup.com/wiki/Mission_statement) articles
