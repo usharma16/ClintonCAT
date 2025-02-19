@@ -5,4 +5,4 @@ Before submitting this PR, please make sure:
 - [ ] No commits are missing from forked base branch (e.g. modified main branch instead of dev)
 - [ ] All test pass, run `npm test`
 - [ ] The code is formated, run `npm run format`
-- [ ] Test cases have been added and/or update
+- [ ] You have updated or added test cases, as/if required
