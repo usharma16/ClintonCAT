@@ -12,7 +12,7 @@ export class DomainTools {
     private initDefaultSuffixList(): void {
         if (DomainTools.suffixDbDefault.length === 0) {
             console.error(
-                "Error: Suffix database is empty. Please run '../scripts/utils/tld2json.py' to generate the required JSON file."
+                "Error: Suffix database is missing or empty. Please run '../scripts/utils/tld2json.py' to generate the required JSON file."
             );
             return;
         }
@@ -24,18 +24,21 @@ export class DomainTools {
             this.initDefaultSuffixList();
         }
 
-        const cleanHostname = hostname.replace(/^www\./, '');
-        const parts = cleanHostname.split('.');
+        const parts = hostname.split('.');
 
         for (let i = 1; i < parts.length; i++) {
             const potentialTLD = parts.slice(i).join('.');
             if (this.suffixDB.includes(potentialTLD)) {
-                return parts.slice(0, i).join('.');
+                if (parts.length <= 2) {
+                    return parts[0];
+                }
+                return parts.slice(1, i).join('.');
             }
         }
-
         return parts.length > 1 ? parts[parts.length - 2] : parts[0];
     }
+
+    // TODO: Maybe associate known keywords with domains, eg. AWS = Amazon
 
     isDomainExcluded(exclusions: string[], domain: string): boolean {
         return exclusions.some((excludedDomain: string) => domain.includes(excludedDomain));
