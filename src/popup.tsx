@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import * as styles from './popup.module.css';
 import Preferences from './preferences';
+import ChromeSyncStorage from './storage/chrome-sync-storage';
+import ChromeLocalStorage from './storage/chrome-local-storage';
+
+Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage());
 
 const Popup = () => {
-    const [isEnabled, setIsEnabled] = useState(false);
+    const [isEnabled, setIsEnabled] = useState(Preferences.isEnabled.value);
+
+    Preferences.isEnabled.addListener('enable-options', (result: boolean) => {
+        setIsEnabled(result);
+    });
 
     const handleToggleEnabled = () => {
-        // TODO:
-        setIsEnabled(() => {
-            Preferences.isEnabled.value = !Preferences.isEnabled.value;
-            return Preferences.isEnabled.value;
-        });
+        Preferences.isEnabled.value = !Preferences.isEnabled.value;
     };
 
     const openCATPage = () => {
@@ -19,12 +23,12 @@ const Popup = () => {
     };
 
     const allowThisSite = () => {
-        // TODO:
+        const domain = window.location.hostname; // TODO: gets extension name instead of open tab domain
+        Preferences.domainExclusions.delete(domain);
     };
 
     const excludeThisSite = () => {
-        // TODO:
-        const domain = window.location.hostname;
+        const domain = window.location.hostname; // TODO: gets extension name instead of open tab domain
         Preferences.domainExclusions.add(domain);
     };
 

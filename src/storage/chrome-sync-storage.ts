@@ -3,7 +3,7 @@ import { IStorageBackend } from './istorage-backend';
 
 class ChromeSyncStorage implements IStorageBackend {
     /**
-     * Stores a value under the given key in chrome.storage.local.
+     * Stores a value under the given key in chrome.storage.sync.
      * The value is JSON-stringified first.
      */
     async set(key: string, value: unknown): Promise<void> {
@@ -19,7 +19,7 @@ class ChromeSyncStorage implements IStorageBackend {
     }
 
     /**
-     * Retrieves a value from chrome.storage.local for the given key.
+     * Retrieves a value from chrome.storage.sync for the given key.
      * The stored value is JSON-parsed before returning.
      */
     async get(key: string): Promise<unknown> {
@@ -28,26 +28,26 @@ class ChromeSyncStorage implements IStorageBackend {
                 if (chrome.runtime.lastError) return reject(getChromeLastError());
 
                 const rawValue: unknown = result[key];
+                console.log('Rawvalue', rawValue, typeof rawValue);
 
                 if (rawValue === undefined || rawValue === null) {
-                    console.log(`ChromeLocalStorage.get: ${key} => null`);
+                    console.log(`ChromeSyncStorage.get: ${key} => null`);
                     return resolve(null);
                 }
 
                 if (typeof rawValue !== 'string') {
-                    console.warn(`ChromeLocalStorage.get: stored value for '${key}' is not a string. Returning null.`);
+                    console.warn(`ChromeSyncStorage.get: stored value for '${key}' is not a string. Returning null.`);
                     return resolve(null);
                 }
 
                 try {
                     const parsedValue = JSON.parse(rawValue) as unknown;
-                    console.log(`ChromeLocalStorage.get: ${key} =>`, parsedValue);
+                    console.log(`ChromeSyncStorage.get: ${key} =>`, parsedValue);
 
-                    // only return the parsed value if it's a string
-                    return typeof parsedValue === 'string' ? resolve(parsedValue) : resolve(null);
+                    return parsedValue !== null ? resolve(parsedValue) : resolve(null);
                 } catch (_error) {
                     console.warn(
-                        `ChromeLocalStorage.get: could not parse value for key '${key}'. Returning raw value as string.`
+                        `ChromeSyncStorage.get: could not parse value for key '${key}'. Returning raw value as string.`
                     );
                     return resolve(rawValue);
                 }
@@ -56,13 +56,13 @@ class ChromeSyncStorage implements IStorageBackend {
     }
 
     /**
-     * Removes the given key from chrome.storage.local.
+     * Removes the given key from chrome.storage.sync.
      */
     async remove(key: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            chrome.storage.local.remove(key, () => {
+            chrome.storage.sync.remove(key, () => {
                 if (chrome.runtime.lastError) return reject(getChromeLastError());
-                console.log(`ChromeLocalStorage.remove: ${key}`);
+                console.log(`ChromeSyncStorage.remove: ${key}`);
                 resolve();
             });
         });

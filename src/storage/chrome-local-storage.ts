@@ -43,8 +43,7 @@ class ChromeLocalStorage implements IStorageBackend {
                     const parsedValue = JSON.parse(rawValue) as unknown;
                     console.log(`ChromeLocalStorage.get: ${key} =>`, parsedValue);
 
-                    // only return the parsed value if it's a string
-                    return typeof parsedValue === 'string' ? resolve(parsedValue) : resolve(null);
+                    return parsedValue !== null ? resolve(parsedValue) : resolve(null);
                 } catch (_error) {
                     console.warn(
                         `ChromeLocalStorage.get: could not parse value for key '${key}'. Returning raw value as string.`
