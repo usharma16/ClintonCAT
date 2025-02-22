@@ -3,8 +3,10 @@ import { createRoot } from 'react-dom/client';
 import * as styles from './options.module.css';
 import classNames from 'classnames';
 import Preferences from './preferences';
+import ChromeSyncStorage from './storage/chrome-sync-storage';
+import ChromeLocalStorage from './storage/chrome-local-storage';
 
-Preferences.init();
+Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage());
 
 const Options = () => {
     const [items, setItems] = useState<string[]>([]);
@@ -35,6 +37,12 @@ const Options = () => {
         Preferences.domainExclusions.value = [];
     };
 
+    const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key == 'Enter') {
+            addItem();
+        }
+    };
+
     return (
         <div className={styles.optionsPage}>
             <h1 className={styles.pageTitle}>Extension Options</h1>
@@ -47,6 +55,7 @@ const Options = () => {
                                 type="text"
                                 value={domainInput}
                                 onChange={(e) => setDomainInput(e.target.value)}
+                                onKeyDown={(event) => onKeyDown(event)}
                                 placeholder="Enter a domain"
                                 className={styles.inputField}
                             />

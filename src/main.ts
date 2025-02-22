@@ -3,8 +3,9 @@ import { CATWikiPageSearchResults, PagesDB } from './database';
 import { StorageCache } from './storagecache';
 import { DomainTools } from './domaintools';
 import { ContentScanner, IScanParameters } from './contentscanner';
-import ChromeSyncStorage from './storage/chrome-sync-storage';
 import { DOMHelper } from '@/domhelper';
+import ChromeSyncStorage from './storage/chrome-sync-storage';
+import ChromeLocalStorage from './storage/chrome-local-storage';
 
 export interface IMainMessage {
     badgeText: string;
@@ -20,7 +21,6 @@ export class Main {
 
     constructor() {
         // TODO: need a ChromeLocalStorage for pages db
-        Preferences.setBackingStores(new ChromeSyncStorage(), new ChromeSyncStorage());
         this.pagesDatabase = new PagesDB();
         this.pagesDatabase.initDefaultPages();
         this.storageCache = new StorageCache(this.pagesDatabase);
@@ -74,6 +74,7 @@ export class Main {
 
         if (this.checkDomainIsExcluded(mainDomain)) {
             console.log('Excluded domain:', mainDomain);
+            this.indicateStatus();
             return;
         }
 
@@ -95,7 +96,7 @@ export class Main {
      */
     onBrowserExtensionInstalled(): void {
         console.log('ClintonCAT Extension Installed');
-        Preferences.initDefaults().then(() => {
+        Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage()).then(() => {
             Preferences.dump();
             this.indicateStatus();
         });
@@ -111,7 +112,7 @@ export class Main {
         _sendResponse: VoidFunction
     ): void {
         void (async () => {
-            await Preferences.refresh();
+            await Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage());
             Preferences.dump();
 
             if (message.badgeText) {
