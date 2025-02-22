@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import Preferences from './preferences';
 import ChromeSyncStorage from './storage/chrome-sync-storage';
 import ChromeLocalStorage from './storage/chrome-local-storage';
+import * as psl from 'psl';
 
 Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage());
 
@@ -21,9 +22,10 @@ const Options = () => {
     }, []);
 
     const addItem = () => {
-        if (domainInput.trim() === '') return;
+        const value = domainInput.trim();
+        if (value === '' || !psl.isValid(value)) return;
         // TODO: update the StorageBackend or PreferenceStore
-        Preferences.domainExclusions.add(domainInput.trim());
+        Preferences.domainExclusions.add(value);
         setDomainInput('');
     };
 

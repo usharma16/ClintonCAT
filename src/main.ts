@@ -1,11 +1,12 @@
 import Preferences from './preferences';
 import { CATWikiPageSearchResults, PagesDB } from './database';
 import { StorageCache } from './storagecache';
-import { DomainTools } from './domaintools';
 import { ContentScanner, IScanParameters } from './contentscanner';
-import { DOMHelper } from '@/domhelper';
 import ChromeSyncStorage from './storage/chrome-sync-storage';
 import ChromeLocalStorage from './storage/chrome-local-storage';
+import { DOMHelper } from '@/domhelper';
+import { ParsedDomain } from 'psl';
+import * as psl from 'psl';
 
 export interface IMainMessage {
     badgeText: string;
@@ -16,7 +17,6 @@ export interface IMainMessage {
 export class Main {
     storageCache: StorageCache;
     pagesDatabase: PagesDB;
-    domainTools: DomainTools;
     contentScanner: ContentScanner;
 
     constructor() {
@@ -24,7 +24,6 @@ export class Main {
         this.pagesDatabase = new PagesDB();
         this.pagesDatabase.initDefaultPages();
         this.storageCache = new StorageCache(this.pagesDatabase);
-        this.domainTools = new DomainTools();
         this.contentScanner = new ContentScanner();
     }
 
@@ -60,7 +59,7 @@ export class Main {
     }
 
     checkDomainIsExcluded(domain: string): boolean {
-        return this.domainTools.isDomainExcluded(Preferences.domainExclusions.value, domain);
+        return Preferences.domainExclusions.value.includes(domain);
     }
 
     /**
@@ -68,19 +67,23 @@ export class Main {
      * Scans the domain and in-page contents, merges results,
      * and indicates how many CAT pages were found.
      */
-    async onPageLoaded(domain: string, url: string): Promise<void> {
-        const mainDomain = this.domainTools.extractMainDomain(domain);
-        console.log('Main domain:', mainDomain);
+    async onPageLoaded(fullDomain: string, url: string): Promise<void> {
+        if (!psl.isValid(fullDomain)) {
+            throw new Error('onPageLoaded received an invalid url');
+        }
+        const parsedDomain = psl.parse(fullDomain) as ParsedDomain;
+        const domain = parsedDomain.domain ?? '';
+        console.log('Domain:', domain);
 
-        if (this.checkDomainIsExcluded(mainDomain)) {
-            console.log('Excluded domain:', mainDomain);
+        if (this.checkDomainIsExcluded(domain)) {
+            console.log('Domain skipped, was excluded');
             this.indicateStatus();
             return;
         }
 
         const scannerParameters: IScanParameters = {
-            domain: domain.toLowerCase(),
-            mainDomain: mainDomain.toLowerCase(),
+            domain: fullDomain.toLowerCase(),
+            mainDomain: domain.toLowerCase(),
             url: url,
             pagesDb: this.pagesDatabase,
             dom: new DOMHelper(),
