@@ -6,6 +6,7 @@ import Preferences from './preferences';
 import ChromeSyncStorage from './storage/chrome-sync-storage';
 import ChromeLocalStorage from './storage/chrome-local-storage';
 import * as psl from 'psl';
+import { ParsedDomain } from 'psl';
 
 Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage());
 
@@ -24,18 +25,18 @@ const Options = () => {
     const addItem = () => {
         const value = domainInput.trim();
         if (value === '' || !psl.isValid(value)) return;
-        // TODO: update the StorageBackend or PreferenceStore
-        Preferences.domainExclusions.add(value);
-        setDomainInput('');
+        const parsedDomain = psl.parse(value) as ParsedDomain;
+        if (parsedDomain.domain !== null) {
+            Preferences.domainExclusions.add(parsedDomain.domain.toLowerCase());
+            setDomainInput('');
+        }
     };
 
     const removeItem = (index: number) => {
-        // TODO: update the StorageBackend or PreferenceStore
         Preferences.domainExclusions.deleteAt(index);
     };
 
     const clearList = () => {
-        // TODO: update the StorageBackend or PreferenceStore
         Preferences.domainExclusions.value = [];
     };
 

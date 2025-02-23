@@ -59,7 +59,17 @@ export class Main {
     }
 
     checkDomainIsExcluded(domain: string): boolean {
-        return Preferences.domainExclusions.value.includes(domain);
+        for (const excluded of Preferences.domainExclusions.value) {
+            if (!psl.isValid(excluded)) {
+                console.error(`Invalid domain in exclusions: ${excluded}`);
+                continue;
+            }
+            const excludedParsed = psl.parse(excluded) as ParsedDomain;
+            if (excludedParsed.domain == domain.toLowerCase()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -67,11 +77,11 @@ export class Main {
      * Scans the domain and in-page contents, merges results,
      * and indicates how many CAT pages were found.
      */
-    async onPageLoaded(fullDomain: string, url: string): Promise<void> {
-        if (!psl.isValid(fullDomain)) {
+    async onPageLoaded(unparsedDomain: string, url: string): Promise<void> {
+        if (!psl.isValid(unparsedDomain)) {
             throw new Error('onPageLoaded received an invalid url');
         }
-        const parsedDomain = psl.parse(fullDomain) as ParsedDomain;
+        const parsedDomain = psl.parse(unparsedDomain) as ParsedDomain;
         const domain = parsedDomain.domain ?? '';
         console.log('Domain:', domain);
 
@@ -82,8 +92,8 @@ export class Main {
         }
 
         const scannerParameters: IScanParameters = {
-            domain: fullDomain.toLowerCase(),
-            mainDomain: domain.toLowerCase(),
+            domain: domain.toLowerCase(),
+            mainDomain: parsedDomain.sld?.toLowerCase() ?? '',
             url: url,
             pagesDb: this.pagesDatabase,
             dom: new DOMHelper(),
