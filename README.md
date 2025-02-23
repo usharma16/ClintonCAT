@@ -11,7 +11,7 @@
 
 ## About
 
-# BETA
+# Under development
 
 Chrome Browser Extension for automatically
 searching [Rossmann's Consumer Action Taskforce (CAT)](https://wiki.rossmanngroup.com/wiki/Mission_statement) articles
@@ -24,31 +24,11 @@ for the current site being visited.<br>
 If a CAT wiki page for the website is found then the plugin toolbar icon will indicate the number of controversies found.
 You might also see a clickable angry cat image in the page.
 
-## Install
+## Installation
 
-As this is not yet on any Web Store it's necessary to download and manually install it.
-Note: the current latest release is very old, and it's recommended to build from source.
+As this extension is currently under development it's necessary to build and install from source.
 
-### For Chrome:
-
-1. Download a [release](https://github.com/WayneKeenan/ClintonCAT/releases).
-2. Open Extension settings: e.g. `chrome://extensions/` or `brave://extensions/` etc.
-3. Enable Developer Mode
-4. Click `Load Unpacked`
-5. Navigate to the unzipped folder.
-
-### For Firefox:
-
-1. Open: about:debugging#/runtime/this-firefox
-2. Expand 'Temporary Extensions'
-3. Click 'Load Temporary Add-on...'
-4. Navigate to the unzipped folder and open `manifest.json`
-
-### For Safari
-
-1. Build from source.
-
-# Developer
+# Development
 
 ## Checkout and build the extension:
 
@@ -68,6 +48,27 @@ The compiled extension will be output in the `dist` folder.
 ### Safari (iOS and macOS)
 
 Perform the above steps for the `chromium` build then open the [XCode project](engines/safari/ClintonCAT/ClintonCAT.xcodeproj) and build for your preferred OS(es).
+
+## Development Installation
+
+### For Chrome:
+
+1. Open Extension settings: e.g. `chrome://extensions/` or `brave://extensions/` etc.
+2. Enable Developer Mode
+3. Click `Load Unpacked`
+4. Navigate to the unzipped folder.
+
+### For Firefox:
+
+1. Open: about:debugging#/runtime/this-firefox
+2. Expand 'Temporary Extensions'
+3. Click 'Load Temporary Add-on...'
+4. Navigate to the unzipped folder and open `manifest.json`
+
+### For Safari
+
+1. Press Run
+2. Enable in Preferences -> Extensions
 
 ## Contributing
 
