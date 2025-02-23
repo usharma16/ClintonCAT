@@ -5,6 +5,7 @@ import { Nullable } from './utils/types';
 class Preferences {
     static readonly IS_ENABLED_KEY = 'is_enabled';
     static readonly DOMAIN_EXCLUSIONS_KEY = 'domain_exclusions';
+    static readonly DEFAULT_DOMAIN_EXCLUSIONS = ['rossmanngroup.com'];
 
     static isEnabled = new ValueListener<boolean>(true);
     static domainExclusions = new OrderedSetListener<string>();
@@ -56,7 +57,7 @@ class Preferences {
                 (item): item is string => typeof item === 'string'
             );
         } else {
-            this.domainExclusions.value = [];
+            this.domainExclusions.value = Preferences.DEFAULT_DOMAIN_EXCLUSIONS;
         }
     }
 
