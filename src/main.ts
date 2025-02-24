@@ -1,9 +1,9 @@
+import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
+import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
+import StorageCache from '@/storage/storage-cache';
 import Preferences from './preferences';
 import { CATWikiPageSearchResults, PagesDB } from './database';
-import { StorageCache } from './storagecache';
 import { ContentScanner, IScanParameters } from './contentscanner';
-import ChromeSyncStorage from './storage/chrome-sync-storage';
-import ChromeLocalStorage from './storage/chrome-local-storage';
 import { DOMHelper } from '@/domhelper';
 import { ParsedDomain } from 'psl';
 import * as psl from 'psl';

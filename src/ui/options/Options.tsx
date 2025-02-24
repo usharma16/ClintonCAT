@@ -1,12 +1,12 @@
+import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
+import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import * as styles from './options.module.css';
+import * as styles from './Options.module.css';
 import classNames from 'classnames';
-import Preferences from './preferences';
-import ChromeSyncStorage from './storage/chrome-sync-storage';
-import ChromeLocalStorage from './storage/chrome-local-storage';
 import * as psl from 'psl';
 import { ParsedDomain } from 'psl';
+import Preferences from '@/preferences';
 
 Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage());
 

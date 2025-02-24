@@ -1,9 +1,9 @@
+import Preferences from '@/preferences';
+import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
+import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import * as styles from './popup.module.css';
-import Preferences from './preferences';
-import ChromeSyncStorage from './storage/chrome-sync-storage';
-import ChromeLocalStorage from './storage/chrome-local-storage';
+import * as styles from './Popup.module.css';
 
 Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage());
 
