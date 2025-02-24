@@ -1,4 +1,4 @@
-import Preferences from '@/preferences';
+import Preferences from '@/common/services/preferences';
 import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
 import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
 import React, { useState } from 'react';

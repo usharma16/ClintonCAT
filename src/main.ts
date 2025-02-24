@@ -1,7 +1,7 @@
+import Preferences from '@/common/services/preferences';
 import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
 import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
 import StorageCache from '@/storage/storage-cache';
-import Preferences from './preferences';
 import { CATWikiPageSearchResults, PagesDB } from './database';
 import { ContentScanner, IScanParameters } from './contentscanner';
 import { DOMHelper } from '@/domhelper';
