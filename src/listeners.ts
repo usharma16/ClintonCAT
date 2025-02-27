@@ -73,7 +73,7 @@ export interface IListener<T> {
 
 export class ValueListener<T extends Printable> implements IListener<T> {
     private _value: T;
-    private _callbacks: Map<string, ResultCallback<T>>;
+    private readonly _callbacks: Map<string, ResultCallback<T>>;
 
     constructor(value: T) {
         this._value = value;
@@ -119,7 +119,7 @@ export class ValueListener<T extends Printable> implements IListener<T> {
 export class OrderedSetListener<T extends Printable> implements IListener<T[]> {
     private _seen: Set<T>;
     private _value: SortedArray<T>;
-    private _callbacks: Map<string, ResultCallback<T[]>>;
+    private readonly _callbacks: Map<string, ResultCallback<T[]>>;
 
     constructor(...values: T[]) {
         this._value = new SortedArray(...values);
