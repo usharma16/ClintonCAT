@@ -1,4 +1,4 @@
-import { IContentScanMessage, IElementData } from './contentscanner';
+import { IContentScanMessage, IElementData } from './content-scanner';
 
 export interface IDOMHelperInterface {
     querySelectorAll(selector: string): Promise<IElementData[]>;

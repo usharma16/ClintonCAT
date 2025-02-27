@@ -1,9 +1,9 @@
 import Preferences from '@/common/services/preferences';
+import ContentScanner, { IScanParameters } from '@/content-scanner';
+import { CATWikiPageSearchResults, PagesDB } from '@/database';
 import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
 import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
 import StorageCache from '@/storage/storage-cache';
-import { CATWikiPageSearchResults, PagesDB } from './database';
-import { ContentScanner, IScanParameters } from './contentscanner';
 import { DOMHelper } from '@/domhelper';
 import { ParsedDomain } from 'psl';
 import * as psl from 'psl';

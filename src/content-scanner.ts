@@ -1,7 +1,7 @@
 // The 'require.context' feature depends on WebPack (@types/webpack)
-const context: __WebpackModuleApi.RequireContext = require.context('./contentscanners', true, /\.ts$/, 'sync');
+const context: __WebpackModuleApi.RequireContext = require.context('./content-scanners', true, /\.ts$/, 'sync');
 import { CATWikiPageSearchResults, PagesDB } from './database';
-import { DefaultScanner } from './contentscanners/default';
+import DefaultScanner from '@/content-scanners/default-scanner';
 import { IDOMHelperInterface, DOMHelperMessageType } from './domhelper';
 
 export interface IContentScannerPlugin {
@@ -38,7 +38,7 @@ export interface IElementData {
     // innerHtml: string;  // can be a bit weighty
 }
 
-export class ContentScanner {
+class ContentScanner {
     private scannerPlugins: IContentScannerPlugin[] = [];
     private defaultScannerPlugin: IContentScannerPlugin = new DefaultScanner();
 
@@ -77,3 +77,5 @@ export class ContentScanner {
         });
     }
 }
+
+export default ContentScanner;
