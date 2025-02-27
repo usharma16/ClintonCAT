@@ -1,3 +1,4 @@
+npm run typecheck
 # chromium build is generated as all of the tests are currently run on chromium
 npm run build:chromium
 npm run test
