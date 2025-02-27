@@ -1,0 +1,5 @@
+{
+    "**/*.{mjs,js,jsx,mts,ts,tsx,json,md,html}": ["prettier --write"],
+    "**/*.{mjs,js,jsx,mts,ts,tsx}": ["eslint --fix"],
+    "**/*.{ts,tsx}": ["tsc --noEmit"]
+}
