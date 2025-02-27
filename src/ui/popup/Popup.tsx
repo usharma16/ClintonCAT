@@ -5,7 +5,9 @@ import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import * as styles from './Popup.module.css';
 
-Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage());
+Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage()).catch((error: unknown) =>
+    console.error('Failed to initialize preferences:', error)
+);
 
 const Popup = () => {
     const [isEnabled, setIsEnabled] = useState(Preferences.isEnabled.value);

@@ -8,7 +8,9 @@ import classNames from 'classnames';
 import * as psl from 'psl';
 import { ParsedDomain } from 'psl';
 
-Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage());
+Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage()).catch((error: unknown) =>
+    console.error('Failed to initialize preferences:', error)
+);
 
 const Options = () => {
     const [items, setItems] = useState<string[]>([]);
