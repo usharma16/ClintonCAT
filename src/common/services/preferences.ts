@@ -1,4 +1,5 @@
-import { OrderedSetListener, ValueListener } from '@/listeners';
+import ObservableSet from '@/common/observables/observable-set';
+import ObservableValue from '@/common/observables/observable-value';
 import { IStorageBackend } from '@/storage/istorage-backend';
 import { Nullable } from '@/utils/types';
 
@@ -7,8 +8,8 @@ class Preferences {
     static readonly DOMAIN_EXCLUSIONS_KEY = 'domain_exclusions';
     static readonly DEFAULT_DOMAIN_EXCLUSIONS = ['rossmanngroup.com'];
 
-    static isEnabled = new ValueListener<boolean>(true);
-    static domainExclusions = new OrderedSetListener<string>();
+    static isEnabled = new ObservableValue<boolean>(true);
+    static domainExclusions = new ObservableSet<string>();
 
     // Injected storage backends  (TODO: do we need both?)
     // Sync is used to share data across browsers if logged in, e.g. plugin settings
