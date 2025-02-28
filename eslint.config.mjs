@@ -64,6 +64,7 @@ export default tseslint.config(
         ignores: [
             'node_modules',
             'dist',
+            'jest/CustomJSDOMEnvironment.js',
             '**/webpack.config.js',
             '**/eslint.config.mjs',
             '**/jest.config.ts',
