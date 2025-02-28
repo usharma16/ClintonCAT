@@ -1,12 +1,11 @@
+import React, { useEffect, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import { parse } from 'tldts';
+import classNames from 'classnames';
 import Preferences from '@/common/services/preferences';
 import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
 import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
-import React, { useEffect, useState } from 'react';
-import { createRoot } from 'react-dom/client';
 import * as styles from './Options.module.css';
-import classNames from 'classnames';
-import * as psl from 'psl';
-import { ParsedDomain } from 'psl';
 
 Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage()).catch((error: unknown) =>
     console.error('Failed to initialize preferences:', error)
@@ -26,8 +25,8 @@ const Options = () => {
 
     const addItem = () => {
         const value = domainInput.trim();
-        if (value === '' || !psl.isValid(value)) return;
-        const parsedDomain = psl.parse(value) as ParsedDomain;
+        if (value === '') return;
+        const parsedDomain = parse(value, { allowPrivateDomains: true });
         if (parsedDomain.domain !== null) {
             Preferences.domainExclusions.add(parsedDomain.domain.toLowerCase());
             setDomainInput('');

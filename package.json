@@ -29,7 +29,6 @@
         "@eslint/js": "^9.19.0",
         "@types/chrome": "^0.0.299",
         "@types/jest": "^29.5.14",
-        "@types/psl": "^1.1.3",
         "@types/react": "^19.0.8",
         "@types/react-dom": "^19.0.3",
         "@types/sinon": "^17.0.3",
@@ -54,7 +53,6 @@
         "lint-staged": "^15.4.3",
         "mini-css-extract-plugin": "^2.9.2",
         "prettier": "^3.4.2",
-        "psl": "^1.15.0",
         "puppeteer": "^24.2.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
@@ -71,6 +69,7 @@
         "webpack-dev-server": "^5.2.0"
     },
     "dependencies": {
-        "classnames": "^2.5.1"
+        "classnames": "^2.5.1",
+        "tldts": "^6.1.79"
     }
 }
