@@ -1,10 +1,11 @@
+import ContentScanner from '@/common/services/content-scanner';
+import { IScanParameters } from '@/common/services/content-scanner.types';
 import Preferences from '@/common/services/preferences';
-import ContentScanner, { IScanParameters } from '@/content-scanner';
+import DOMMessenger from '@/content-scanners/helpers/dom-messenger';
 import { CATWikiPageSearchResults, PagesDB } from '@/database';
 import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
 import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
 import StorageCache from '@/storage/storage-cache';
-import { DOMHelper } from '@/domhelper';
 import { ParsedDomain } from 'psl';
 import * as psl from 'psl';
 
@@ -96,7 +97,7 @@ export class Main {
             mainDomain: parsedDomain.sld?.toLowerCase() ?? '',
             url: url,
             pagesDb: this.pagesDatabase,
-            dom: new DOMHelper(),
+            dom: new DOMMessenger(),
             notify: (results) => this.indicateCATPages(results),
         };
 
