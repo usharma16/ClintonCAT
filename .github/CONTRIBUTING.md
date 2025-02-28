@@ -2,6 +2,9 @@
 
 Thank you for considering contributing to **Clinton CAT**! We appreciate your time and effort to improve this project. Please follow the guidelines below to ensure a smooth collaboration.
 
+## Code Style & Guidelines
+- Please adhere to the [Code Style Guidelines](docs/code-style.md).
+
 ## How to Contribute
 
 ### 1. Fork and Clone the Repository
