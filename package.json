@@ -6,6 +6,7 @@
     "scripts": {
         "format": "prettier --write \"**/*.{mjs,js,jsx,mts,ts,tsx,json,md,html}\"",
         "lint": "eslint \"**/*.{mjs,js,jsx,mts,ts,tsx,json,md,html}\"",
+        "lint:fix": "eslint \"**/*.{mjs,js,jsx,mts,ts,tsx,json,md,html}\" --fix",
         "typecheck": "tsc --noEmit",
         "test": "jest",
         "test:coverage": "COVERAGE=true jest",
