@@ -1,10 +1,11 @@
 import eslint from '@eslint/js';
 import { includeIgnoreFile } from '@eslint/compat';
-import checkFile from 'eslint-plugin-check-file';
 import prettier from 'eslint-plugin-prettier/recommended';
+import tseslint from 'typescript-eslint';
+import checkFile from 'eslint-plugin-check-file';
+import importPlugin from 'eslint-plugin-import';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import tseslint from 'typescript-eslint';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,6 +27,7 @@ export default tseslint.config(
             prettier,
         ],
         plugins: {
+            import: importPlugin,
             'check-file': checkFile,
         },
         rules: {
@@ -48,7 +50,8 @@ export default tseslint.config(
             'check-file/filename-naming-convention': [
                 'error',
                 {
-                    '**/*.{js,jsx,ts,tsx}': 'KEBAB_CASE',
+                    '**/*.{js,ts}': 'KEBAB_CASE',
+                    '**/*.{jsx,tsx}': 'PASCAL_CASE',
                 },
                 {
                     ignoreMiddleExtensions: true,
@@ -61,6 +64,7 @@ export default tseslint.config(
         ignores: [
             'node_modules',
             'dist',
+            'jest/CustomJSDOMEnvironment.js',
             '**/webpack.config.js',
             '**/eslint.config.mjs',
             '**/jest.config.ts',

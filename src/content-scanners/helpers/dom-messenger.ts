@@ -1,26 +1,11 @@
-import { IContentScanMessage, IElementData } from './contentscanner';
+import { IContentScanMessage, IElementData } from '@/common/services/content-scanner.types';
+import { DOMMessengerAction, IDOMMessengerInterface } from './dom-messenger.types';
 
-export interface IDOMHelperInterface {
-    querySelectorAll(selector: string): Promise<IElementData[]>;
-    querySelector(selector: string): Promise<IElementData | undefined | null>;
-    querySelectorByParentId(id: string, selector: string): Promise<IElementData | undefined | null>;
-    querySelectorAllAsText(selector: string): Promise<string>;
-    createElement(parentId: string, element: string, html: string): Promise<void>;
-}
-
-export enum DOMHelperMessageType {
-    DOM_QUERY_SELECTOR_ALL = 'DOM_QUERY_SELECTOR_ALL',
-    DOM_QUERY_SELECTOR_ALL_AS_TEXT = 'DOM_QUERY_SELECTOR_ALL_AS_TEXT',
-    DOM_QUERY_SELECTOR = 'DOM_QUERY_SELECTOR',
-    DOM_QUERY_SELECTOR_BY_PARENT_ID = 'DOM_QUERY_SELECTOR_BY_PARENT_ID',
-    DOM_CREATE_ELEMENT = 'DOM_CREATE_ELEMENT',
-}
-
-export class DOMHelper implements IDOMHelperInterface {
+class DOMMessenger implements IDOMMessengerInterface {
     public async querySelectorAll(selector: string): Promise<IElementData[]> {
         console.log('querySelectorAll: ', selector);
         return (await this.sendMessageToCurrentTab({
-            action: DOMHelperMessageType.DOM_QUERY_SELECTOR_ALL,
+            action: DOMMessengerAction.DOM_QUERY_SELECTOR_ALL,
             selector: selector,
         })) as IElementData[];
     }
@@ -29,7 +14,7 @@ export class DOMHelper implements IDOMHelperInterface {
     public async querySelector(selector: string): Promise<IElementData | null> {
         console.log('querySelector: ', selector);
         return (await this.sendMessageToCurrentTab({
-            action: DOMHelperMessageType.DOM_QUERY_SELECTOR,
+            action: DOMMessengerAction.DOM_QUERY_SELECTOR,
             selector: selector,
         })) as IElementData;
     }
@@ -37,7 +22,7 @@ export class DOMHelper implements IDOMHelperInterface {
     public async querySelectorByParentId(id: string, selector: string): Promise<IElementData | undefined | null> {
         console.log('querySelectorById: ', id, selector);
         return (await this.sendMessageToCurrentTab({
-            action: DOMHelperMessageType.DOM_QUERY_SELECTOR_BY_PARENT_ID,
+            action: DOMMessengerAction.DOM_QUERY_SELECTOR_BY_PARENT_ID,
             id: id,
             selector: selector,
         })) as IElementData;
@@ -46,7 +31,7 @@ export class DOMHelper implements IDOMHelperInterface {
     public async querySelectorAllAsText(selector: string): Promise<string> {
         console.log('querySelectorAll (as text): ', selector);
         return (await this.sendMessageToCurrentTab({
-            action: DOMHelperMessageType.DOM_QUERY_SELECTOR_ALL_AS_TEXT,
+            action: DOMMessengerAction.DOM_QUERY_SELECTOR_ALL_AS_TEXT,
             selector: selector,
         })) as string;
     }
@@ -54,7 +39,7 @@ export class DOMHelper implements IDOMHelperInterface {
     public async createElement(parentId: string, element: string, html: string): Promise<void> {
         console.log('createElement (id, element, html): ', parentId, element, html);
         await this.sendMessageToCurrentTab({
-            action: DOMHelperMessageType.DOM_CREATE_ELEMENT,
+            action: DOMMessengerAction.DOM_CREATE_ELEMENT,
             id: parentId,
             element: element,
             html: html,
@@ -69,7 +54,7 @@ export class DOMHelper implements IDOMHelperInterface {
     //     html: string
     // ): Promise<void> {}
 
-    // TODO: Exwcute JS?
+    // TODO: Execute JS?
     // see: https://developer.chrome.com/docs/extensions/reference/api/scripting
     // see:https://stackoverflow.com/questions/69348933/execute-javascript-in-a-new-tab-using-chrome-extension
     // see: https://developer.chrome.com/docs/extensions/reference/api/scripting
@@ -137,33 +122,33 @@ export class DOMHelper implements IDOMHelperInterface {
     }
 
     private static elementDataFromNodes(nodes: NodeListOf<HTMLElement>): (IElementData | undefined | null)[] {
-        return Array.from(nodes).map((node) => DOMHelper.elementDataFromNode(node));
+        return Array.from(nodes).map((node) => DOMMessenger.elementDataFromNode(node));
     }
 
     public static registerMessageListener() {
         chrome.runtime.onMessage.addListener((message: IContentScanMessage, _sender, sendResponse) => {
             switch (message.action) {
-                case DOMHelperMessageType.DOM_QUERY_SELECTOR_ALL: {
+                case DOMMessengerAction.DOM_QUERY_SELECTOR_ALL: {
                     if (!message.selector) {
                         throw new Error(`DOM_QUERY_SELECTOR_ALL requires a selector`);
                     }
                     const nodes: NodeListOf<HTMLElement> = document.querySelectorAll(message.selector);
-                    const elementData = DOMHelper.elementDataFromNodes(nodes);
+                    const elementData = DOMMessenger.elementDataFromNodes(nodes);
                     // It doesn't seem possible to send a NodeList (as-is, cloned or deep copied) via `sendResponse`
                     sendResponse(elementData);
                     break;
                 }
 
-                case DOMHelperMessageType.DOM_QUERY_SELECTOR: {
+                case DOMMessengerAction.DOM_QUERY_SELECTOR: {
                     if (!message.selector) {
                         throw new Error(`DOM_QUERY_SELECTOR requires a selector`);
                     }
                     const element: HTMLElement | null = document.querySelector(message.selector);
-                    sendResponse(DOMHelper.elementDataFromNode(element));
+                    sendResponse(DOMMessenger.elementDataFromNode(element));
                     break;
                 }
 
-                case DOMHelperMessageType.DOM_QUERY_SELECTOR_BY_PARENT_ID: {
+                case DOMMessengerAction.DOM_QUERY_SELECTOR_BY_PARENT_ID: {
                     if (!message.selector) {
                         throw new Error(`DOM_QUERY_SELECTOR_BY_PARENT_ID requires a selector`);
                     }
@@ -172,11 +157,11 @@ export class DOMHelper implements IDOMHelperInterface {
                     }
                     const parent = document.getElementById(message.id);
                     const element: HTMLElement | null | undefined = parent?.querySelector(message.selector);
-                    sendResponse(DOMHelper.elementDataFromNode(element));
+                    sendResponse(DOMMessenger.elementDataFromNode(element));
                     break;
                 }
 
-                case DOMHelperMessageType.DOM_QUERY_SELECTOR_ALL_AS_TEXT: {
+                case DOMMessengerAction.DOM_QUERY_SELECTOR_ALL_AS_TEXT: {
                     if (!message.selector) {
                         throw new Error(`DOM_QUERY_SELECTOR_ALL_AS_TEXT requires a selector`);
                     }
@@ -188,7 +173,7 @@ export class DOMHelper implements IDOMHelperInterface {
                     break;
                 }
 
-                case DOMHelperMessageType.DOM_CREATE_ELEMENT: {
+                case DOMMessengerAction.DOM_CREATE_ELEMENT: {
                     if (!message.id) {
                         throw new Error(`DOM_CREATE_ELEMENT requires an id`);
                     }
@@ -220,3 +205,5 @@ export class DOMHelper implements IDOMHelperInterface {
         });
     }
 }
+
+export default DOMMessenger;

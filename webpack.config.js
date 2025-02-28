@@ -18,8 +18,8 @@ module.exports = (env, argv) => {
         entry: {
             background: './src/background.ts',
             content: './src/content.ts',
-            popup: './src/popup.tsx',
-            options: './src/options.tsx',
+            popup: './src/ui/popup/Popup.tsx',
+            options: './src/ui/options/Options.tsx',
         },
         output: {
             path: path.resolve(__dirname, 'dist'),

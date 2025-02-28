@@ -1,5 +1,5 @@
+import { IStorageBackend } from '@/storage/istorage-backend';
 import getChromeLastError from '@/utils/helpers/get-chrome-last-error';
-import { IStorageBackend } from './istorage-backend';
 
 class ChromeSyncStorage implements IStorageBackend {
     /**

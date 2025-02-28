@@ -1,6 +1,6 @@
-import { PagesDB, IPageEntry } from './database';
+import { IPageEntry, PagesDB } from '@/database';
 
-export class StorageCache {
+class StorageCache {
     static readonly UPDATE_ALARM_NAME: string = 'updatePagesDB';
     static readonly CACHE_KEY: string = 'cachedPagesDB';
     static readonly CACHE_TIMESTAMP_KEY: string = 'cachedPagesDBTimestamp';
@@ -92,3 +92,5 @@ export class StorageCache {
         return '';
     }
 }
+
+export default StorageCache;

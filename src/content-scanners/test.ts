@@ -1,4 +1,4 @@
-import { IContentScannerPlugin, IScanParameters, IElementData } from '@/contentscanner';
+import { IContentScannerPlugin, IElementData, IScanParameters } from '@/common/services/content-scanner.types';
 import { CATWikiPageSearchResults, PageEntry } from '@/database';
 
 // Simple test for simple test page, e.g.

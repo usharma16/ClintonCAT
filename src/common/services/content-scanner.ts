@@ -1,44 +1,9 @@
 // The 'require.context' feature depends on WebPack (@types/webpack)
-const context: __WebpackModuleApi.RequireContext = require.context('./contentscanners', true, /\.ts$/, 'sync');
-import { CATWikiPageSearchResults, PagesDB } from './database';
-import { DefaultScanner } from './contentscanners/default';
-import { IDOMHelperInterface, DOMHelperMessageType } from './domhelper';
+const context: __WebpackModuleApi.RequireContext = require.context('../../content-scanners', true, /\.ts$/, 'sync');
+import DefaultScanner from '@/content-scanners/default-scanner';
+import { IContentScannerPlugin, IScanParameters } from './content-scanner.types';
 
-export interface IContentScannerPlugin {
-    metaInfo(): string;
-
-    canScanContent(params: IScanParameters): boolean;
-
-    scan(params: IScanParameters): Promise<boolean>;
-}
-
-export interface IScanParameters {
-    domain: string;
-    mainDomain: string;
-    url: string;
-    pagesDb: PagesDB;
-    dom: IDOMHelperInterface;
-    notify: (result: CATWikiPageSearchResults) => void;
-}
-
-// TODO: break this up into per DOMQuery types?
-export interface IContentScanMessage {
-    action: DOMHelperMessageType;
-    id?: string;
-    selector?: string;
-    element?: string;
-    html?: string;
-}
-
-export interface IElementData {
-    tag: string;
-    id: string;
-    className: string;
-    innerText: string;
-    // innerHtml: string;  // can be a bit weighty
-}
-
-export class ContentScanner {
+class ContentScanner {
     private scannerPlugins: IContentScannerPlugin[] = [];
     private defaultScannerPlugin: IContentScannerPlugin = new DefaultScanner();
 
@@ -53,9 +18,7 @@ export class ContentScanner {
                 console.log(`Found a plugin that can handle request: ${scannerParameters.domain}`);
                 // TODO: allow multiple handlers ?
                 const didFindPages = await plugin.scan(scannerParameters);
-                if (didFindPages) {
-                    return;
-                }
+                if (didFindPages) return;
             }
         }
         console.log('Using default content scanner');
@@ -77,3 +40,5 @@ export class ContentScanner {
         });
     }
 }
+
+export default ContentScanner;

@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import * as styles from './options.module.css';
+import { parse } from 'tldts';
 import classNames from 'classnames';
-import Preferences from './preferences';
-import ChromeSyncStorage from './storage/chrome-sync-storage';
-import ChromeLocalStorage from './storage/chrome-local-storage';
-import * as psl from 'psl';
-import { ParsedDomain } from 'psl';
+import Preferences from '@/common/services/preferences';
+import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
+import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
+import * as styles from './Options.module.css';
 
-Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage());
+Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage()).catch((error: unknown) =>
+    console.error('Failed to initialize preferences:', error)
+);
 
 const Options = () => {
     const [items, setItems] = useState<string[]>([]);
@@ -24,8 +25,8 @@ const Options = () => {
 
     const addItem = () => {
         const value = domainInput.trim();
-        if (value === '' || !psl.isValid(value)) return;
-        const parsedDomain = psl.parse(value) as ParsedDomain;
+        if (value === '') return;
+        const parsedDomain = parse(value, { allowPrivateDomains: true });
         if (parsedDomain.domain !== null) {
             Preferences.domainExclusions.add(parsedDomain.domain.toLowerCase());
             setDomainInput('');

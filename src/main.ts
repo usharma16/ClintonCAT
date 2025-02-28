@@ -1,12 +1,12 @@
-import Preferences from './preferences';
-import { CATWikiPageSearchResults, PagesDB } from './database';
-import { StorageCache } from './storagecache';
-import { ContentScanner, IScanParameters } from './contentscanner';
-import ChromeSyncStorage from './storage/chrome-sync-storage';
-import ChromeLocalStorage from './storage/chrome-local-storage';
-import { DOMHelper } from '@/domhelper';
-import { ParsedDomain } from 'psl';
-import * as psl from 'psl';
+import { getDomainWithoutSuffix, parse } from 'tldts';
+import ContentScanner from '@/common/services/content-scanner';
+import { IScanParameters } from '@/common/services/content-scanner.types';
+import Preferences from '@/common/services/preferences';
+import DOMMessenger from '@/content-scanners/helpers/dom-messenger';
+import { CATWikiPageSearchResults, PagesDB } from '@/database';
+import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
+import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
+import StorageCache from '@/storage/storage-cache';
 
 export interface IMainMessage {
     badgeText: string;
@@ -60,11 +60,11 @@ export class Main {
 
     checkDomainIsExcluded(domain: string): boolean {
         for (const excluded of Preferences.domainExclusions.value) {
-            if (!psl.isValid(excluded)) {
+            if (!parse(excluded, { allowPrivateDomains: true }).domain) {
                 console.error(`Invalid domain in exclusions: ${excluded}`);
                 continue;
             }
-            const excludedParsed = psl.parse(excluded) as ParsedDomain;
+            const excludedParsed = parse(excluded, { allowPrivateDomains: true });
             if (excludedParsed.domain == domain.toLowerCase()) {
                 return true;
             }
@@ -78,10 +78,10 @@ export class Main {
      * and indicates how many CAT pages were found.
      */
     async onPageLoaded(unparsedDomain: string, url: string): Promise<void> {
-        if (!psl.isValid(unparsedDomain)) {
+        if (!parse(unparsedDomain, { allowPrivateDomains: true }).domain) {
             throw new Error('onPageLoaded received an invalid url');
         }
-        const parsedDomain = psl.parse(unparsedDomain) as ParsedDomain;
+        const parsedDomain = parse(unparsedDomain, { allowPrivateDomains: true });
         const domain = parsedDomain.domain ?? '';
         console.log('Domain:', domain);
 
@@ -93,10 +93,10 @@ export class Main {
 
         const scannerParameters: IScanParameters = {
             domain: domain.toLowerCase(),
-            mainDomain: parsedDomain.sld?.toLowerCase() ?? '',
+            mainDomain: getDomainWithoutSuffix(unparsedDomain, { allowPrivateDomains: true }) ?? '',
             url: url,
             pagesDb: this.pagesDatabase,
-            dom: new DOMHelper(),
+            dom: new DOMMessenger(),
             notify: (results) => this.indicateCATPages(results),
         };
 
