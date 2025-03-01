@@ -22,11 +22,9 @@ const Options = () => {
     }, []);
 
     const addItem = () => {
-        const value = domainInput.trim();
-        if (value === '') return;
-        const parsedDomain = getDomain(value);
+        const parsedDomain = getDomain(domainInput);
         if (parsedDomain === null) {
-            return setDomainError(`${value} is not a valid domain`);
+            return setDomainError(`"${domainInput}" is not a valid domain`);
         }
         Preferences.domainExclusions.add(parsedDomain.toLowerCase() + 'test');
         setDomainInput('');
@@ -35,10 +33,12 @@ const Options = () => {
 
     const removeItem = (index: number) => {
         Preferences.domainExclusions.deleteAt(index);
+        setDomainError('');
     };
 
     const clearList = () => {
         Preferences.domainExclusions.value = [];
+        setDomainError('');
     };
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -53,12 +53,12 @@ const Options = () => {
                 <div className={styles.settingsColumn}>
                     <h2 className={styles.columnTitle}>Excluded Domains</h2>
                     <div className={styles.settingsContainer}>
-                        {domainError && <div className={styles.errorMessage}>{domainError}</div>}
-                        <form onSubmit={handleSubmit} className={styles.inputGroup}>
+                        <form onSubmit={handleSubmit} className={styles.form}>
                             <input
                                 type="text"
                                 value={domainInput}
-                                onChange={(e) => setDomainInput(e.target.value)}
+                                onFocus={() => setDomainError('')}
+                                onChange={(e) => setDomainInput(e.target.value.trim())}
                                 placeholder="Enter a domain"
                                 className={styles.inputField}
                             />
@@ -72,6 +72,7 @@ const Options = () => {
                                 Clear
                             </button>
                         </form>
+                        {domainError && <div className={styles.errorMessage}>{domainError}</div>}
                     </div>
                     <ul className={styles.excludedList}>
                         {items.map((item, index) => (
