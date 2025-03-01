@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { parse } from 'tldts';
+import { getDomain } from 'tldts';
 import classNames from 'classnames';
 import Preferences from '@/common/services/preferences';
 import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
@@ -12,25 +12,25 @@ Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage()).catc
 );
 
 const Options = () => {
-    const [items, setItems] = useState<string[]>([]);
+    const [items, setItems] = useState<string[]>(Preferences.domainExclusions.value);
     const [domainInput, setDomainInput] = useState('');
-
-    Preferences.domainExclusions.addListener('exclude-options', (result: string[]) => {
-        setItems([...result]); // Forces UI update: https://stackoverflow.com/questions/69836737/react-state-is-not-updating-the-ui
-    });
+    const [domainError, setDomainError] = useState('');
 
     useEffect(() => {
-        setItems(Preferences.domainExclusions.value);
+        Preferences.domainExclusions.addListener('exclude-options', (result: string[]) => setItems([...result]));
+        return () => Preferences.domainExclusions.removeListener('exclude-options');
     }, []);
 
     const addItem = () => {
         const value = domainInput.trim();
         if (value === '') return;
-        const parsedDomain = parse(value, { allowPrivateDomains: true });
-        if (parsedDomain.domain !== null) {
-            Preferences.domainExclusions.add(parsedDomain.domain.toLowerCase());
-            setDomainInput('');
+        const parsedDomain = getDomain(value);
+        if (parsedDomain === null) {
+            return setDomainError(`${value} is not a valid domain`);
         }
+        Preferences.domainExclusions.add(parsedDomain.toLowerCase() + 'test');
+        setDomainInput('');
+        setDomainError('');
     };
 
     const removeItem = (index: number) => {
@@ -41,10 +41,9 @@ const Options = () => {
         Preferences.domainExclusions.value = [];
     };
 
-    const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key == 'Enter') {
-            addItem();
-        }
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        addItem();
     };
 
     return (
@@ -54,22 +53,25 @@ const Options = () => {
                 <div className={styles.settingsColumn}>
                     <h2 className={styles.columnTitle}>Excluded Domains</h2>
                     <div className={styles.settingsContainer}>
-                        <div className={styles.inputGroup}>
+                        {domainError && <div className={styles.errorMessage}>{domainError}</div>}
+                        <form onSubmit={handleSubmit} className={styles.inputGroup}>
                             <input
                                 type="text"
                                 value={domainInput}
                                 onChange={(e) => setDomainInput(e.target.value)}
-                                onKeyDown={(event) => onKeyDown(event)}
                                 placeholder="Enter a domain"
                                 className={styles.inputField}
                             />
-                            <button onClick={addItem} className={classNames(styles.btn, styles.addBtn)}>
+                            <button type="submit" className={classNames(styles.btn, styles.addBtn)}>
                                 Add
                             </button>
-                            <button onClick={clearList} className={classNames(styles.btn, styles.clearBtn)}>
+                            <button
+                                type="button"
+                                onClick={clearList}
+                                className={classNames(styles.btn, styles.clearBtn)}>
                                 Clear
                             </button>
-                        </div>
+                        </form>
                     </div>
                     <ul className={styles.excludedList}>
                         {items.map((item, index) => (
