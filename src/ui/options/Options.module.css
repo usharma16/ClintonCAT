@@ -16,7 +16,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 16px;
+    gap: 32px;
     margin: 0 auto;
 }
 
@@ -40,7 +40,7 @@
 .form {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .inputField {
