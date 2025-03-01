@@ -31,7 +31,7 @@ const Options = () => {
         if (parsedDomain === null) {
             return setDomainError(`"${domainInput}" is not a valid domain`);
         }
-        Preferences.domainExclusions.add(parsedDomain.toLowerCase() + 'test');
+        Preferences.domainExclusions.add(parsedDomain);
         setDomainInput('');
         setDomainError('');
     };
