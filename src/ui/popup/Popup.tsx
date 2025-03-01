@@ -1,19 +1,23 @@
 import Preferences from '@/common/services/preferences';
 import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
 import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
+import useEffectOnce from '@/utils/hooks/use-effect-once';
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import * as styles from './Popup.module.css';
 
-Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage()).catch((error: unknown) =>
-    console.error('Failed to initialize preferences:', error)
-);
-
 const Popup = () => {
-    const [isEnabled, setIsEnabled] = useState(Preferences.isEnabled.value);
+    const [isEnabled, setIsEnabled] = useState(false);
 
-    Preferences.isEnabled.addListener('enable-options', (result: boolean) => {
-        setIsEnabled(result);
+    useEffectOnce(() => {
+        Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage())
+            .then(() => {
+                Preferences.isEnabled.addListener('enable-options', (result: boolean) => setIsEnabled(result));
+                setIsEnabled(Preferences.isEnabled.value);
+            })
+            .catch((error: unknown) => console.error('Failed to initialize preferences:', error));
+
+        return () => Preferences.isEnabled.removeListener('enable-options');
     });
 
     const handleToggleEnabled = () => {

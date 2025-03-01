@@ -1,4 +1,5 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import useEffectOnce from '@/utils/hooks/use-effect-once';
+import React, { FormEvent, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { getDomain } from 'tldts';
 import classNames from 'classnames';
@@ -7,19 +8,23 @@ import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
 import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
 import * as styles from './Options.module.css';
 
-Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage()).catch((error: unknown) =>
-    console.error('Failed to initialize preferences:', error)
-);
-
 const Options = () => {
-    const [items, setItems] = useState<string[]>(Preferences.domainExclusions.value);
+    const [items, setItems] = useState<string[]>([]);
     const [domainInput, setDomainInput] = useState('');
     const [domainError, setDomainError] = useState('');
 
-    useEffect(() => {
-        Preferences.domainExclusions.addListener('exclude-options', (result: string[]) => setItems([...result]));
+    useEffectOnce(() => {
+        Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage())
+            .then(() => {
+                Preferences.domainExclusions.addListener('exclude-options', (result: string[]) =>
+                    setItems([...result])
+                );
+                setItems([...Preferences.domainExclusions.value]);
+            })
+            .catch((error: unknown) => console.error('Failed to initialize preferences:', error));
+
         return () => Preferences.domainExclusions.removeListener('exclude-options');
-    }, []);
+    });
 
     const addItem = () => {
         const parsedDomain = getDomain(domainInput);
