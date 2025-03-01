@@ -78,6 +78,7 @@ module.exports = (env, argv) => {
             new CopyWebpackPlugin({
                 patterns: [
                     { from: manifestPath, to: 'manifest.json' },
+                    { from: 'public/style.css', to: 'style.css' },
                     { from: 'public/icons/clinton16.png', to: 'icon16.png' },
                     { from: 'public/icons/clinton32.png', to: 'icon32.png' },
                     { from: 'public/icons/clinton48.png', to: 'icon48.png' },
