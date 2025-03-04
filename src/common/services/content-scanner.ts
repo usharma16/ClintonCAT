@@ -26,17 +26,21 @@ class ContentScanner {
     }
 
     private findScannerPlugins(): void {
-        context.keys().map((key) => {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            const module = context(key);
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            const className = Object.keys(module)[0];
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-            const Class = module[className];
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-            const obj: IContentScannerPlugin = new Class();
-            this.scannerPlugins.push(obj);
-            console.log('Added content scanner plugin: ', className, ' metainfo: ', obj.metaInfo());
+        context.keys().map((filename) => {
+            try {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                const module = context(filename);
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                const className = Object.keys(module)[0];
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                const Class = module[className];
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+                const obj: IContentScannerPlugin = new Class();
+                this.scannerPlugins.push(obj);
+                console.log('Added content scanner plugin: ', className, ' metainfo: ', obj.metaInfo());
+            } catch (e) {
+                console.error('Failed to add content scanner plugin: ', filename, e);
+            }
         });
     }
 }
