@@ -79,6 +79,7 @@ We use **Jest** for unit and integration testing.
 - Include a **clear description** of your changes.
 - Every PR should have one, and only one, unique goal.
 - Your PR should make the minimum number of changes that are required to achieve this goal.
+- Squash and merge your commits.
 - If you're thinking of contributing a significant new feature and not sure if it's suitable, consider raising an enhancement.
 
 ## Reporting Issues
