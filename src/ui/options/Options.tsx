@@ -1,38 +1,54 @@
-import React, { useEffect, useState } from 'react';
+import useEffectOnce from '@/utils/hooks/use-effect-once';
+import React, { FormEvent, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import * as styles from './options.module.css';
+import { getDomain } from 'tldts';
 import classNames from 'classnames';
-import Preferences from './preferences';
-
-Preferences.init();
+import Preferences from '@/common/services/preferences';
+import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
+import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
+import * as styles from './Options.module.css';
 
 const Options = () => {
     const [items, setItems] = useState<string[]>([]);
     const [domainInput, setDomainInput] = useState('');
+    const [domainError, setDomainError] = useState('');
 
-    Preferences.domainExclusions.addListener('exclude-options', (result: string[]) => {
-        setItems([...result]); // Forces UI update: https://stackoverflow.com/questions/69836737/react-state-is-not-updating-the-ui
+    useEffectOnce(() => {
+        Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage())
+            .then(() => {
+                Preferences.domainExclusions.addListener('exclude-options', (result: string[]) =>
+                    setItems([...result])
+                );
+                setItems([...Preferences.domainExclusions.value]);
+            })
+            .catch((error: unknown) => console.error('Failed to initialize preferences:', error));
+
+        return () => Preferences.domainExclusions.removeListener('exclude-options');
     });
 
-    useEffect(() => {
-        setItems(Preferences.domainExclusions.value);
-    }, []);
-
     const addItem = () => {
-        if (domainInput.trim() === '') return;
-        // TODO: update the StorageBackend or PreferenceStore
-        Preferences.domainExclusions.add(domainInput.trim());
+        const parsedDomain = getDomain(domainInput);
+        if (parsedDomain === null) {
+            return setDomainError(`"${domainInput}" is not a valid domain`);
+        }
+        Preferences.domainExclusions.add(parsedDomain);
         setDomainInput('');
+        setDomainError('');
     };
 
     const removeItem = (index: number) => {
-        // TODO: update the StorageBackend or PreferenceStore
         Preferences.domainExclusions.deleteAt(index);
+        setDomainError('');
     };
 
     const clearList = () => {
-        // TODO: update the StorageBackend or PreferenceStore
         Preferences.domainExclusions.value = [];
+        setDomainError('');
+    };
+
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        addItem();
     };
 
     return (
@@ -42,21 +58,26 @@ const Options = () => {
                 <div className={styles.settingsColumn}>
                     <h2 className={styles.columnTitle}>Excluded Domains</h2>
                     <div className={styles.settingsContainer}>
-                        <div className={styles.inputGroup}>
+                        <form onSubmit={handleSubmit} className={styles.form}>
                             <input
                                 type="text"
                                 value={domainInput}
-                                onChange={(e) => setDomainInput(e.target.value)}
+                                onFocus={() => setDomainError('')}
+                                onChange={(e) => setDomainInput(e.target.value.trim())}
                                 placeholder="Enter a domain"
                                 className={styles.inputField}
                             />
-                            <button onClick={addItem} className={classNames(styles.btn, styles.addBtn)}>
+                            <button type="submit" className={classNames(styles.btn, styles.addBtn)}>
                                 Add
                             </button>
-                            <button onClick={clearList} className={classNames(styles.btn, styles.clearBtn)}>
+                            <button
+                                type="button"
+                                onClick={clearList}
+                                className={classNames(styles.btn, styles.clearBtn)}>
                                 Clear
                             </button>
-                        </div>
+                        </form>
+                        {domainError && <div className={styles.errorMessage}>{domainError}</div>}
                     </div>
                     <ul className={styles.excludedList}>
                         {items.map((item, index) => (

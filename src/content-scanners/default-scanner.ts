@@ -1,7 +1,7 @@
-import { IContentScannerPlugin, IScanParameters } from '@/contentscanner';
+import { IContentScannerPlugin, IScanParameters } from '@/common/services/content-scanner.types';
 import { CATWikiPageSearchResults } from '@/database';
 
-export class DefaultScanner implements IContentScannerPlugin {
+class DefaultScanner implements IContentScannerPlugin {
     metaInfo(): string {
         return 'default scanner';
     }
@@ -27,3 +27,5 @@ export class DefaultScanner implements IContentScannerPlugin {
         return Promise.resolve(true);
     }
 }
+
+export default DefaultScanner;

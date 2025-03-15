@@ -18,8 +18,8 @@ module.exports = (env, argv) => {
         entry: {
             background: './src/background.ts',
             content: './src/content.ts',
-            popup: './src/popup.tsx',
-            options: './src/options.tsx',
+            popup: './src/ui/popup/Popup.tsx',
+            options: './src/ui/options/Options.tsx',
         },
         output: {
             path: path.resolve(__dirname, 'dist'),
@@ -78,6 +78,7 @@ module.exports = (env, argv) => {
             new CopyWebpackPlugin({
                 patterns: [
                     { from: manifestPath, to: 'manifest.json' },
+                    { from: 'public/style.css', to: 'style.css' },
                     { from: 'public/icons/clinton16.png', to: 'icon16.png' },
                     { from: 'public/icons/clinton32.png', to: 'icon32.png' },
                     { from: 'public/icons/clinton48.png', to: 'icon48.png' },

@@ -1,17 +1,27 @@
+import Preferences from '@/common/services/preferences';
+import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
+import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
+import useEffectOnce from '@/utils/hooks/use-effect-once';
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import * as styles from './popup.module.css';
-import Preferences from './preferences';
+import * as styles from './Popup.module.css';
 
 const Popup = () => {
     const [isEnabled, setIsEnabled] = useState(false);
 
+    useEffectOnce(() => {
+        Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage())
+            .then(() => {
+                Preferences.isEnabled.addListener('enable-options', (result: boolean) => setIsEnabled(result));
+                setIsEnabled(Preferences.isEnabled.value);
+            })
+            .catch((error: unknown) => console.error('Failed to initialize preferences:', error));
+
+        return () => Preferences.isEnabled.removeListener('enable-options');
+    });
+
     const handleToggleEnabled = () => {
-        // TODO:
-        setIsEnabled(() => {
-            Preferences.isEnabled.value = !Preferences.isEnabled.value;
-            return Preferences.isEnabled.value;
-        });
+        Preferences.isEnabled.value = !Preferences.isEnabled.value;
     };
 
     const openCATPage = () => {
@@ -19,12 +29,12 @@ const Popup = () => {
     };
 
     const allowThisSite = () => {
-        // TODO:
+        const domain = window.location.hostname; // TODO: gets extension name instead of open tab domain
+        Preferences.domainExclusions.delete(domain);
     };
 
     const excludeThisSite = () => {
-        // TODO:
-        const domain = window.location.hostname;
+        const domain = window.location.hostname; // TODO: gets extension name instead of open tab domain
         Preferences.domainExclusions.add(domain);
     };
 

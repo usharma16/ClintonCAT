@@ -1,13 +1,15 @@
-import { OrderedSetListener, ValueListener } from './listeners';
-import { IStorageBackend } from './storage/istorage-backend';
-import { Nullable } from './utils/types';
+import ObservableSet from '@/common/observables/observable-set';
+import ObservableValue from '@/common/observables/observable-value';
+import { IStorageBackend } from '@/storage/istorage-backend';
+import { Nullable } from '@/utils/types';
 
 class Preferences {
     static readonly IS_ENABLED_KEY = 'is_enabled';
     static readonly DOMAIN_EXCLUSIONS_KEY = 'domain_exclusions';
+    static readonly DEFAULT_DOMAIN_EXCLUSIONS = ['rossmanngroup.com'];
 
-    static isEnabled = new ValueListener<boolean>(true);
-    static domainExclusions = new OrderedSetListener<string>();
+    static isEnabled = new ObservableValue<boolean>(true);
+    static domainExclusions = new ObservableSet<string>();
 
     // Injected storage backends  (TODO: do we need both?)
     // Sync is used to share data across browsers if logged in, e.g. plugin settings
@@ -24,74 +26,40 @@ class Preferences {
     }
 
     /**
-     * Fetches settings from storage and updates local ValueListeners.
+     * Get defaults from preferenceStorage, if available,
+     * otherwise use some default values. This method needs to
+     * be called for each context to initialize storage correctly
      */
-    static async refresh(): Promise<void> {
-        console.log('Refreshing settings');
-
-        const isEnabledVal = await this.getPreference(this.IS_ENABLED_KEY);
-        this.isEnabled.value = typeof isEnabledVal === 'boolean' ? isEnabledVal : true;
-
-        // Retrieve domainExclusions
-        const domainExclusionsVal = await this.getPreference(this.DOMAIN_EXCLUSIONS_KEY);
-
-        if (Array.isArray(domainExclusionsVal)) {
-            // Filter the array to ensure string[]
-            this.domainExclusions.value = domainExclusionsVal.filter(
-                (item): item is string => typeof item === 'string'
-            );
-            return;
-        }
-
-        // Fallback to empty array
-        this.domainExclusions.value = [];
-    }
-
-    /**
-     * Initialize the ValueListeners with default values and listeners.
-     */
-    static init() {
-        // Reset and set up isEnabled
+    static async initDefaults(preferenceStore: IStorageBackend, localStore: IStorageBackend) {
+        console.log('Defaulting settings');
+        this.setBackingStores(preferenceStore, localStore);
+        // Reset callbacks
         this.isEnabled.removeAllListeners();
-        this.isEnabled.value = true;
+        this.domainExclusions.removeAllListeners();
+        // Set up default callbacks
         this.isEnabled.addListener(this.IS_ENABLED_KEY, (result: boolean) => {
             void this.setPreference(Preferences.IS_ENABLED_KEY, result);
         });
 
-        // Reset and set up domainExclusions
-        this.domainExclusions.removeAllListeners();
-        this.domainExclusions.value = [];
         this.domainExclusions.addListener(this.DOMAIN_EXCLUSIONS_KEY, (result: string[]) => {
             void this.setPreference(Preferences.DOMAIN_EXCLUSIONS_KEY, result);
         });
-    }
 
-    /**
-     * Get defaults from localStorage, if available
-     * and override the in-memory defaults.
-     */
-    static async initDefaults() {
-        console.log('Defaulting settings');
-
-        // If no localStore is available, use in-memory defaults
-        if (!this.localStore) {
-            console.warn('No localStore defined; using in-memory defaults for isEnabled and domainExclusions.');
-            return this.init();
-        }
-
-        const rawIsEnabled = await this.localStore.get(this.IS_ENABLED_KEY);
+        // Attempt preference retrieval
+        const rawIsEnabled = await this.getPreference(this.IS_ENABLED_KEY);
         if (typeof rawIsEnabled === 'boolean') {
             this.isEnabled.value = rawIsEnabled;
+        } else {
+            this.isEnabled.value = true;
         }
-
-        const rawDomainExclusions = await this.localStore.get(this.DOMAIN_EXCLUSIONS_KEY);
+        const rawDomainExclusions = await this.getPreference(this.DOMAIN_EXCLUSIONS_KEY);
         if (Array.isArray(rawDomainExclusions)) {
             this.domainExclusions.value = rawDomainExclusions.filter(
                 (item): item is string => typeof item === 'string'
             );
+        } else {
+            this.domainExclusions.value = Preferences.DEFAULT_DOMAIN_EXCLUSIONS;
         }
-
-        this.init();
     }
 
     public static dump(): void {

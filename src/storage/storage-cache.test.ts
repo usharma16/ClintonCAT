@@ -1,5 +1,5 @@
 import chrome from 'sinon-chrome';
-// import { StorageCache } from './storagecache';
+// import StorageCache from './storage-cache';
 // import { PagesDB } from './database';
 
 beforeEach(() => {

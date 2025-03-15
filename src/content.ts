@@ -1,6 +1,6 @@
-import { DOMHelper } from './domhelper';
+import DOMMessenger from '@/common/helpers/dom-messenger';
 
-DOMHelper.registerMessageListener();
+DOMMessenger.registerMessageListener();
 
 void chrome.runtime.sendMessage({
     domain: window.location.hostname,

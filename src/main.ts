@@ -1,10 +1,12 @@
-import Preferences from './preferences';
-import { CATWikiPageSearchResults, PagesDB } from './database';
-import { StorageCache } from './storagecache';
-import { DomainTools } from './domaintools';
-import { ContentScanner, IScanParameters } from './contentscanner';
-import ChromeSyncStorage from './storage/chrome-sync-storage';
-import { DOMHelper } from '@/domhelper';
+import { getDomainWithoutSuffix, parse } from 'tldts';
+import ContentScanner from '@/common/services/content-scanner';
+import { IScanParameters } from '@/common/services/content-scanner.types';
+import Preferences from '@/common/services/preferences';
+import DOMMessenger from '@/common/helpers/dom-messenger';
+import { CATWikiPageSearchResults, PagesDB } from '@/database';
+import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
+import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
+import StorageCache from '@/storage/storage-cache';
 
 export interface IMainMessage {
     badgeText: string;
@@ -15,16 +17,13 @@ export interface IMainMessage {
 export class Main {
     storageCache: StorageCache;
     pagesDatabase: PagesDB;
-    domainTools: DomainTools;
     contentScanner: ContentScanner;
 
     constructor() {
         // TODO: need a ChromeLocalStorage for pages db
-        Preferences.setBackingStores(new ChromeSyncStorage(), new ChromeSyncStorage());
         this.pagesDatabase = new PagesDB();
         this.pagesDatabase.initDefaultPages();
         this.storageCache = new StorageCache(this.pagesDatabase);
-        this.domainTools = new DomainTools();
         this.contentScanner = new ContentScanner();
     }
 
@@ -60,7 +59,17 @@ export class Main {
     }
 
     checkDomainIsExcluded(domain: string): boolean {
-        return this.domainTools.isDomainExcluded(Preferences.domainExclusions.value, domain);
+        for (const excluded of Preferences.domainExclusions.value) {
+            if (!parse(excluded, { allowPrivateDomains: true }).domain) {
+                console.error(`Invalid domain in exclusions: ${excluded}`);
+                continue;
+            }
+            const excludedParsed = parse(excluded, { allowPrivateDomains: true });
+            if (excludedParsed.domain == domain.toLowerCase()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -68,21 +77,26 @@ export class Main {
      * Scans the domain and in-page contents, merges results,
      * and indicates how many CAT pages were found.
      */
-    async onPageLoaded(domain: string, url: string): Promise<void> {
-        const mainDomain = this.domainTools.extractMainDomain(domain);
-        console.log('Main domain:', mainDomain);
+    async onPageLoaded(unparsedDomain: string, url: string): Promise<void> {
+        if (!parse(unparsedDomain, { allowPrivateDomains: true }).domain) {
+            throw new Error('onPageLoaded received an invalid url');
+        }
+        const parsedDomain = parse(unparsedDomain, { allowPrivateDomains: true });
+        const domain = parsedDomain.domain ?? '';
+        console.log('Domain:', domain);
 
-        if (this.checkDomainIsExcluded(mainDomain)) {
-            console.log('Excluded domain:', mainDomain);
+        if (this.checkDomainIsExcluded(domain)) {
+            console.log('Domain skipped, was excluded');
+            this.indicateStatus();
             return;
         }
 
         const scannerParameters: IScanParameters = {
             domain: domain.toLowerCase(),
-            mainDomain: mainDomain.toLowerCase(),
+            mainDomain: getDomainWithoutSuffix(unparsedDomain, { allowPrivateDomains: true }) ?? '',
             url: url,
             pagesDb: this.pagesDatabase,
-            dom: new DOMHelper(),
+            dom: new DOMMessenger(),
             notify: (results) => this.indicateCATPages(results),
         };
 
@@ -95,7 +109,7 @@ export class Main {
      */
     onBrowserExtensionInstalled(): void {
         console.log('ClintonCAT Extension Installed');
-        Preferences.initDefaults().then(() => {
+        Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage()).then(() => {
             Preferences.dump();
             this.indicateStatus();
         });
@@ -111,7 +125,7 @@ export class Main {
         _sendResponse: VoidFunction
     ): void {
         void (async () => {
-            await Preferences.refresh();
+            await Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage());
             Preferences.dump();
 
             if (message.badgeText) {
