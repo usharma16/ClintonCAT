@@ -1,77 +1,30 @@
+import { CompanyPage, ICompanyCargo } from '@/models/company';
+import { IIncidentCargo, IncidentPage } from '@/models/incident';
+import { Page } from '@/models/page';
+import { IProductCargo, ProductPage } from '@/models/product';
+import { IProductLineCargo, ProductLinePage } from '@/models/product-line';
 import escapeRegex from '@/utils/helpers/escape-regex';
-import pagesDbDefaultJson from '../data/pages_db.json'; // assert { type: 'json' };
+import pagesDbJsonFile from '../data/pages_db.json'; // assert { type: 'json' };
 
-export interface IPageEntry {
-    pageId: number;
-    pageTitle: string;
-    popupText: string;
-    category: string;
-}
-
-export class PageEntry implements IPageEntry {
-    static readonly WIKI_URL: string = 'https://wiki.rossmanngroup.com/wiki/index.php?curid=';
-
-    private _pageId: number;
-    private _pageTitle: string;
-    private _popupText: string;
-    private _category: string;
-
-    constructor(pageEntry: IPageEntry) {
-        this._pageId = pageEntry.pageId;
-        this._pageTitle = pageEntry.pageTitle;
-        this._popupText = pageEntry.popupText;
-        this._category = pageEntry.category;
-    }
-
-    get pageId(): number {
-        return this._pageId;
-    }
-
-    set pageId(value: number) {
-        this._pageId = value;
-    }
-
-    get pageTitle(): string {
-        return this._pageTitle;
-    }
-
-    set pageTitle(value: string) {
-        this._pageTitle = value;
-    }
-
-    get popupText(): string {
-        return this._popupText;
-    }
-
-    set popupText(value: string) {
-        this._popupText = value;
-    }
-
-    get category(): string {
-        return this._category;
-    }
-
-    set category(value: string) {
-        this._category = value;
-    }
-
-    public url(): string {
-        return `${PageEntry.WIKI_URL}/${this.pageId.toString()}`;
-    }
+export interface ICargoExport {
+    Company: ICompanyCargo[];
+    Incident: IIncidentCargo[];
+    Product: IProductCargo[];
+    ProductLine: IProductLineCargo[];
 }
 
 export class CATWikiPageSearchResults {
-    private _pageEntries: IPageEntry[] = [];
+    private _pageEntries: Page[] = [];
 
-    constructor(pageEntries: IPageEntry[] = []) {
+    constructor(pageEntries: Page[] = []) {
         this.addPageEntries(pageEntries);
     }
 
-    public addPageEntry(pageEntry: IPageEntry): void {
-        this._pageEntries = [...this._pageEntries, new PageEntry(pageEntry)];
+    public addPageEntry(pageEntry: Page): void {
+        this._pageEntries = [...this._pageEntries, pageEntry];
     }
 
-    public addPageEntries(pageEntries: readonly IPageEntry[]): void {
+    public addPageEntries(pageEntries: readonly Page[]): void {
         for (const pageEntry of pageEntries) {
             this.addPageEntry(pageEntry);
         }
@@ -81,41 +34,89 @@ export class CATWikiPageSearchResults {
         return this._pageEntries.length;
     }
 
-    get pageEntries(): readonly IPageEntry[] {
+    get pageEntries(): readonly Page[] {
         return this._pageEntries;
     }
 }
 
 export class PagesDB {
     static readonly PAGES_DB_JSON_URL: string =
-        'https://raw.githubusercontent.com/WayneKeenan/ClintonCAT/refs/heads/main/data/pages_db.json';
-    private pagesList: IPageEntry[] = []; // keep another local copy.
+        'https://raw.githubusercontent.com/WKDLabs/CATWikiCargoPrototype/refs/heads/export/data/all_cargo_combined.json';
+    private _companyPages: CompanyPage[] = [];
+    private _incidentPages: IncidentPage[] = [];
+    private _productPages: ProductPage[] = [];
+    private _productLinePages: ProductLinePage[] = [];
 
-    static readonly pagesDbDefault: IPageEntry[] = pagesDbDefaultJson;
+    static readonly pagesDbDefault: ICargoExport = pagesDbJsonFile;
+
+    get companyPages(): CompanyPage[] {
+        return this._companyPages;
+    }
+
+    get incidentPages(): IncidentPage[] {
+        return this._incidentPages;
+    }
+
+    get productPages(): ProductPage[] {
+        return this._productPages;
+    }
+
+    get productLinePages(): ProductLinePage[] {
+        return this._productLinePages;
+    }
+
+    get allPages(): Page[] {
+        return ([] as Page[]).concat(
+            this._companyPages,
+            this._incidentPages,
+            this._productPages,
+            this._productLinePages
+        );
+    }
 
     // load the baked in pagesdb json as an initial db, just in case...
     public initDefaultPages(): void {
         this.setPages(PagesDB.pagesDbDefault);
     }
 
-    public getDefaultPages(): readonly IPageEntry[] {
+    public getDefaultPages(): ICargoExport {
         return PagesDB.pagesDbDefault;
     }
 
-    public setPages(pages: IPageEntry[]) {
-        // console.log('setPages', pages);
-        this.pagesList = pages;
+    public setPages(cargoExport: ICargoExport) {
+        this._companyPages = cargoExport.Company.map((companyEntry) => CompanyPage.fromCargoExport(companyEntry));
+        this._incidentPages = cargoExport.Incident.map((incidentEntry) => IncidentPage.fromCargoExport(incidentEntry));
+        this._productPages = cargoExport.Product.map((productEntry) => ProductPage.fromCargoExport(productEntry));
+        this._productLinePages = cargoExport.ProductLine.map((productLineEntry) =>
+            ProductLinePage.fromCargoExport(productLineEntry)
+        );
     }
     public getPagesForDomain(domain: string): CATWikiPageSearchResults {
         return this.fuzzySearch(domain);
     }
 
+    public getPagesForCategory(categoryName: string): CATWikiPageSearchResults {
+        const lowerCategoryName = categoryName.toLowerCase();
+        const results = new CATWikiPageSearchResults();
+        const pageEntries = this.allPages.filter((page) => {
+            if (page instanceof CompanyPage) {
+                return page.industries.some((industry) => industry.toLowerCase() === lowerCategoryName);
+            }
+            if (page instanceof ProductPage || page instanceof ProductLinePage) {
+                return page.categories.some((category) => category.toLowerCase() === lowerCategoryName);
+            }
+            return false;
+        });
+        results.addPageEntries(pageEntries);
+        return results;
+    }
+
     public simpleSearch(query: string): CATWikiPageSearchResults {
         const lowerQuery = query.toLowerCase();
         const results = new CATWikiPageSearchResults();
-        for (const pageEntry of this.pagesList) {
-            if (pageEntry.pageTitle.toLowerCase().includes(lowerQuery)) {
-                results.addPageEntry(pageEntry);
+        for (const page of this.allPages) {
+            if (page.pageName.toLowerCase().includes(lowerQuery)) {
+                results.addPageEntry(page);
             }
         }
         return results;
@@ -133,8 +134,8 @@ export class PagesDB {
         let maxInOrderCount = 0;
         let foundPage = null;
 
-        for (const pageEntry of this.pagesList) {
-            const titleWords = pageEntry.pageTitle.toLowerCase().split(' ');
+        for (const page of this.allPages) {
+            const titleWords = page.pageName.toLowerCase().split(' ');
             let thisInOrderCount = 0;
             const maxIndex = Math.min(searchWords.length, titleWords.length);
 
@@ -145,7 +146,7 @@ export class PagesDB {
             }
             if (thisInOrderCount > maxInOrderCount) {
                 maxInOrderCount = thisInOrderCount;
-                foundPage = pageEntry;
+                foundPage = page;
             }
         }
         const results = new CATWikiPageSearchResults();
@@ -160,9 +161,9 @@ export class PagesDB {
         const lowerQueryWords = query.toLowerCase().split(/\s+/);
         const results = new CATWikiPageSearchResults();
 
-        const pageEntries = this.pagesList
-            .map((pageEntry) => {
-                const lowerTitle = pageEntry.pageTitle.toLowerCase();
+        const pages = this.allPages
+            .map((page) => {
+                const lowerTitle = page.pageName.toLowerCase();
                 let matchCount = 0;
                 for (const word of lowerQueryWords) {
                     // Use word boundaries to reduce false positives
@@ -172,13 +173,13 @@ export class PagesDB {
                         matchCount++;
                     }
                 }
-                return { pageEntry, matchCount };
+                return { pageEntry: page, matchCount };
             })
             .filter(({ matchCount }) => (matchAllWords ? matchCount === lowerQueryWords.length : matchCount > 0))
             .sort((a, b) => b.matchCount - a.matchCount)
             .map(({ pageEntry }) => pageEntry);
 
-        results.addPageEntries(pageEntries);
+        results.addPageEntries(pages);
         return results;
     }
 }

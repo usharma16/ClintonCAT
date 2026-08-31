@@ -1,3 +1,15 @@
+# Project Archived!
+
+The extension is now being developed by the FULU Foundation here: https://github.com/FULU-Foundation/CRW-Extension
+
+A big thank you to all that helped with this code!
+
+Please do consider contributing to the new development over at the FULU Foundation and/or joining the Discord channel.
+
+All the best
+Wayne & Co.
+
+
 # Clinton CAT
 
 ![GitHub Release](<https://img.shields.io/github/v/release/WayneKeenan/ClintonCAT?include_prereleases&color=rgba(28%2C%20181%2C%2033%2C%201)&label=Release>)
@@ -13,16 +25,15 @@
 
 # Under development
 
-Chrome Browser Extension for automatically
-searching [Rossmann's Consumer Action Taskforce (CAT)](https://wiki.rossmanngroup.com/wiki/Mission_statement) articles
-for the current site being visited.<br>
+Chrome browser extension that automatically searches
+[Rossmann's Consumer Rights Wiki (CRW)](https://consumerrights.wiki)
+for articles related to the website you're currently visiting.<br>
 
-> All references found by this software are not part of ClintonCAT and are provided to the end-user under `CC-4.0-BY-SA licensing` as stated [here](https://wiki.rossmanngroup.com/wiki/Consumer_Action_Taskforce:Copyrights) by the originating website [wiki.rossmanngroup.com](https://wiki.rossmanngroup.com/).
+> All references found by this software are not part of ClintonCAT and are provided to the end-user under `CC-4.0-BY-SA licensing` by the originating website [consumerrights.wiki](https://consumerrights.wiki/).
 
 ## Operation
 
-If a CAT wiki page for the website is found then the plugin toolbar icon will indicate the number of controversies found.
-You might also see a clickable angry cat image in the page.
+If a matching page is found on the Consumer Rights Wiki, the extension’s toolbar icon will display the number of controversies associated with the current site. You’ll also be able to navigate directly to the relevant article with a single click.
 
 ## Installation
 

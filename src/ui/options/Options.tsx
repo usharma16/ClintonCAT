@@ -1,25 +1,36 @@
 import useEffectOnce from '@/utils/hooks/use-effect-once';
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useState, ChangeEvent } from 'react';
 import { createRoot } from 'react-dom/client';
 import { getDomain } from 'tldts';
 import classNames from 'classnames';
 import Preferences from '@/common/services/preferences';
-import ChromeLocalStorage from '@/storage/chrome/chrome-local-storage';
-import ChromeSyncStorage from '@/storage/chrome/chrome-sync-storage';
+import BrowserLocalStorage from '@/storage/browser/browser-local-storage';
+import BrowserSyncStorage from '@/storage/browser/browser-sync-storage';
 import * as styles from './Options.module.css';
 
+import { useI18n } from '@/utils/helpers/localized';
+
 const Options = () => {
+    const { t } = useI18n();
     const [items, setItems] = useState<string[]>([]);
     const [domainInput, setDomainInput] = useState('');
     const [domainError, setDomainError] = useState('');
 
     useEffectOnce(() => {
-        Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage())
+        // Preferences.initDefaults(new ChromeSyncStorage(), new ChromeLocalStorage())
+        Preferences.initDefaults(new BrowserSyncStorage(), new BrowserLocalStorage())
             .then(() => {
                 Preferences.domainExclusions.addListener('exclude-options', (result: string[]) =>
                     setItems([...result])
                 );
                 setItems([...Preferences.domainExclusions.value]);
+
+                setInPageAutoHideTime(Preferences.pageNotificationsAutoHideTime.value);
+                setInPageDismissTime(Preferences.pageNotificationsDismissTime.value);
+
+                setInPageShowMore(Preferences.pageNotificationsShowMore.value);
+                setInPageShowMute(Preferences.pageNotificationsShowMute.value);
+                setInPageShowHide(Preferences.pageNotificationsShowHide.value);
             })
             .catch((error: unknown) => console.error('Failed to initialize preferences:', error));
 
@@ -29,7 +40,7 @@ const Options = () => {
     const addItem = () => {
         const parsedDomain = getDomain(domainInput);
         if (parsedDomain === null) {
-            return setDomainError(`"${domainInput}" is not a valid domain`);
+            return setDomainError(t('DOMAIN_NOT_VALID', [domainInput]));
         }
         Preferences.domainExclusions.add(parsedDomain);
         setDomainInput('');
@@ -51,12 +62,48 @@ const Options = () => {
         addItem();
     };
 
+    const [inPageAutoHideTime, setInPageAutoHideTime] = useState(5);
+    const setInPageAutoHideTimeOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setInPageAutoHideTime(Number(event.currentTarget.value));
+    };
+    const setInPageAutoHideTimeSave = () => {
+        Preferences.pageNotificationsAutoHideTime.value = Number(inPageAutoHideTime);
+    };
+
+    const [inPageDismissTime, setInPageDismissTime] = useState(1);
+    const setInPageDismissTimeOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setInPageDismissTime(Number(event.currentTarget.value));
+        Preferences.pageNotificationsDismissTime.value = Number(event.currentTarget.value);
+    };
+
+    const setInPageDismissTimeSave = () => {
+        Preferences.pageNotificationsDismissTime.value = Number(inPageDismissTime);
+    };
+
+    const [inPageShowMore, setInPageShowMore] = useState(true);
+    const toggleInPageShowMore = () => {
+        setInPageShowMore(!inPageShowMore);
+        Preferences.pageNotificationsShowMore.value = Boolean(!inPageShowMore);
+    };
+
+    const [inPageShowMute, setInPageShowMute] = useState(true);
+    const toggleInPageShowMute = () => {
+        setInPageShowMute(!inPageShowMute);
+        Preferences.pageNotificationsShowMute.value = Boolean(!inPageShowMute);
+    };
+
+    const [inPageShowHide, setInPageShowHide] = useState(true);
+    const toggleInPageShowHide = () => {
+        setInPageShowHide(!inPageShowHide);
+        Preferences.pageNotificationsShowHide.value = Boolean(!inPageShowHide);
+    };
+
     return (
         <div className={styles.optionsPage}>
-            <h1 className={styles.pageTitle}>Extension Options</h1>
+            <h1 className={styles.pageTitle}>{t('EXTENSION_OPTIONS')}</h1>
             <div className={styles.optionsContainer}>
                 <div className={styles.settingsColumn}>
-                    <h2 className={styles.columnTitle}>Excluded Domains</h2>
+                    <h2 className={styles.columnTitle}>{t('EXCLUDED_DOMAINS')}</h2>
                     <div className={styles.settingsContainer}>
                         <form onSubmit={handleSubmit} className={styles.form}>
                             <input
@@ -64,17 +111,17 @@ const Options = () => {
                                 value={domainInput}
                                 onFocus={() => setDomainError('')}
                                 onChange={(e) => setDomainInput(e.target.value.trim())}
-                                placeholder="Enter a domain"
+                                placeholder={t('ENTER_DOMAIN')}
                                 className={styles.inputField}
                             />
                             <button type="submit" className={classNames(styles.btn, styles.addBtn)}>
-                                Add
+                                {t('ADD')}
                             </button>
                             <button
                                 type="button"
                                 onClick={clearList}
                                 className={classNames(styles.btn, styles.clearBtn)}>
-                                Clear
+                                {t('CLEAR')}
                             </button>
                         </form>
                         {domainError && <div className={styles.errorMessage}>{domainError}</div>}
@@ -92,12 +139,75 @@ const Options = () => {
                 </div>
 
                 <div className={styles.settingsColumn}>
-                    <h2 className={styles.columnTitle}>Other Settings</h2>
+                    <h2 className={styles.columnTitle}>{t('OTHER_SETTINGS')}</h2>
                     <div className={styles.settingsContainer}>
                         <p>TODO</p>
                         <label className={styles.toggleLabel}>
                             <span>Enable Feature XYZ</span>
                             <input type="checkbox" />
+                            <span className={styles.toggleSlider} />
+                        </label>
+                    </div>
+                </div>
+
+                <div className={styles.settingsColumn}>
+                    <h2 className={styles.columnTitle}>{t('IN_PAGE_SETTINGS')}</h2>
+                    <div className={styles.settingsContainer}>
+                        <label className={styles.sliderLabel}>
+                            <span>{t('AUTOHIDE_LABEL', [inPageAutoHideTime.toString()])}</span>
+                            <div className={styles.slidecontainer}>
+                                <input
+                                    type="range"
+                                    value={inPageAutoHideTime}
+                                    min="0"
+                                    max="30"
+                                    onChange={setInPageAutoHideTimeOnChange}
+                                    onMouseUp={setInPageAutoHideTimeSave}
+                                    onTouchEnd={setInPageAutoHideTimeSave}
+                                    className={styles.slider}
+                                    list="autohide-data"
+                                />
+                                <datalist className={styles.sliderDatalist} id="autohide-data">
+                                    <option value="0" label={t('OFF')}></option>
+                                    <option value="30" label={t('30')}></option>
+                                </datalist>
+                            </div>
+                        </label>
+
+                        <label className={styles.sliderLabel}>
+                            <span>{t('DISMISS_TIME_LABEL', [inPageDismissTime.toString()])}</span>
+                            <div className={styles.slidecontainer}>
+                                <input
+                                    type="range"
+                                    value={inPageDismissTime}
+                                    min="1"
+                                    max="48"
+                                    onChange={setInPageDismissTimeOnChange}
+                                    onMouseUp={setInPageDismissTimeSave}
+                                    onTouchEnd={setInPageDismissTimeSave}
+                                    className={styles.slider}
+                                    list="dismisstime-data"
+                                />
+                                <datalist className={styles.sliderDatalist} id="dismisstime-data">
+                                    <option value="1" label="1"></option>
+                                    <option value="48" label="48"></option>
+                                </datalist>
+                            </div>
+                        </label>
+
+                        <label className={styles.toggleLabel}>
+                            <span>{t('SHOW_MORE_OPTION')}</span>
+                            <input type="checkbox" checked={inPageShowMore} onClick={toggleInPageShowMore} />
+                            <span className={styles.toggleSlider} />
+                        </label>
+                        <label className={styles.toggleLabel}>
+                            <span>{t('SHOW_MUTE_OPTION')}</span>
+                            <input type="checkbox" checked={inPageShowMute} onClick={toggleInPageShowMute} />
+                            <span className={styles.toggleSlider} />
+                        </label>
+                        <label className={styles.toggleLabel}>
+                            <span>{t('SHOW_HIDE_OPTION')}</span>
+                            <input type="checkbox" checked={inPageShowHide} onClick={toggleInPageShowHide} />
                             <span className={styles.toggleSlider} />
                         </label>
                     </div>
